@@ -28,6 +28,8 @@ mod bmap;
 
 mod map;
 
+mod constraint;
+
 mod aff;
 
 mod pw_aff;
@@ -61,6 +63,8 @@ pub use set::Set;
 pub use bmap::BasicMap;
 
 pub use map::Map;
+
+pub use constraint::Constraint;
 
 pub use aff::Aff;
 
