@@ -2,7 +2,7 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    BasicSet, Context, DimType, FixedBox, Id, Map, Point, PwAff, Space, StrideInfo, Val,
+    BasicSet, Constraint, Context, DimType, FixedBox, Id, Map, Point, PwAff, Space, StrideInfo, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -299,6 +299,8 @@ extern "C" {
     fn isl_set_dim_min(set: uintptr_t, pos: i32) -> uintptr_t;
 
     fn isl_set_to_str(set: uintptr_t) -> *const c_char;
+
+    fn isl_set_add_constraint(set: uintptr_t, constraint: uintptr_t) -> uintptr_t;
 
 }
 
@@ -1990,6 +1992,21 @@ impl Set {
         let isl_rs_result = unsafe { isl_set_to_str(set) };
         let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
         let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_add_constraint`.
+    pub fn add_constraint(self, constraint: Constraint) -> Set {
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut constraint = constraint;
+        constraint.do_not_free_on_drop();
+        let constraint = constraint.ptr;
+        let isl_rs_result = unsafe { isl_set_add_constraint(set, constraint) };
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 

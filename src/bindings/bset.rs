@@ -2,7 +2,7 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, BasicMap, Context, DimType, Id, LocalSpace, Mat, Point, Set, Space, Val,
+    Aff, BasicMap, Constraint, Context, DimType, Id, LocalSpace, Mat, Point, Set, Space, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -190,6 +190,12 @@ extern "C" {
     fn isl_basic_set_solutions(bset: uintptr_t) -> uintptr_t;
 
     fn isl_basic_set_to_str(bset: uintptr_t) -> *const c_char;
+
+    fn isl_basic_set_n_constraint(bset: uintptr_t) -> i32;
+
+    fn isl_basic_set_add_constraint(bset: uintptr_t, constraint: uintptr_t) -> uintptr_t;
+
+    fn isl_basic_set_from_constraint(constraint: uintptr_t) -> uintptr_t;
 
 }
 
@@ -1152,6 +1158,40 @@ impl BasicSet {
         let isl_rs_result = unsafe { isl_basic_set_to_str(bset) };
         let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
         let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_basic_set_n_constraint`.
+    pub fn n_constraint(&self) -> i32 {
+        let bset = self;
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_basic_set_n_constraint(bset) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_basic_set_add_constraint`.
+    pub fn add_constraint(self, constraint: Constraint) -> BasicSet {
+        let bset = self;
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let mut constraint = constraint;
+        constraint.do_not_free_on_drop();
+        let constraint = constraint.ptr;
+        let isl_rs_result = unsafe { isl_basic_set_add_constraint(bset, constraint) };
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_basic_set_from_constraint`.
+    pub fn from_constraint(constraint: Constraint) -> BasicSet {
+        let mut constraint = constraint;
+        constraint.do_not_free_on_drop();
+        let constraint = constraint.ptr;
+        let isl_rs_result = unsafe { isl_basic_set_from_constraint(constraint) };
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 

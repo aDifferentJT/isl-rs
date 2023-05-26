@@ -2,7 +2,7 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, BasicMap, Context, DimType, FixedBox, Id, PwAff, Set, Space, StrideInfo, Val,
+    Aff, BasicMap, Constraint, Context, DimType, FixedBox, Id, PwAff, Set, Space, StrideInfo, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -402,6 +402,8 @@ extern "C" {
     fn isl_map_dim_min(map: uintptr_t, pos: i32) -> uintptr_t;
 
     fn isl_map_dim_max(map: uintptr_t, pos: i32) -> uintptr_t;
+
+    fn isl_map_add_constraint(map: uintptr_t, constraint: uintptr_t) -> uintptr_t;
 
 }
 
@@ -2737,6 +2739,21 @@ impl Map {
         let isl_rs_result = unsafe { isl_map_dim_max(map, pos) };
         let isl_rs_result = PwAff { ptr: isl_rs_result,
                                     should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_add_constraint`.
+    pub fn add_constraint(self, constraint: Constraint) -> Map {
+        let map = self;
+        let mut map = map;
+        map.do_not_free_on_drop();
+        let map = map.ptr;
+        let mut constraint = constraint;
+        constraint.do_not_free_on_drop();
+        let constraint = constraint.ptr;
+        let isl_rs_result = unsafe { isl_map_add_constraint(map, constraint) };
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
