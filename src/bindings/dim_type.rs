@@ -7,7 +7,10 @@ pub enum DimType {
     Param,
     In,
     Out,
-    Set,
     Div,
     All,
+}
+
+impl DimType {
+    pub const Set: DimType = DimType::Out;
 }
