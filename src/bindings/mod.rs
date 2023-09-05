@@ -34,6 +34,8 @@ mod aff;
 
 mod pw_aff;
 
+mod printer;
+
 pub use dim_type::DimType;
 
 pub use fixed_box::FixedBox;
@@ -69,3 +71,5 @@ pub use constraint::Constraint;
 pub use aff::Aff;
 
 pub use pw_aff::PwAff;
+
+pub use printer::Printer;
