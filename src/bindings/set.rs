@@ -304,6 +304,12 @@ extern "C" {
 
 }
 
+impl Clone for Set {
+    fn clone(&self) -> Set {
+        self.copy()
+    }
+}
+
 impl Set {
     /// Wraps `isl_set_n_dim`.
     pub fn n_dim(&self) -> i32 {

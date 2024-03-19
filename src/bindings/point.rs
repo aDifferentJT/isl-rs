@@ -43,6 +43,12 @@ extern "C" {
 
 }
 
+impl Clone for Point {
+    fn clone(&self) -> Point {
+        self.copy()
+    }
+}
+
 impl Point {
     /// Wraps `isl_point_get_ctx`.
     pub fn get_ctx(&self) -> Context {

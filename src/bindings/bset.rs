@@ -199,6 +199,12 @@ extern "C" {
 
 }
 
+impl Clone for BasicSet {
+    fn clone(&self) -> BasicSet {
+        self.copy()
+    }
+}
+
 impl BasicSet {
     /// Wraps `isl_basic_set_n_dim`.
     pub fn n_dim(&self) -> i32 {

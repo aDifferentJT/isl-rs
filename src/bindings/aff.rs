@@ -185,6 +185,12 @@ extern "C" {
 
 }
 
+impl Clone for Aff {
+    fn clone(&self) -> Aff {
+        self.copy()
+    }
+}
+
 impl Aff {
     /// Wraps `isl_aff_zero_on_domain_space`.
     pub fn zero_on_domain_space(space: Space) -> Aff {

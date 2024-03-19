@@ -24,6 +24,12 @@ extern "C" {
 
 }
 
+impl Clone for StrideInfo {
+    fn clone(&self) -> StrideInfo {
+        self.copy()
+    }
+}
+
 impl StrideInfo {
     /// Wraps `isl_stride_info_get_ctx`.
     pub fn get_ctx(&self) -> Context {

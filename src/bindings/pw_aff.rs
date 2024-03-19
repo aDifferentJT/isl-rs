@@ -213,6 +213,12 @@ extern "C" {
 
 }
 
+impl Clone for PwAff {
+    fn clone(&self) -> PwAff {
+        self.copy()
+    }
+}
+
 impl PwAff {
     /// Wraps `isl_pw_aff_get_ctx`.
     pub fn get_ctx(&self) -> Context {

@@ -80,6 +80,12 @@ extern "C" {
 
 }
 
+impl Clone for LocalSpace {
+    fn clone(&self) -> LocalSpace {
+        self.copy()
+    }
+}
+
 impl LocalSpace {
     /// Wraps `isl_local_space_get_ctx`.
     pub fn get_ctx(&self) -> Context {

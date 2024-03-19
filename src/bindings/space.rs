@@ -222,6 +222,12 @@ extern "C" {
 
 }
 
+impl Clone for Space {
+    fn clone(&self) -> Space {
+        self.copy()
+    }
+}
+
 impl Space {
     /// Wraps `isl_space_get_ctx`.
     pub fn get_ctx(&self) -> Context {

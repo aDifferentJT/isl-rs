@@ -32,6 +32,12 @@ extern "C" {
 
 }
 
+impl Clone for FixedBox {
+    fn clone(&self) -> FixedBox {
+        self.copy()
+    }
+}
+
 impl FixedBox {
     /// Wraps `isl_fixed_box_get_ctx`.
     pub fn get_ctx(&self) -> Context {

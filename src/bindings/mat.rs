@@ -108,6 +108,12 @@ extern "C" {
 
 }
 
+impl Clone for Mat {
+    fn clone(&self) -> Mat {
+        self.copy()
+    }
+}
+
 impl Mat {
     /// Wraps `isl_mat_get_ctx`.
     pub fn get_ctx(&self) -> Context {

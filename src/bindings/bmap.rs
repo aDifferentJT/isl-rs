@@ -255,6 +255,12 @@ extern "C" {
 
 }
 
+impl Clone for BasicMap {
+    fn clone(&self) -> BasicMap {
+        self.copy()
+    }
+}
+
 impl BasicMap {
     /// Wraps `isl_basic_map_total_dim`.
     pub fn total_dim(&self) -> i32 {

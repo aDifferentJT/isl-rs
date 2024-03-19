@@ -41,6 +41,12 @@ extern "C" {
 
 }
 
+impl Clone for Id {
+    fn clone(&self) -> Id {
+        self.copy()
+    }
+}
+
 impl Id {
     /// Wraps `isl_id_get_ctx`.
     pub fn get_ctx(&self) -> Context {

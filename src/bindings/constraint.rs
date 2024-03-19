@@ -78,6 +78,12 @@ extern "C" {
 
 }
 
+impl Clone for Constraint {
+    fn clone(&self) -> Constraint {
+        self.copy()
+    }
+}
+
 impl Constraint {
     /// Wraps `isl_constraint_get_ctx`.
     pub fn get_ctx(&self) -> Context {

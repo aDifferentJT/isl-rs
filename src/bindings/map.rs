@@ -407,6 +407,12 @@ extern "C" {
 
 }
 
+impl Clone for Map {
+    fn clone(&self) -> Map {
+        self.copy()
+    }
+}
+
 impl Map {
     /// Wraps `isl_map_domain_tuple_dim`.
     pub fn domain_tuple_dim(&self) -> i32 {

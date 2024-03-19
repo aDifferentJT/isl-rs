@@ -146,6 +146,12 @@ extern "C" {
 
 }
 
+impl Clone for Val {
+    fn clone(&self) -> Val {
+        self.copy()
+    }
+}
+
 impl Val {
     /// Wraps `isl_val_zero`.
     pub fn zero(ctx: &Context) -> Val {

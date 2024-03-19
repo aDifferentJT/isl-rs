@@ -70,6 +70,12 @@ extern "C" {
 
 }
 
+impl Clone for Vec {
+    fn clone(&self) -> Vec {
+        self.copy()
+    }
+}
+
 impl Vec {
     /// Wraps `isl_vec_alloc`.
     pub fn alloc(ctx: &Context, size: u32) -> Vec {
