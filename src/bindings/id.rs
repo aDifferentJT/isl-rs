@@ -4,7 +4,7 @@
 use crate::bindings::Context;
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 
 /// Wraps `isl_id`.
 pub struct Id {
@@ -18,11 +18,20 @@ extern "C" {
 
     fn isl_id_get_hash(id: uintptr_t) -> u32;
 
+    fn isl_id_alloc(ctx: uintptr_t, name: *const c_char, user: *mut c_void) -> uintptr_t;
+
     fn isl_id_copy(id: uintptr_t) -> uintptr_t;
 
     fn isl_id_free(id: uintptr_t) -> uintptr_t;
 
+    fn isl_id_get_user(id: uintptr_t) -> *mut c_void;
+
     fn isl_id_get_name(id: uintptr_t) -> *const c_char;
+
+    fn isl_id_set_free_user(id: uintptr_t, free_user: unsafe extern "C" fn(*mut c_void))
+                            -> uintptr_t;
+
+    fn isl_id_get_free_user(id: uintptr_t) -> unsafe extern "C" fn(*mut c_void);
 
     fn isl_id_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
@@ -53,6 +62,17 @@ impl Id {
         isl_rs_result
     }
 
+    /// Wraps `isl_id_alloc`.
+    pub fn alloc(ctx: &Context, name: &str, user: *mut c_void) -> Id {
+        let ctx = ctx.ptr;
+        let name = CString::new(name).unwrap();
+        let name = name.as_ptr();
+        let isl_rs_result = unsafe { isl_id_alloc(ctx, name, user) };
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_id_copy`.
     pub fn copy(&self) -> Id {
         let id = self;
@@ -75,6 +95,14 @@ impl Id {
         isl_rs_result
     }
 
+    /// Wraps `isl_id_get_user`.
+    pub fn get_user(&self) -> *mut c_void {
+        let id = self;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_id_get_user(id) };
+        isl_rs_result
+    }
+
     /// Wraps `isl_id_get_name`.
     pub fn get_name(&self) -> &str {
         let id = self;
@@ -82,6 +110,26 @@ impl Id {
         let isl_rs_result = unsafe { isl_id_get_name(id) };
         let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
         let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_id_set_free_user`.
+    pub fn set_free_user(self, free_user: unsafe extern "C" fn(*mut c_void)) -> Id {
+        let id = self;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_id_set_free_user(id, free_user) };
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_id_get_free_user`.
+    pub fn get_free_user(&self) -> unsafe extern "C" fn(*mut c_void) {
+        let id = self;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_id_get_free_user(id) };
         isl_rs_result
     }
 
