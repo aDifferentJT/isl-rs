@@ -157,6 +157,9 @@ impl Val {
     pub fn zero(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_zero(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -166,6 +169,9 @@ impl Val {
     pub fn one(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_one(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -175,6 +181,9 @@ impl Val {
     pub fn negone(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_negone(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -184,6 +193,9 @@ impl Val {
     pub fn nan(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_nan(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -193,6 +205,9 @@ impl Val {
     pub fn infty(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_infty(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -202,6 +217,9 @@ impl Val {
     pub fn neginfty(ctx: &Context) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_neginfty(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -211,6 +229,9 @@ impl Val {
     pub fn int_from_si(ctx: &Context, i: i64) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_int_from_si(ctx, i) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -220,6 +241,9 @@ impl Val {
     pub fn int_from_ui(ctx: &Context, u: u64) -> Val {
         let ctx = ctx.ptr;
         let isl_rs_result = unsafe { isl_val_int_from_ui(ctx, u) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -227,9 +251,13 @@ impl Val {
 
     /// Wraps `isl_val_copy`.
     pub fn copy(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_copy(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -237,11 +265,15 @@ impl Val {
 
     /// Wraps `isl_val_free`.
     pub fn free(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_free(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -252,6 +284,9 @@ impl Val {
         let val = self;
         let val = val.ptr;
         let isl_rs_result = unsafe { isl_val_get_ctx(val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -285,9 +320,13 @@ impl Val {
 
     /// Wraps `isl_val_get_den_val`.
     pub fn get_den_val(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_get_den_val(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -311,11 +350,15 @@ impl Val {
 
     /// Wraps `isl_val_set_si`.
     pub fn set_si(self, i: i64) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_set_si(v, i) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -323,11 +366,15 @@ impl Val {
 
     /// Wraps `isl_val_abs`.
     pub fn abs(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_abs(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -335,11 +382,15 @@ impl Val {
 
     /// Wraps `isl_val_neg`.
     pub fn neg(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_neg(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -347,11 +398,15 @@ impl Val {
 
     /// Wraps `isl_val_inv`.
     pub fn inv(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_inv(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -359,11 +414,15 @@ impl Val {
 
     /// Wraps `isl_val_floor`.
     pub fn floor(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_floor(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -371,11 +430,15 @@ impl Val {
 
     /// Wraps `isl_val_ceil`.
     pub fn ceil(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_ceil(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -383,11 +446,15 @@ impl Val {
 
     /// Wraps `isl_val_trunc`.
     pub fn trunc(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_trunc(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -395,11 +462,15 @@ impl Val {
 
     /// Wraps `isl_val_2exp`.
     pub fn to_exp(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_2exp(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -407,11 +478,15 @@ impl Val {
 
     /// Wraps `isl_val_pow2`.
     pub fn pow2(self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let mut v = v;
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_pow2(v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -419,6 +494,7 @@ impl Val {
 
     /// Wraps `isl_val_min`.
     pub fn min(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -427,6 +503,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_min(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -434,6 +513,7 @@ impl Val {
 
     /// Wraps `isl_val_max`.
     pub fn max(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -442,6 +522,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_max(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -449,6 +532,7 @@ impl Val {
 
     /// Wraps `isl_val_add`.
     pub fn add(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -457,6 +541,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_add(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -464,11 +551,15 @@ impl Val {
 
     /// Wraps `isl_val_add_ui`.
     pub fn add_ui(self, v2: u64) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
         let v1 = v1.ptr;
         let isl_rs_result = unsafe { isl_val_add_ui(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -476,6 +567,7 @@ impl Val {
 
     /// Wraps `isl_val_sub`.
     pub fn sub(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -484,6 +576,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_sub(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -491,11 +586,15 @@ impl Val {
 
     /// Wraps `isl_val_sub_ui`.
     pub fn sub_ui(self, v2: u64) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
         let v1 = v1.ptr;
         let isl_rs_result = unsafe { isl_val_sub_ui(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -503,6 +602,7 @@ impl Val {
 
     /// Wraps `isl_val_mul`.
     pub fn mul(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -511,6 +611,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_mul(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -518,11 +621,15 @@ impl Val {
 
     /// Wraps `isl_val_mul_ui`.
     pub fn mul_ui(self, v2: u64) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
         let v1 = v1.ptr;
         let isl_rs_result = unsafe { isl_val_mul_ui(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -530,6 +637,7 @@ impl Val {
 
     /// Wraps `isl_val_div`.
     pub fn div(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -538,6 +646,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_div(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -545,11 +656,15 @@ impl Val {
 
     /// Wraps `isl_val_div_ui`.
     pub fn div_ui(self, v2: u64) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
         let v1 = v1.ptr;
         let isl_rs_result = unsafe { isl_val_div_ui(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -557,6 +672,7 @@ impl Val {
 
     /// Wraps `isl_val_mod`.
     pub fn mod_(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -565,6 +681,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_mod(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -572,6 +691,7 @@ impl Val {
 
     /// Wraps `isl_val_gcd`.
     pub fn gcd(self, v2: Val) -> Val {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let mut v1 = v1;
         v1.do_not_free_on_drop();
@@ -580,6 +700,9 @@ impl Val {
         v2.do_not_free_on_drop();
         let v2 = v2.ptr;
         let isl_rs_result = unsafe { isl_val_gcd(v1, v2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -595,156 +718,168 @@ impl Val {
 
     /// Wraps `isl_val_is_zero`.
     pub fn is_zero(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_zero(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_one`.
     pub fn is_one(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_one(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_negone`.
     pub fn is_negone(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_negone(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_nonneg`.
     pub fn is_nonneg(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_nonneg(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_nonpos`.
     pub fn is_nonpos(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_nonpos(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_pos`.
     pub fn is_pos(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_pos(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_neg`.
     pub fn is_neg(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_neg(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_int`.
     pub fn is_int(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_int(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_rat`.
     pub fn is_rat(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_rat(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_nan`.
     pub fn is_nan(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_nan(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_infty`.
     pub fn is_infty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_infty(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_neginfty`.
     pub fn is_neginfty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_is_neginfty(v) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -759,6 +894,7 @@ impl Val {
 
     /// Wraps `isl_val_lt`.
     pub fn lt(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -766,13 +902,14 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_le`.
     pub fn le(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -780,13 +917,14 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_gt`.
     pub fn gt(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -794,26 +932,28 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_gt_si`.
     pub fn gt_si(&self, i: i64) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_gt_si(v, i) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_ge`.
     pub fn ge(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -821,13 +961,14 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_eq`.
     pub fn eq(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -835,26 +976,28 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_eq_si`.
     pub fn eq_si(&self, i: i64) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v = self;
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_val_eq_si(v, i) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_ne`.
     pub fn ne(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -862,13 +1005,14 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_abs_eq`.
     pub fn abs_eq(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -876,13 +1020,14 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_val_is_divisible_by`.
     pub fn is_divisible_by(&self, v2: &Val) -> bool {
+        let context_for_error_message = self.get_ctx();
         let v1 = self;
         let v1 = v1.ptr;
         let v2 = v2.ptr;
@@ -890,7 +1035,7 @@ impl Val {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -901,6 +1046,9 @@ impl Val {
         let str_ = CString::new(str_).unwrap();
         let str_ = str_.as_ptr();
         let isl_rs_result = unsafe { isl_val_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result

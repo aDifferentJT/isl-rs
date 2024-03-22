@@ -443,6 +443,9 @@ impl Map {
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_ctx(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -452,9 +455,13 @@ impl Map {
 
     /// Wraps `isl_map_get_space`.
     pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_space(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -462,13 +469,14 @@ impl Map {
 
     /// Wraps `isl_map_has_tuple_name`.
     pub fn has_tuple_name(&self, type_: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_tuple_name(map, type_) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -485,6 +493,7 @@ impl Map {
 
     /// Wraps `isl_map_set_tuple_name`.
     pub fn set_tuple_name(self, type_: DimType, s: &str) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -492,6 +501,9 @@ impl Map {
         let s = CString::new(s).unwrap();
         let s = s.as_ptr();
         let isl_rs_result = unsafe { isl_map_set_tuple_name(map, type_, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -499,13 +511,14 @@ impl Map {
 
     /// Wraps `isl_map_has_dim_name`.
     pub fn has_dim_name(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_dim_name(map, type_, pos) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -522,6 +535,7 @@ impl Map {
 
     /// Wraps `isl_map_set_dim_name`.
     pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -529,6 +543,9 @@ impl Map {
         let s = CString::new(s).unwrap();
         let s = s.as_ptr();
         let isl_rs_result = unsafe { isl_map_set_dim_name(map, type_, pos, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -536,6 +553,7 @@ impl Map {
 
     /// Wraps `isl_map_set_dim_id`.
     pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -544,6 +562,9 @@ impl Map {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_map_set_dim_id(map, type_, pos, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -551,22 +572,27 @@ impl Map {
 
     /// Wraps `isl_map_has_dim_id`.
     pub fn has_dim_id(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_dim_id(map, type_, pos) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_get_dim_id`.
     pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_dim_id(map, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -574,6 +600,7 @@ impl Map {
 
     /// Wraps `isl_map_set_domain_tuple_id`.
     pub fn set_domain_tuple_id(self, id: Id) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -582,6 +609,9 @@ impl Map {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_map_set_domain_tuple_id(map, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -589,6 +619,7 @@ impl Map {
 
     /// Wraps `isl_map_set_range_tuple_id`.
     pub fn set_range_tuple_id(self, id: Id) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -597,6 +628,9 @@ impl Map {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_map_set_range_tuple_id(map, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -604,6 +638,7 @@ impl Map {
 
     /// Wraps `isl_map_set_tuple_id`.
     pub fn set_tuple_id(self, type_: DimType, id: Id) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -612,6 +647,9 @@ impl Map {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_map_set_tuple_id(map, type_, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -619,11 +657,15 @@ impl Map {
 
     /// Wraps `isl_map_reset_tuple_id`.
     pub fn reset_tuple_id(self, type_: DimType) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_reset_tuple_id(map, type_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -631,48 +673,55 @@ impl Map {
 
     /// Wraps `isl_map_has_domain_tuple_id`.
     pub fn has_domain_tuple_id(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_domain_tuple_id(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_has_range_tuple_id`.
     pub fn has_range_tuple_id(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_range_tuple_id(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_has_tuple_id`.
     pub fn has_tuple_id(&self, type_: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_has_tuple_id(map, type_) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_get_domain_tuple_id`.
     pub fn get_domain_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_domain_tuple_id(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -680,9 +729,13 @@ impl Map {
 
     /// Wraps `isl_map_get_range_tuple_id`.
     pub fn get_range_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_range_tuple_id(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -690,9 +743,13 @@ impl Map {
 
     /// Wraps `isl_map_get_tuple_id`.
     pub fn get_tuple_id(&self, type_: DimType) -> Id {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_tuple_id(map, type_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -700,11 +757,15 @@ impl Map {
 
     /// Wraps `isl_map_reset_user`.
     pub fn reset_user(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_reset_user(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -731,11 +792,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_redundancies`.
     pub fn remove_redundancies(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_redundancies(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -743,11 +808,15 @@ impl Map {
 
     /// Wraps `isl_map_simple_hull`.
     pub fn simple_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_simple_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -755,11 +824,15 @@ impl Map {
 
     /// Wraps `isl_map_unshifted_simple_hull`.
     pub fn unshifted_simple_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_unshifted_simple_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -767,11 +840,15 @@ impl Map {
 
     /// Wraps `isl_map_plain_unshifted_simple_hull`.
     pub fn plain_unshifted_simple_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_unshifted_simple_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -783,6 +860,9 @@ impl Map {
         let str_ = CString::new(str_).unwrap();
         let str_ = str_.as_ptr();
         let isl_rs_result = unsafe { isl_map_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -808,6 +888,7 @@ impl Map {
 
     /// Wraps `isl_map_sum`.
     pub fn sum(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -816,6 +897,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_sum(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -823,11 +907,15 @@ impl Map {
 
     /// Wraps `isl_map_neg`.
     pub fn neg(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_neg(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -835,6 +923,7 @@ impl Map {
 
     /// Wraps `isl_map_floordiv_val`.
     pub fn floordiv_val(self, d: Val) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -843,6 +932,9 @@ impl Map {
         d.do_not_free_on_drop();
         let d = d.ptr;
         let isl_rs_result = unsafe { isl_map_floordiv_val(map, d) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -850,11 +942,15 @@ impl Map {
 
     /// Wraps `isl_map_lexmin`.
     pub fn lexmin(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_lexmin(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -862,11 +958,15 @@ impl Map {
 
     /// Wraps `isl_map_lexmax`.
     pub fn lexmax(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_lexmax(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -878,6 +978,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_universe(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -889,6 +992,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_nat_universe(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -900,6 +1006,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_empty(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -911,6 +1020,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_identity(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -922,6 +1034,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_lt_first(space, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -933,6 +1048,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_le_first(space, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -944,6 +1062,9 @@ impl Map {
         set_space.do_not_free_on_drop();
         let set_space = set_space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_lt(set_space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -955,6 +1076,9 @@ impl Map {
         set_space.do_not_free_on_drop();
         let set_space = set_space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_le(set_space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -966,6 +1090,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_gt_first(space, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -977,6 +1104,9 @@ impl Map {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_ge_first(space, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -988,6 +1118,9 @@ impl Map {
         set_space.do_not_free_on_drop();
         let set_space = set_space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_gt(set_space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -999,6 +1132,9 @@ impl Map {
         set_space.do_not_free_on_drop();
         let set_space = set_space.ptr;
         let isl_rs_result = unsafe { isl_map_lex_ge(set_space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1006,11 +1142,15 @@ impl Map {
 
     /// Wraps `isl_map_free`.
     pub fn free(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_free(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1018,9 +1158,13 @@ impl Map {
 
     /// Wraps `isl_map_copy`.
     pub fn copy(&self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_copy(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1028,11 +1172,15 @@ impl Map {
 
     /// Wraps `isl_map_reverse`.
     pub fn reverse(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_reverse(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1040,11 +1188,15 @@ impl Map {
 
     /// Wraps `isl_map_domain_reverse`.
     pub fn domain_reverse(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_domain_reverse(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1052,11 +1204,15 @@ impl Map {
 
     /// Wraps `isl_map_range_reverse`.
     pub fn range_reverse(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_reverse(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1064,6 +1220,7 @@ impl Map {
 
     /// Wraps `isl_map_union`.
     pub fn union(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1072,6 +1229,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_union(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1079,6 +1239,7 @@ impl Map {
 
     /// Wraps `isl_map_union_disjoint`.
     pub fn union_disjoint(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1087,6 +1248,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_union_disjoint(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1094,6 +1258,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_domain`.
     pub fn intersect_domain(self, set: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1102,6 +1267,9 @@ impl Map {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_domain(map, set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1109,6 +1277,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_range`.
     pub fn intersect_range(self, set: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1117,6 +1286,9 @@ impl Map {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_range(map, set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1124,6 +1296,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_domain_factor_domain`.
     pub fn intersect_domain_factor_domain(self, factor: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1132,6 +1305,9 @@ impl Map {
         factor.do_not_free_on_drop();
         let factor = factor.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_domain_factor_domain(map, factor) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1139,6 +1315,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_domain_factor_range`.
     pub fn intersect_domain_factor_range(self, factor: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1147,6 +1324,9 @@ impl Map {
         factor.do_not_free_on_drop();
         let factor = factor.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_domain_factor_range(map, factor) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1154,6 +1334,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_range_factor_domain`.
     pub fn intersect_range_factor_domain(self, factor: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1162,6 +1343,9 @@ impl Map {
         factor.do_not_free_on_drop();
         let factor = factor.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_range_factor_domain(map, factor) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1169,6 +1353,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_range_factor_range`.
     pub fn intersect_range_factor_range(self, factor: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1177,6 +1362,9 @@ impl Map {
         factor.do_not_free_on_drop();
         let factor = factor.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_range_factor_range(map, factor) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1184,6 +1372,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_domain_wrapped_domain`.
     pub fn intersect_domain_wrapped_domain(self, domain: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1192,6 +1381,9 @@ impl Map {
         domain.do_not_free_on_drop();
         let domain = domain.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_domain_wrapped_domain(map, domain) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1199,6 +1391,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_range_wrapped_domain`.
     pub fn intersect_range_wrapped_domain(self, domain: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1207,6 +1400,9 @@ impl Map {
         domain.do_not_free_on_drop();
         let domain = domain.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_range_wrapped_domain(map, domain) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1214,6 +1410,7 @@ impl Map {
 
     /// Wraps `isl_map_apply_domain`.
     pub fn apply_domain(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1222,6 +1419,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_apply_domain(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1229,6 +1429,7 @@ impl Map {
 
     /// Wraps `isl_map_apply_range`.
     pub fn apply_range(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1237,6 +1438,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_apply_range(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1244,6 +1448,7 @@ impl Map {
 
     /// Wraps `isl_map_product`.
     pub fn product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1252,6 +1457,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1259,6 +1467,7 @@ impl Map {
 
     /// Wraps `isl_map_domain_product`.
     pub fn domain_product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1267,6 +1476,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_domain_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1274,6 +1486,7 @@ impl Map {
 
     /// Wraps `isl_map_range_product`.
     pub fn range_product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1282,6 +1495,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_range_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1289,6 +1505,7 @@ impl Map {
 
     /// Wraps `isl_map_flat_product`.
     pub fn flat_product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1297,6 +1514,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_flat_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1304,6 +1524,7 @@ impl Map {
 
     /// Wraps `isl_map_flat_domain_product`.
     pub fn flat_domain_product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1312,6 +1533,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_flat_domain_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1319,6 +1543,7 @@ impl Map {
 
     /// Wraps `isl_map_flat_range_product`.
     pub fn flat_range_product(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1327,6 +1552,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_flat_range_product(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1334,50 +1562,57 @@ impl Map {
 
     /// Wraps `isl_map_domain_is_wrapping`.
     pub fn domain_is_wrapping(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_domain_is_wrapping(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_range_is_wrapping`.
     pub fn range_is_wrapping(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_is_wrapping(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_product`.
     pub fn is_product(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_product(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_factor_domain`.
     pub fn factor_domain(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_factor_domain(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1385,11 +1620,15 @@ impl Map {
 
     /// Wraps `isl_map_factor_range`.
     pub fn factor_range(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_factor_range(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1397,11 +1636,15 @@ impl Map {
 
     /// Wraps `isl_map_domain_factor_domain`.
     pub fn domain_factor_domain(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_domain_factor_domain(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1409,11 +1652,15 @@ impl Map {
 
     /// Wraps `isl_map_domain_factor_range`.
     pub fn domain_factor_range(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_domain_factor_range(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1421,11 +1668,15 @@ impl Map {
 
     /// Wraps `isl_map_range_factor_domain`.
     pub fn range_factor_domain(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_factor_domain(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1433,11 +1684,15 @@ impl Map {
 
     /// Wraps `isl_map_range_factor_range`.
     pub fn range_factor_range(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_factor_range(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1445,6 +1700,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect`.
     pub fn intersect(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1453,6 +1709,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_intersect(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1460,6 +1719,7 @@ impl Map {
 
     /// Wraps `isl_map_intersect_params`.
     pub fn intersect_params(self, params: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1468,6 +1728,9 @@ impl Map {
         params.do_not_free_on_drop();
         let params = params.ptr;
         let isl_rs_result = unsafe { isl_map_intersect_params(map, params) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1475,6 +1738,7 @@ impl Map {
 
     /// Wraps `isl_map_subtract`.
     pub fn subtract(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -1483,6 +1747,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_subtract(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1490,6 +1757,7 @@ impl Map {
 
     /// Wraps `isl_map_subtract_domain`.
     pub fn subtract_domain(self, dom: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1498,6 +1766,9 @@ impl Map {
         dom.do_not_free_on_drop();
         let dom = dom.ptr;
         let isl_rs_result = unsafe { isl_map_subtract_domain(map, dom) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1505,6 +1776,7 @@ impl Map {
 
     /// Wraps `isl_map_subtract_range`.
     pub fn subtract_range(self, dom: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1513,6 +1785,9 @@ impl Map {
         dom.do_not_free_on_drop();
         let dom = dom.ptr;
         let isl_rs_result = unsafe { isl_map_subtract_range(map, dom) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1520,11 +1795,15 @@ impl Map {
 
     /// Wraps `isl_map_complement`.
     pub fn complement(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_complement(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1532,11 +1811,15 @@ impl Map {
 
     /// Wraps `isl_map_fix_input_si`.
     pub fn fix_input_si(self, input: u32, value: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_fix_input_si(map, input, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1544,11 +1827,15 @@ impl Map {
 
     /// Wraps `isl_map_fix_si`.
     pub fn fix_si(self, type_: DimType, pos: u32, value: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_fix_si(map, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1556,6 +1843,7 @@ impl Map {
 
     /// Wraps `isl_map_fix_val`.
     pub fn fix_val(self, type_: DimType, pos: u32, v: Val) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1564,6 +1852,9 @@ impl Map {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_map_fix_val(map, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1571,11 +1862,15 @@ impl Map {
 
     /// Wraps `isl_map_lower_bound_si`.
     pub fn lower_bound_si(self, type_: DimType, pos: u32, value: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_lower_bound_si(map, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1583,6 +1878,7 @@ impl Map {
 
     /// Wraps `isl_map_lower_bound_val`.
     pub fn lower_bound_val(self, type_: DimType, pos: u32, value: Val) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1591,6 +1887,9 @@ impl Map {
         value.do_not_free_on_drop();
         let value = value.ptr;
         let isl_rs_result = unsafe { isl_map_lower_bound_val(map, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1598,11 +1897,15 @@ impl Map {
 
     /// Wraps `isl_map_upper_bound_si`.
     pub fn upper_bound_si(self, type_: DimType, pos: u32, value: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_upper_bound_si(map, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1610,6 +1913,7 @@ impl Map {
 
     /// Wraps `isl_map_upper_bound_val`.
     pub fn upper_bound_val(self, type_: DimType, pos: u32, value: Val) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1618,6 +1922,9 @@ impl Map {
         value.do_not_free_on_drop();
         let value = value.ptr;
         let isl_rs_result = unsafe { isl_map_upper_bound_val(map, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1625,11 +1932,15 @@ impl Map {
 
     /// Wraps `isl_map_deltas`.
     pub fn deltas(self) -> Set {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_deltas(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1637,11 +1948,15 @@ impl Map {
 
     /// Wraps `isl_map_deltas_map`.
     pub fn deltas_map(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_deltas_map(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1649,11 +1964,15 @@ impl Map {
 
     /// Wraps `isl_map_detect_equalities`.
     pub fn detect_equalities(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_detect_equalities(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1661,11 +1980,15 @@ impl Map {
 
     /// Wraps `isl_map_affine_hull`.
     pub fn affine_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_affine_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1673,11 +1996,15 @@ impl Map {
 
     /// Wraps `isl_map_convex_hull`.
     pub fn convex_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_convex_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1685,11 +2012,15 @@ impl Map {
 
     /// Wraps `isl_map_polyhedral_hull`.
     pub fn polyhedral_hull(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_polyhedral_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1697,11 +2028,15 @@ impl Map {
 
     /// Wraps `isl_map_add_dims`.
     pub fn add_dims(self, type_: DimType, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_add_dims(map, type_, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1709,11 +2044,15 @@ impl Map {
 
     /// Wraps `isl_map_insert_dims`.
     pub fn insert_dims(self, type_: DimType, pos: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_insert_dims(map, type_, pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1723,12 +2062,16 @@ impl Map {
     pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
                      n: u32)
                      -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result =
             unsafe { isl_map_move_dims(map, dst_type, dst_pos, src_type, src_pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1736,6 +2079,7 @@ impl Map {
 
     /// Wraps `isl_map_project_out_param_id`.
     pub fn project_out_param_id(self, id: Id) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -1744,6 +2088,9 @@ impl Map {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_map_project_out_param_id(map, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1751,11 +2098,15 @@ impl Map {
 
     /// Wraps `isl_map_project_out`.
     pub fn project_out(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_project_out(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1763,11 +2114,15 @@ impl Map {
 
     /// Wraps `isl_map_project_out_all_params`.
     pub fn project_out_all_params(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_project_out_all_params(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1775,11 +2130,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_unknown_divs`.
     pub fn remove_unknown_divs(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_unknown_divs(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1787,11 +2146,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_divs`.
     pub fn remove_divs(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_divs(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1799,11 +2162,15 @@ impl Map {
 
     /// Wraps `isl_map_eliminate`.
     pub fn eliminate(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_eliminate(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1811,11 +2178,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_dims`.
     pub fn remove_dims(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_dims(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1823,11 +2194,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_divs_involving_dims`.
     pub fn remove_divs_involving_dims(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_divs_involving_dims(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1835,11 +2210,15 @@ impl Map {
 
     /// Wraps `isl_map_remove_inputs`.
     pub fn remove_inputs(self, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_remove_inputs(map, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1847,11 +2226,15 @@ impl Map {
 
     /// Wraps `isl_map_order_ge`.
     pub fn order_ge(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_order_ge(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1859,11 +2242,15 @@ impl Map {
 
     /// Wraps `isl_map_order_le`.
     pub fn order_le(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_order_le(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1871,11 +2258,15 @@ impl Map {
 
     /// Wraps `isl_map_equate`.
     pub fn equate(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_equate(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1883,11 +2274,15 @@ impl Map {
 
     /// Wraps `isl_map_oppose`.
     pub fn oppose(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_oppose(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1895,11 +2290,15 @@ impl Map {
 
     /// Wraps `isl_map_order_lt`.
     pub fn order_lt(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_order_lt(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1907,11 +2306,15 @@ impl Map {
 
     /// Wraps `isl_map_order_gt`.
     pub fn order_gt(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_order_gt(map, type1, pos1, type2, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1919,11 +2322,15 @@ impl Map {
 
     /// Wraps `isl_map_wrap`.
     pub fn wrap(self) -> Set {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_wrap(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1931,11 +2338,15 @@ impl Map {
 
     /// Wraps `isl_map_flatten`.
     pub fn flatten(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_flatten(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1943,11 +2354,15 @@ impl Map {
 
     /// Wraps `isl_map_flatten_domain`.
     pub fn flatten_domain(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_flatten_domain(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1955,11 +2370,15 @@ impl Map {
 
     /// Wraps `isl_map_flatten_range`.
     pub fn flatten_range(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_flatten_range(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1967,11 +2386,15 @@ impl Map {
 
     /// Wraps `isl_map_params`.
     pub fn params(self) -> Set {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_params(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1979,11 +2402,15 @@ impl Map {
 
     /// Wraps `isl_map_domain`.
     pub fn domain(self) -> Set {
+        let context_for_error_message = self.get_ctx();
         let bmap = self;
         let mut bmap = bmap;
         bmap.do_not_free_on_drop();
         let bmap = bmap.ptr;
         let isl_rs_result = unsafe { isl_map_domain(bmap) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1991,11 +2418,15 @@ impl Map {
 
     /// Wraps `isl_map_range`.
     pub fn range(self) -> Set {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2003,11 +2434,15 @@ impl Map {
 
     /// Wraps `isl_map_domain_map`.
     pub fn domain_map(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_domain_map(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2015,11 +2450,15 @@ impl Map {
 
     /// Wraps `isl_map_range_map`.
     pub fn range_map(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_map(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2031,6 +2470,9 @@ impl Map {
         bmap.do_not_free_on_drop();
         let bmap = bmap.ptr;
         let isl_rs_result = unsafe { isl_map_from_basic_map(bmap) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2042,6 +2484,9 @@ impl Map {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_map_from_domain(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2053,6 +2498,9 @@ impl Map {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_map_from_range(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2067,6 +2515,9 @@ impl Map {
         range.do_not_free_on_drop();
         let range = range.ptr;
         let isl_rs_result = unsafe { isl_map_from_domain_and_range(domain, range) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2074,11 +2525,15 @@ impl Map {
 
     /// Wraps `isl_map_sample`.
     pub fn sample(self) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_sample(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicMap { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -2086,45 +2541,49 @@ impl Map {
 
     /// Wraps `isl_map_plain_is_empty`.
     pub fn plain_is_empty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_is_empty(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_plain_is_universe`.
     pub fn plain_is_universe(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_is_universe(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_empty`.
     pub fn is_empty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_empty(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_subset`.
     pub fn is_subset(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2132,13 +2591,14 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_strict_subset`.
     pub fn is_strict_subset(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2146,13 +2606,14 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_equal`.
     pub fn is_equal(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2160,13 +2621,14 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_disjoint`.
     pub fn is_disjoint(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2174,85 +2636,91 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_plain_is_single_valued`.
     pub fn plain_is_single_valued(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_is_single_valued(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_single_valued`.
     pub fn is_single_valued(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_single_valued(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_plain_is_injective`.
     pub fn plain_is_injective(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_is_injective(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_injective`.
     pub fn is_injective(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_injective(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_bijective`.
     pub fn is_bijective(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_bijective(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_is_identity`.
     pub fn is_identity(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_is_identity(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -2267,6 +2735,7 @@ impl Map {
 
     /// Wraps `isl_map_has_equal_space`.
     pub fn has_equal_space(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2274,31 +2743,36 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_can_zip`.
     pub fn can_zip(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_can_zip(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_zip`.
     pub fn zip(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_zip(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2306,24 +2780,29 @@ impl Map {
 
     /// Wraps `isl_map_can_curry`.
     pub fn can_curry(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_can_curry(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_curry`.
     pub fn curry(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_curry(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2331,24 +2810,29 @@ impl Map {
 
     /// Wraps `isl_map_can_range_curry`.
     pub fn can_range_curry(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_can_range_curry(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_range_curry`.
     pub fn range_curry(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_range_curry(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2356,24 +2840,29 @@ impl Map {
 
     /// Wraps `isl_map_can_uncurry`.
     pub fn can_uncurry(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_can_uncurry(map) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_uncurry`.
     pub fn uncurry(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_uncurry(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2381,11 +2870,15 @@ impl Map {
 
     /// Wraps `isl_map_make_disjoint`.
     pub fn make_disjoint(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_make_disjoint(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2393,11 +2886,15 @@ impl Map {
 
     /// Wraps `isl_map_compute_divs`.
     pub fn compute_divs(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_compute_divs(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2405,11 +2902,15 @@ impl Map {
 
     /// Wraps `isl_map_align_divs`.
     pub fn align_divs(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_align_divs(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2417,12 +2918,16 @@ impl Map {
 
     /// Wraps `isl_map_drop_constraints_involving_dims`.
     pub fn drop_constraints_involving_dims(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result =
             unsafe { isl_map_drop_constraints_involving_dims(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2430,12 +2935,16 @@ impl Map {
 
     /// Wraps `isl_map_drop_constraints_not_involving_dims`.
     pub fn drop_constraints_not_involving_dims(self, type_: DimType, first: u32, n: u32) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result =
             unsafe { isl_map_drop_constraints_not_involving_dims(map, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2443,22 +2952,27 @@ impl Map {
 
     /// Wraps `isl_map_involves_dims`.
     pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_involves_dims(map, type_, first, n) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_map_plain_get_val_if_fixed`.
     pub fn plain_get_val_if_fixed(&self, type_: DimType, pos: u32) -> Val {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_get_val_if_fixed(map, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2466,6 +2980,7 @@ impl Map {
 
     /// Wraps `isl_map_gist`.
     pub fn gist(self, context: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2474,6 +2989,9 @@ impl Map {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_map_gist(map, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2481,6 +2999,7 @@ impl Map {
 
     /// Wraps `isl_map_gist_domain`.
     pub fn gist_domain(self, context: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2489,6 +3008,9 @@ impl Map {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_map_gist_domain(map, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2496,6 +3018,7 @@ impl Map {
 
     /// Wraps `isl_map_gist_range`.
     pub fn gist_range(self, context: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2504,6 +3027,9 @@ impl Map {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_map_gist_range(map, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2511,6 +3037,7 @@ impl Map {
 
     /// Wraps `isl_map_gist_params`.
     pub fn gist_params(self, context: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2519,6 +3046,9 @@ impl Map {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_map_gist_params(map, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2526,6 +3056,7 @@ impl Map {
 
     /// Wraps `isl_map_gist_basic_map`.
     pub fn gist_basic_map(self, context: BasicMap) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2534,6 +3065,9 @@ impl Map {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_map_gist_basic_map(map, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2541,9 +3075,13 @@ impl Map {
 
     /// Wraps `isl_map_get_range_stride_info`.
     pub fn get_range_stride_info(&self, pos: i32) -> StrideInfo {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_range_stride_info(map, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = StrideInfo { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -2551,9 +3089,13 @@ impl Map {
 
     /// Wraps `isl_map_get_range_lattice_tile`.
     pub fn get_range_lattice_tile(&self) -> FixedBox {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_range_lattice_tile(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = FixedBox { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -2561,9 +3103,13 @@ impl Map {
 
     /// Wraps `isl_map_get_range_simple_fixed_box_hull`.
     pub fn get_range_simple_fixed_box_hull(&self) -> FixedBox {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_get_range_simple_fixed_box_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = FixedBox { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -2571,11 +3117,15 @@ impl Map {
 
     /// Wraps `isl_map_coalesce`.
     pub fn coalesce(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_coalesce(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2583,6 +3133,7 @@ impl Map {
 
     /// Wraps `isl_map_plain_is_equal`.
     pub fn plain_is_equal(&self, map2: &Map) -> bool {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let map1 = map1.ptr;
         let map2 = map2.ptr;
@@ -2590,7 +3141,7 @@ impl Map {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -2613,6 +3164,7 @@ impl Map {
 
     /// Wraps `isl_map_fixed_power_val`.
     pub fn fixed_power_val(self, exp: Val) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2621,6 +3173,9 @@ impl Map {
         exp.do_not_free_on_drop();
         let exp = exp.ptr;
         let isl_rs_result = unsafe { isl_map_fixed_power_val(map, exp) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2628,6 +3183,7 @@ impl Map {
 
     /// Wraps `isl_map_lex_le_map`.
     pub fn lex_le_map(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -2636,6 +3192,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_lex_le_map(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2643,6 +3202,7 @@ impl Map {
 
     /// Wraps `isl_map_lex_lt_map`.
     pub fn lex_lt_map(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -2651,6 +3211,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_lex_lt_map(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2658,6 +3221,7 @@ impl Map {
 
     /// Wraps `isl_map_lex_ge_map`.
     pub fn lex_ge_map(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -2666,6 +3230,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_lex_ge_map(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2673,6 +3240,7 @@ impl Map {
 
     /// Wraps `isl_map_lex_gt_map`.
     pub fn lex_gt_map(self, map2: Map) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map1 = self;
         let mut map1 = map1;
         map1.do_not_free_on_drop();
@@ -2681,6 +3249,9 @@ impl Map {
         map2.do_not_free_on_drop();
         let map2 = map2.ptr;
         let isl_rs_result = unsafe { isl_map_lex_gt_map(map1, map2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2688,6 +3259,7 @@ impl Map {
 
     /// Wraps `isl_map_align_params`.
     pub fn align_params(self, model: Space) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2696,6 +3268,9 @@ impl Map {
         model.do_not_free_on_drop();
         let model = model.ptr;
         let isl_rs_result = unsafe { isl_map_align_params(map, model) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2703,11 +3278,15 @@ impl Map {
 
     /// Wraps `isl_map_drop_unused_params`.
     pub fn drop_unused_params(self) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_drop_unused_params(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2719,6 +3298,9 @@ impl Map {
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_map_from_aff(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -2726,11 +3308,15 @@ impl Map {
 
     /// Wraps `isl_map_dim_min`.
     pub fn dim_min(self, pos: i32) -> PwAff {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_dim_min(map, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = PwAff { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -2738,11 +3324,15 @@ impl Map {
 
     /// Wraps `isl_map_dim_max`.
     pub fn dim_max(self, pos: i32) -> PwAff {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_dim_max(map, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = PwAff { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -2750,6 +3340,7 @@ impl Map {
 
     /// Wraps `isl_map_add_constraint`.
     pub fn add_constraint(self, constraint: Constraint) -> Map {
+        let context_for_error_message = self.get_ctx();
         let map = self;
         let mut map = map;
         map.do_not_free_on_drop();
@@ -2758,6 +3349,9 @@ impl Map {
         constraint.do_not_free_on_drop();
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_map_add_constraint(map, constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Map { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result

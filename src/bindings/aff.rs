@@ -198,6 +198,9 @@ impl Aff {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_aff_zero_on_domain_space(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -209,6 +212,9 @@ impl Aff {
         ls.do_not_free_on_drop();
         let ls = ls.ptr;
         let isl_rs_result = unsafe { isl_aff_zero_on_domain(ls) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -223,6 +229,9 @@ impl Aff {
         val.do_not_free_on_drop();
         let val = val.ptr;
         let isl_rs_result = unsafe { isl_aff_val_on_domain_space(space, val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -237,6 +246,9 @@ impl Aff {
         val.do_not_free_on_drop();
         let val = val.ptr;
         let isl_rs_result = unsafe { isl_aff_val_on_domain(ls, val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -248,6 +260,9 @@ impl Aff {
         ls.do_not_free_on_drop();
         let ls = ls.ptr;
         let isl_rs_result = unsafe { isl_aff_var_on_domain(ls, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -259,6 +274,9 @@ impl Aff {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_aff_nan_on_domain_space(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -270,6 +288,9 @@ impl Aff {
         ls.do_not_free_on_drop();
         let ls = ls.ptr;
         let isl_rs_result = unsafe { isl_aff_nan_on_domain(ls) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -284,6 +305,9 @@ impl Aff {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_aff_param_on_domain_space_id(space, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -291,9 +315,13 @@ impl Aff {
 
     /// Wraps `isl_aff_copy`.
     pub fn copy(&self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_copy(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -301,11 +329,15 @@ impl Aff {
 
     /// Wraps `isl_aff_free`.
     pub fn free(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_free(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -316,6 +348,9 @@ impl Aff {
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_ctx(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -333,13 +368,14 @@ impl Aff {
 
     /// Wraps `isl_aff_involves_locals`.
     pub fn involves_locals(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_involves_locals(aff) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -354,22 +390,27 @@ impl Aff {
 
     /// Wraps `isl_aff_involves_dims`.
     pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_involves_dims(aff, type_, first, n) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_aff_get_domain_space`.
     pub fn get_domain_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_domain_space(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -377,9 +418,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_space`.
     pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_space(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -387,9 +432,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_domain_local_space`.
     pub fn get_domain_local_space(&self) -> LocalSpace {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_domain_local_space(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = LocalSpace { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -397,9 +446,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_local_space`.
     pub fn get_local_space(&self) -> LocalSpace {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_local_space(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = LocalSpace { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -417,9 +470,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_constant_val`.
     pub fn get_constant_val(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_constant_val(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -427,9 +484,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_coefficient_val`.
     pub fn get_coefficient_val(&self, type_: DimType, pos: i32) -> Val {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_coefficient_val(aff, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -445,9 +506,13 @@ impl Aff {
 
     /// Wraps `isl_aff_get_denominator_val`.
     pub fn get_denominator_val(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_denominator_val(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -455,11 +520,15 @@ impl Aff {
 
     /// Wraps `isl_aff_set_constant_si`.
     pub fn set_constant_si(self, v: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_set_constant_si(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -467,6 +536,7 @@ impl Aff {
 
     /// Wraps `isl_aff_set_constant_val`.
     pub fn set_constant_val(self, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -475,6 +545,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_set_constant_val(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -482,11 +555,15 @@ impl Aff {
 
     /// Wraps `isl_aff_set_coefficient_si`.
     pub fn set_coefficient_si(self, type_: DimType, pos: i32, v: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_set_coefficient_si(aff, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -494,6 +571,7 @@ impl Aff {
 
     /// Wraps `isl_aff_set_coefficient_val`.
     pub fn set_coefficient_val(self, type_: DimType, pos: i32, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -502,6 +580,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_set_coefficient_val(aff, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -509,11 +590,15 @@ impl Aff {
 
     /// Wraps `isl_aff_add_constant_si`.
     pub fn add_constant_si(self, v: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_add_constant_si(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -521,6 +606,7 @@ impl Aff {
 
     /// Wraps `isl_aff_add_constant_val`.
     pub fn add_constant_val(self, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -529,6 +615,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_add_constant_val(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -536,11 +625,15 @@ impl Aff {
 
     /// Wraps `isl_aff_add_constant_num_si`.
     pub fn add_constant_num_si(self, v: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_add_constant_num_si(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -548,11 +641,15 @@ impl Aff {
 
     /// Wraps `isl_aff_add_coefficient_si`.
     pub fn add_coefficient_si(self, type_: DimType, pos: i32, v: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_add_coefficient_si(aff, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -560,6 +657,7 @@ impl Aff {
 
     /// Wraps `isl_aff_add_coefficient_val`.
     pub fn add_coefficient_val(self, type_: DimType, pos: i32, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -568,6 +666,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_add_coefficient_val(aff, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -575,19 +676,21 @@ impl Aff {
 
     /// Wraps `isl_aff_is_cst`.
     pub fn is_cst(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_is_cst(aff) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_aff_set_tuple_id`.
     pub fn set_tuple_id(self, type_: DimType, id: Id) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -596,6 +699,9 @@ impl Aff {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_aff_set_tuple_id(aff, type_, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -603,6 +709,7 @@ impl Aff {
 
     /// Wraps `isl_aff_set_dim_name`.
     pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -610,6 +717,9 @@ impl Aff {
         let s = CString::new(s).unwrap();
         let s = s.as_ptr();
         let isl_rs_result = unsafe { isl_aff_set_dim_name(aff, type_, pos, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -617,6 +727,7 @@ impl Aff {
 
     /// Wraps `isl_aff_set_dim_id`.
     pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -625,6 +736,9 @@ impl Aff {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_aff_set_dim_id(aff, type_, pos, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -642,6 +756,7 @@ impl Aff {
 
     /// Wraps `isl_aff_plain_is_equal`.
     pub fn plain_is_equal(&self, aff2: &Aff) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let aff1 = aff1.ptr;
         let aff2 = aff2.ptr;
@@ -649,42 +764,48 @@ impl Aff {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_aff_plain_is_zero`.
     pub fn plain_is_zero(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_plain_is_zero(aff) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_aff_is_nan`.
     pub fn is_nan(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_is_nan(aff) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_aff_get_div`.
     pub fn get_div(&self, pos: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_get_div(aff, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -692,11 +813,15 @@ impl Aff {
 
     /// Wraps `isl_aff_from_range`.
     pub fn from_range(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_from_range(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -704,11 +829,15 @@ impl Aff {
 
     /// Wraps `isl_aff_neg`.
     pub fn neg(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_neg(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -716,11 +845,15 @@ impl Aff {
 
     /// Wraps `isl_aff_ceil`.
     pub fn ceil(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_ceil(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -728,11 +861,15 @@ impl Aff {
 
     /// Wraps `isl_aff_floor`.
     pub fn floor(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_floor(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -740,6 +877,7 @@ impl Aff {
 
     /// Wraps `isl_aff_mod_val`.
     pub fn mod_val(self, mod_: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -748,6 +886,9 @@ impl Aff {
         mod_.do_not_free_on_drop();
         let mod_ = mod_.ptr;
         let isl_rs_result = unsafe { isl_aff_mod_val(aff, mod_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -755,6 +896,7 @@ impl Aff {
 
     /// Wraps `isl_aff_mul`.
     pub fn mul(self, aff2: Aff) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -763,6 +905,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_mul(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -770,6 +915,7 @@ impl Aff {
 
     /// Wraps `isl_aff_div`.
     pub fn div(self, aff2: Aff) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -778,6 +924,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_div(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -785,6 +934,7 @@ impl Aff {
 
     /// Wraps `isl_aff_add`.
     pub fn add(self, aff2: Aff) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -793,6 +943,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_add(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -800,6 +953,7 @@ impl Aff {
 
     /// Wraps `isl_aff_sub`.
     pub fn sub(self, aff2: Aff) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -808,6 +962,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_sub(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -815,6 +972,7 @@ impl Aff {
 
     /// Wraps `isl_aff_scale_val`.
     pub fn scale_val(self, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -823,6 +981,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_scale_val(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -830,11 +991,15 @@ impl Aff {
 
     /// Wraps `isl_aff_scale_down_ui`.
     pub fn scale_down_ui(self, f: u32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_scale_down_ui(aff, f) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -842,6 +1007,7 @@ impl Aff {
 
     /// Wraps `isl_aff_scale_down_val`.
     pub fn scale_down_val(self, v: Val) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -850,6 +1016,9 @@ impl Aff {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_aff_scale_down_val(aff, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -857,11 +1026,15 @@ impl Aff {
 
     /// Wraps `isl_aff_domain_reverse`.
     pub fn domain_reverse(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_domain_reverse(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -869,11 +1042,15 @@ impl Aff {
 
     /// Wraps `isl_aff_insert_dims`.
     pub fn insert_dims(self, type_: DimType, first: u32, n: u32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_insert_dims(aff, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -881,11 +1058,15 @@ impl Aff {
 
     /// Wraps `isl_aff_add_dims`.
     pub fn add_dims(self, type_: DimType, n: u32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_add_dims(aff, type_, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -895,12 +1076,16 @@ impl Aff {
     pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
                      n: u32)
                      -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result =
             unsafe { isl_aff_move_dims(aff, dst_type, dst_pos, src_type, src_pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -908,11 +1093,15 @@ impl Aff {
 
     /// Wraps `isl_aff_drop_dims`.
     pub fn drop_dims(self, type_: DimType, first: u32, n: u32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_drop_dims(aff, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -920,11 +1109,15 @@ impl Aff {
 
     /// Wraps `isl_aff_project_domain_on_params`.
     pub fn project_domain_on_params(self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_project_domain_on_params(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -932,6 +1125,7 @@ impl Aff {
 
     /// Wraps `isl_aff_align_params`.
     pub fn align_params(self, model: Space) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -940,6 +1134,9 @@ impl Aff {
         model.do_not_free_on_drop();
         let model = model.ptr;
         let isl_rs_result = unsafe { isl_aff_align_params(aff, model) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -947,6 +1144,7 @@ impl Aff {
 
     /// Wraps `isl_aff_gist`.
     pub fn gist(self, context: Set) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -955,6 +1153,9 @@ impl Aff {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_aff_gist(aff, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -962,6 +1163,7 @@ impl Aff {
 
     /// Wraps `isl_aff_gist_params`.
     pub fn gist_params(self, context: Set) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -970,6 +1172,9 @@ impl Aff {
         context.do_not_free_on_drop();
         let context = context.ptr;
         let isl_rs_result = unsafe { isl_aff_gist_params(aff, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -977,6 +1182,7 @@ impl Aff {
 
     /// Wraps `isl_aff_eval`.
     pub fn eval(self, pnt: Point) -> Val {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -985,6 +1191,9 @@ impl Aff {
         pnt.do_not_free_on_drop();
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_aff_eval(aff, pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -992,6 +1201,7 @@ impl Aff {
 
     /// Wraps `isl_aff_pullback_aff`.
     pub fn pullback_aff(self, aff2: Aff) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1000,6 +1210,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_pullback_aff(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1007,11 +1220,15 @@ impl Aff {
 
     /// Wraps `isl_aff_zero_basic_set`.
     pub fn zero_basic_set(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_zero_basic_set(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1019,11 +1236,15 @@ impl Aff {
 
     /// Wraps `isl_aff_neg_basic_set`.
     pub fn neg_basic_set(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
         let aff = aff.ptr;
         let isl_rs_result = unsafe { isl_aff_neg_basic_set(aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1031,6 +1252,7 @@ impl Aff {
 
     /// Wraps `isl_aff_eq_basic_set`.
     pub fn eq_basic_set(self, aff2: Aff) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1039,6 +1261,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_eq_basic_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1046,6 +1271,7 @@ impl Aff {
 
     /// Wraps `isl_aff_eq_set`.
     pub fn eq_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1054,6 +1280,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_eq_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1061,6 +1290,7 @@ impl Aff {
 
     /// Wraps `isl_aff_ne_set`.
     pub fn ne_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1069,6 +1299,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_ne_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1076,6 +1309,7 @@ impl Aff {
 
     /// Wraps `isl_aff_le_basic_set`.
     pub fn le_basic_set(self, aff2: Aff) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1084,6 +1318,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_le_basic_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1091,6 +1328,7 @@ impl Aff {
 
     /// Wraps `isl_aff_le_set`.
     pub fn le_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1099,6 +1337,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_le_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1106,6 +1347,7 @@ impl Aff {
 
     /// Wraps `isl_aff_lt_basic_set`.
     pub fn lt_basic_set(self, aff2: Aff) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1114,6 +1356,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_lt_basic_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1121,6 +1366,7 @@ impl Aff {
 
     /// Wraps `isl_aff_lt_set`.
     pub fn lt_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1129,6 +1375,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_lt_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1136,6 +1385,7 @@ impl Aff {
 
     /// Wraps `isl_aff_ge_basic_set`.
     pub fn ge_basic_set(self, aff2: Aff) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1144,6 +1394,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_ge_basic_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1151,6 +1404,7 @@ impl Aff {
 
     /// Wraps `isl_aff_ge_set`.
     pub fn ge_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1159,6 +1413,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_ge_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1166,6 +1423,7 @@ impl Aff {
 
     /// Wraps `isl_aff_gt_basic_set`.
     pub fn gt_basic_set(self, aff2: Aff) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1174,6 +1432,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_gt_basic_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1181,6 +1442,7 @@ impl Aff {
 
     /// Wraps `isl_aff_gt_set`.
     pub fn gt_set(self, aff2: Aff) -> Set {
+        let context_for_error_message = self.get_ctx();
         let aff1 = self;
         let mut aff1 = aff1;
         aff1.do_not_free_on_drop();
@@ -1189,6 +1451,9 @@ impl Aff {
         aff2.do_not_free_on_drop();
         let aff2 = aff2.ptr;
         let isl_rs_result = unsafe { isl_aff_gt_set(aff1, aff2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -1196,6 +1461,7 @@ impl Aff {
 
     /// Wraps `isl_aff_bind_id`.
     pub fn bind_id(self, id: Id) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
         let aff = self;
         let mut aff = aff;
         aff.do_not_free_on_drop();
@@ -1204,6 +1470,9 @@ impl Aff {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_aff_bind_id(aff, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = BasicSet { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
@@ -1215,6 +1484,9 @@ impl Aff {
         let str_ = CString::new(str_).unwrap();
         let str_ = str_.as_ptr();
         let isl_rs_result = unsafe { isl_aff_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result

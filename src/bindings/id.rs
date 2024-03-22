@@ -53,6 +53,9 @@ impl Id {
         let id = self;
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_id_get_ctx(id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -74,6 +77,9 @@ impl Id {
         let name = CString::new(name).unwrap();
         let name = name.as_ptr();
         let isl_rs_result = unsafe { isl_id_alloc(ctx, name, user) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -81,9 +87,13 @@ impl Id {
 
     /// Wraps `isl_id_copy`.
     pub fn copy(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
         let id = self;
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_id_copy(id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -91,11 +101,15 @@ impl Id {
 
     /// Wraps `isl_id_free`.
     pub fn free(self) -> Id {
+        let context_for_error_message = self.get_ctx();
         let id = self;
         let mut id = id;
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_id_free(id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -121,11 +135,15 @@ impl Id {
 
     /// Wraps `isl_id_set_free_user`.
     pub fn set_free_user(self, free_user: unsafe extern "C" fn(*mut c_void)) -> Id {
+        let context_for_error_message = self.get_ctx();
         let id = self;
         let mut id = id;
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_id_set_free_user(id, free_user) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result
@@ -145,6 +163,9 @@ impl Id {
         let str_ = CString::new(str_).unwrap();
         let str_ = str_.as_ptr();
         let isl_rs_result = unsafe { isl_id_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
         isl_rs_result

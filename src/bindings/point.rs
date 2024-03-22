@@ -55,6 +55,9 @@ impl Point {
         let pnt = self;
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_get_ctx(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -64,9 +67,13 @@ impl Point {
 
     /// Wraps `isl_point_get_space`.
     pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_get_space(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -78,6 +85,9 @@ impl Point {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_point_zero(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -85,9 +95,13 @@ impl Point {
 
     /// Wraps `isl_point_copy`.
     pub fn copy(&self) -> Point {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_copy(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -95,11 +109,15 @@ impl Point {
 
     /// Wraps `isl_point_free`.
     pub fn free(self) -> Point {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let mut pnt = pnt;
         pnt.do_not_free_on_drop();
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_free(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -107,9 +125,13 @@ impl Point {
 
     /// Wraps `isl_point_get_coordinate_val`.
     pub fn get_coordinate_val(&self, type_: DimType, pos: i32) -> Val {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_get_coordinate_val(pnt, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -117,6 +139,7 @@ impl Point {
 
     /// Wraps `isl_point_set_coordinate_val`.
     pub fn set_coordinate_val(self, type_: DimType, pos: i32, v: Val) -> Point {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let mut pnt = pnt;
         pnt.do_not_free_on_drop();
@@ -125,6 +148,9 @@ impl Point {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_point_set_coordinate_val(pnt, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -132,11 +158,15 @@ impl Point {
 
     /// Wraps `isl_point_add_ui`.
     pub fn add_ui(self, type_: DimType, pos: i32, val: u32) -> Point {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let mut pnt = pnt;
         pnt.do_not_free_on_drop();
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_add_ui(pnt, type_, pos, val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -144,11 +174,15 @@ impl Point {
 
     /// Wraps `isl_point_sub_ui`.
     pub fn sub_ui(self, type_: DimType, pos: i32, val: u32) -> Point {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let mut pnt = pnt;
         pnt.do_not_free_on_drop();
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_sub_ui(pnt, type_, pos, val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -160,6 +194,9 @@ impl Point {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_point_void(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Point { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -167,13 +204,14 @@ impl Point {
 
     /// Wraps `isl_point_is_void`.
     pub fn is_void(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let pnt = self;
         let pnt = pnt.ptr;
         let isl_rs_result = unsafe { isl_point_is_void(pnt) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }

@@ -90,6 +90,9 @@ impl Constraint {
         let c = self;
         let c = c.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_ctx(c) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Context { ptr: isl_rs_result,
                                       should_free_on_drop: true };
         let mut isl_rs_result = isl_rs_result;
@@ -103,6 +106,9 @@ impl Constraint {
         ls.do_not_free_on_drop();
         let ls = ls.ptr;
         let isl_rs_result = unsafe { isl_constraint_alloc_equality(ls) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -114,6 +120,9 @@ impl Constraint {
         ls.do_not_free_on_drop();
         let ls = ls.ptr;
         let isl_rs_result = unsafe { isl_constraint_alloc_inequality(ls) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -121,9 +130,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_copy`.
     pub fn copy(&self) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let c = self;
         let c = c.ptr;
         let isl_rs_result = unsafe { isl_constraint_copy(c) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -131,11 +144,15 @@ impl Constraint {
 
     /// Wraps `isl_constraint_free`.
     pub fn free(self) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let c = self;
         let mut c = c;
         c.do_not_free_on_drop();
         let c = c.ptr;
         let isl_rs_result = unsafe { isl_constraint_free(c) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -152,9 +169,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_space`.
     pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_space(constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
@@ -162,9 +183,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_local_space`.
     pub fn get_local_space(&self) -> LocalSpace {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_local_space(constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = LocalSpace { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -180,13 +205,14 @@ impl Constraint {
 
     /// Wraps `isl_constraint_involves_dims`.
     pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_involves_dims(constraint, type_, first, n) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
@@ -203,9 +229,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_constant_val`.
     pub fn get_constant_val(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_constant_val(constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -213,9 +243,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_coefficient_val`.
     pub fn get_coefficient_val(&self, type_: DimType, pos: i32) -> Val {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_coefficient_val(constraint, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Val { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -223,11 +257,15 @@ impl Constraint {
 
     /// Wraps `isl_constraint_set_constant_si`.
     pub fn set_constant_si(self, v: i32) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let mut constraint = constraint;
         constraint.do_not_free_on_drop();
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_set_constant_si(constraint, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -235,6 +273,7 @@ impl Constraint {
 
     /// Wraps `isl_constraint_set_constant_val`.
     pub fn set_constant_val(self, v: Val) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let mut constraint = constraint;
         constraint.do_not_free_on_drop();
@@ -243,6 +282,9 @@ impl Constraint {
         v.do_not_free_on_drop();
         let v = v.ptr;
         let isl_rs_result = unsafe { isl_constraint_set_constant_val(constraint, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -250,11 +292,15 @@ impl Constraint {
 
     /// Wraps `isl_constraint_set_coefficient_si`.
     pub fn set_coefficient_si(self, type_: DimType, pos: i32, v: i32) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let mut constraint = constraint;
         constraint.do_not_free_on_drop();
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_set_coefficient_si(constraint, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -262,6 +308,7 @@ impl Constraint {
 
     /// Wraps `isl_constraint_set_coefficient_val`.
     pub fn set_coefficient_val(self, type_: DimType, pos: i32, v: Val) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let mut constraint = constraint;
         constraint.do_not_free_on_drop();
@@ -271,6 +318,9 @@ impl Constraint {
         let v = v.ptr;
         let isl_rs_result =
             unsafe { isl_constraint_set_coefficient_val(constraint, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -278,9 +328,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_div`.
     pub fn get_div(&self, pos: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_div(constraint, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -288,11 +342,15 @@ impl Constraint {
 
     /// Wraps `isl_constraint_negate`.
     pub fn negate(self) -> Constraint {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let mut constraint = constraint;
         constraint.do_not_free_on_drop();
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_negate(constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Constraint { ptr: isl_rs_result,
                                          should_free_on_drop: true };
         isl_rs_result
@@ -300,61 +358,69 @@ impl Constraint {
 
     /// Wraps `isl_constraint_is_equality`.
     pub fn is_equality(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_is_equality(constraint) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_constraint_is_div_constraint`.
     pub fn is_div_constraint(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_is_div_constraint(constraint) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_constraint_is_lower_bound`.
     pub fn is_lower_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_is_lower_bound(constraint, type_, pos) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_constraint_is_upper_bound`.
     pub fn is_upper_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_is_upper_bound(constraint, type_, pos) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
     /// Wraps `isl_constraint_get_bound`.
     pub fn get_bound(&self, type_: DimType, pos: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_bound(constraint, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
@@ -362,9 +428,13 @@ impl Constraint {
 
     /// Wraps `isl_constraint_get_aff`.
     pub fn get_aff(&self) -> Aff {
+        let context_for_error_message = self.get_ctx();
         let constraint = self;
         let constraint = constraint.ptr;
         let isl_rs_result = unsafe { isl_constraint_get_aff(constraint) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
         let isl_rs_result = Aff { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
