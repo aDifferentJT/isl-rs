@@ -391,7 +391,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -414,7 +414,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -856,7 +856,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -870,7 +870,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -917,7 +917,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -930,7 +930,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -943,7 +943,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -956,7 +956,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -969,7 +969,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -983,7 +983,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -997,7 +997,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -1305,7 +1305,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -1318,7 +1318,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -1343,7 +1343,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -1368,7 +1368,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
@@ -1432,7 +1432,7 @@ impl BasicMap {
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("Got isl_bool = -1"),
+            _ => panic!("ISL error: {}", self.get_ctx().last_error_msg()),
         };
         isl_rs_result
     }
