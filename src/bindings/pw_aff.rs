@@ -219,6 +219,38 @@ impl Clone for PwAff {
     }
 }
 
+impl core::ops::Add for PwAff {
+    type Output = PwAff;
+
+    fn add(self, rhs: PwAff) -> PwAff {
+        self.add(rhs)
+    }
+}
+
+impl core::ops::Sub for PwAff {
+    type Output = PwAff;
+
+    fn sub(self, rhs: PwAff) -> PwAff {
+        self.sub(rhs)
+    }
+}
+
+impl core::ops::Mul for PwAff {
+    type Output = PwAff;
+
+    fn mul(self, rhs: PwAff) -> PwAff {
+        self.mul(rhs)
+    }
+}
+
+impl core::ops::Div for PwAff {
+    type Output = PwAff;
+
+    fn div(self, rhs: PwAff) -> PwAff {
+        self.div(rhs)
+    }
+}
+
 impl PwAff {
     /// Wraps `isl_pw_aff_get_ctx`.
     pub fn get_ctx(&self) -> Context {

@@ -152,6 +152,46 @@ impl Clone for Val {
     }
 }
 
+impl core::ops::Add for Val {
+    type Output = Val;
+
+    fn add(self, rhs: Val) -> Val {
+        self.add(rhs)
+    }
+}
+
+impl core::ops::Sub for Val {
+    type Output = Val;
+
+    fn sub(self, rhs: Val) -> Val {
+        self.sub(rhs)
+    }
+}
+
+impl core::ops::Mul for Val {
+    type Output = Val;
+
+    fn mul(self, rhs: Val) -> Val {
+        self.mul(rhs)
+    }
+}
+
+impl core::ops::Div for Val {
+    type Output = Val;
+
+    fn div(self, rhs: Val) -> Val {
+        self.div(rhs)
+    }
+}
+
+impl core::ops::Rem for Val {
+    type Output = Val;
+
+    fn rem(self, rhs: Val) -> Val {
+        self.mod_(rhs)
+    }
+}
+
 impl Val {
     /// Wraps `isl_val_zero`.
     pub fn zero(ctx: &Context) -> Val {

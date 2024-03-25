@@ -191,6 +191,38 @@ impl Clone for Aff {
     }
 }
 
+impl core::ops::Add for Aff {
+    type Output = Aff;
+
+    fn add(self, rhs: Aff) -> Aff {
+        self.add(rhs)
+    }
+}
+
+impl core::ops::Sub for Aff {
+    type Output = Aff;
+
+    fn sub(self, rhs: Aff) -> Aff {
+        self.sub(rhs)
+    }
+}
+
+impl core::ops::Mul for Aff {
+    type Output = Aff;
+
+    fn mul(self, rhs: Aff) -> Aff {
+        self.mul(rhs)
+    }
+}
+
+impl core::ops::Div for Aff {
+    type Output = Aff;
+
+    fn div(self, rhs: Aff) -> Aff {
+        self.div(rhs)
+    }
+}
+
 impl Aff {
     /// Wraps `isl_aff_zero_on_domain_space`.
     pub fn zero_on_domain_space(space: Space) -> Aff {

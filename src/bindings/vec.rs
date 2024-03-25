@@ -76,6 +76,14 @@ impl Clone for Vec {
     }
 }
 
+impl core::ops::Add for Vec {
+    type Output = Vec;
+
+    fn add(self, rhs: Vec) -> Vec {
+        self.add(rhs)
+    }
+}
+
 impl Vec {
     /// Wraps `isl_vec_alloc`.
     pub fn alloc(ctx: &Context, size: u32) -> Vec {
