@@ -219,6 +219,14 @@ impl Clone for PwAff {
     }
 }
 
+impl PartialEq for PwAff {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for PwAff {}
+
 impl core::ops::Add for PwAff {
     type Output = PwAff;
 

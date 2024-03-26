@@ -114,6 +114,14 @@ impl Clone for Mat {
     }
 }
 
+impl PartialEq for Mat {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for Mat {}
+
 impl Mat {
     /// Wraps `isl_mat_get_ctx`.
     pub fn get_ctx(&self) -> Context {

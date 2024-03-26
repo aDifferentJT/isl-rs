@@ -310,6 +310,14 @@ impl Clone for Set {
     }
 }
 
+impl PartialEq for Set {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for Set {}
+
 impl Set {
     /// Wraps `isl_set_n_dim`.
     pub fn n_dim(&self) -> i32 {

@@ -86,6 +86,14 @@ impl Clone for LocalSpace {
     }
 }
 
+impl PartialEq for LocalSpace {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for LocalSpace {}
+
 impl LocalSpace {
     /// Wraps `isl_local_space_get_ctx`.
     pub fn get_ctx(&self) -> Context {

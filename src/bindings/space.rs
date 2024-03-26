@@ -228,6 +228,14 @@ impl Clone for Space {
     }
 }
 
+impl PartialEq for Space {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for Space {}
+
 impl Space {
     /// Wraps `isl_space_get_ctx`.
     pub fn get_ctx(&self) -> Context {

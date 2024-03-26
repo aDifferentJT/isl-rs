@@ -76,6 +76,14 @@ impl Clone for Vec {
     }
 }
 
+impl PartialEq for Vec {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for Vec {}
+
 impl core::ops::Add for Vec {
     type Output = Vec;
 

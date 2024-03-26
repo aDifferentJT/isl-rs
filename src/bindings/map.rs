@@ -413,6 +413,14 @@ impl Clone for Map {
     }
 }
 
+impl PartialEq for Map {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for Map {}
+
 impl Map {
     /// Wraps `isl_map_domain_tuple_dim`.
     pub fn domain_tuple_dim(&self) -> i32 {

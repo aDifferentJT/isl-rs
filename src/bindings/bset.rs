@@ -205,6 +205,14 @@ impl Clone for BasicSet {
     }
 }
 
+impl PartialEq for BasicSet {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for BasicSet {}
+
 impl BasicSet {
     /// Wraps `isl_basic_set_n_dim`.
     pub fn n_dim(&self) -> i32 {

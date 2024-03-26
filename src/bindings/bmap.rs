@@ -261,6 +261,14 @@ impl Clone for BasicMap {
     }
 }
 
+impl PartialEq for BasicMap {
+    fn eq(&self, other: &Self) -> bool {
+        self.is_equal(other)
+    }
+}
+
+impl Eq for BasicMap {}
+
 impl BasicMap {
     /// Wraps `isl_basic_map_total_dim`.
     pub fn total_dim(&self) -> i32 {
