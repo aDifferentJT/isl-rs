@@ -28,11 +28,6 @@ extern "C" {
 
     fn isl_id_get_name(id: uintptr_t) -> *const c_char;
 
-    fn isl_id_set_free_user(id: uintptr_t, free_user: unsafe extern "C" fn(*mut c_void))
-                            -> uintptr_t;
-
-    fn isl_id_get_free_user(id: uintptr_t) -> unsafe extern "C" fn(*mut c_void);
-
     fn isl_id_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
     fn isl_id_to_str(id: uintptr_t) -> *const c_char;
@@ -130,30 +125,6 @@ impl Id {
         let isl_rs_result = unsafe { isl_id_get_name(id) };
         let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
         let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_id_set_free_user`.
-    pub fn set_free_user(self, free_user: unsafe extern "C" fn(*mut c_void)) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let id = self;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_id_set_free_user(id, free_user) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_id_get_free_user`.
-    pub fn get_free_user(&self) -> unsafe extern "C" fn(*mut c_void) {
-        let id = self;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_id_get_free_user(id) };
         isl_rs_result
     }
 

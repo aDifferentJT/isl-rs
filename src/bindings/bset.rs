@@ -2,7 +2,8 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, BasicMap, Constraint, Context, DimType, Id, LocalSpace, Mat, Point, Set, Space, Val,
+    Aff, BasicMap, Constraint, ConstraintList, Context, DimType, Id, LocalSpace, Mat, Point, Set,
+    Space, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -192,6 +193,8 @@ extern "C" {
     fn isl_basic_set_to_str(bset: uintptr_t) -> *const c_char;
 
     fn isl_basic_set_n_constraint(bset: uintptr_t) -> i32;
+
+    fn isl_basic_set_get_constraint_list(bset: uintptr_t) -> uintptr_t;
 
     fn isl_basic_set_add_constraint(bset: uintptr_t, constraint: uintptr_t) -> uintptr_t;
 
@@ -1417,6 +1420,20 @@ impl BasicSet {
         let bset = self;
         let bset = bset.ptr;
         let isl_rs_result = unsafe { isl_basic_set_n_constraint(bset) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_basic_set_get_constraint_list`.
+    pub fn get_constraint_list(&self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let bset = self;
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_basic_set_get_constraint_list(bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
         isl_rs_result
     }
 

@@ -2,7 +2,8 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, BasicSet, Constraint, Context, DimType, Id, LocalSpace, Map, Mat, Space, Val,
+    Aff, AffList, BasicSet, Constraint, ConstraintList, Context, DimType, Id, LocalSpace, Map, Mat,
+    Space, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -247,7 +248,11 @@ extern "C" {
 
     fn isl_basic_map_from_aff(aff: uintptr_t) -> uintptr_t;
 
+    fn isl_basic_map_from_aff_list(domain_space: uintptr_t, list: uintptr_t) -> uintptr_t;
+
     fn isl_basic_map_n_constraint(bmap: uintptr_t) -> i32;
+
+    fn isl_basic_map_get_constraint_list(bmap: uintptr_t) -> uintptr_t;
 
     fn isl_basic_map_add_constraint(bmap: uintptr_t, constraint: uintptr_t) -> uintptr_t;
 
@@ -1879,11 +1884,42 @@ impl BasicMap {
         isl_rs_result
     }
 
+    /// Wraps `isl_basic_map_from_aff_list`.
+    pub fn from_aff_list(domain_space: Space, list: AffList) -> BasicMap {
+        let mut domain_space = domain_space;
+        domain_space.do_not_free_on_drop();
+        let domain_space = domain_space.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_basic_map_from_aff_list(domain_space, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = BasicMap { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_basic_map_n_constraint`.
     pub fn n_constraint(&self) -> i32 {
         let bmap = self;
         let bmap = bmap.ptr;
         let isl_rs_result = unsafe { isl_basic_map_n_constraint(bmap) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_basic_map_get_constraint_list`.
+    pub fn get_constraint_list(&self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let bmap = self;
+        let bmap = bmap.ptr;
+        let isl_rs_result = unsafe { isl_basic_map_get_constraint_list(bmap) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
         isl_rs_result
     }
 

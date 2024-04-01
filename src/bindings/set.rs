@@ -2,7 +2,8 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    BasicSet, Constraint, Context, DimType, FixedBox, Id, Map, Point, PwAff, Space, StrideInfo, Val,
+    BasicSet, BasicSetList, Constraint, Context, DimType, FixedBox, Id, IdList, Map, Point, PwAff,
+    SetList, Space, StrideInfo, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -124,6 +125,8 @@ extern "C" {
 
     fn isl_set_plain_unshifted_simple_hull(set: uintptr_t) -> uintptr_t;
 
+    fn isl_set_unshifted_simple_hull_from_set_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
+
     fn isl_set_bounded_simple_hull(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_wrapped_reverse(set: uintptr_t) -> uintptr_t;
@@ -163,6 +166,8 @@ extern "C" {
                          -> uintptr_t;
 
     fn isl_set_project_out_param_id(set: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_set_project_out_param_id_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
 
     fn isl_set_project_out(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
 
@@ -267,6 +272,8 @@ extern "C" {
     fn isl_set_get_hash(set: uintptr_t) -> u32;
 
     fn isl_set_n_basic_set(set: uintptr_t) -> i32;
+
+    fn isl_set_get_basic_set_list(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_count_val(set: uintptr_t) -> uintptr_t;
 
@@ -1071,6 +1078,25 @@ impl Set {
         isl_rs_result
     }
 
+    /// Wraps `isl_set_unshifted_simple_hull_from_set_list`.
+    pub fn unshifted_simple_hull_from_set_list(self, list: SetList) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_set_unshifted_simple_hull_from_set_list(set, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_set_bounded_simple_hull`.
     pub fn bounded_simple_hull(self) -> BasicSet {
         let context_for_error_message = self.get_ctx();
@@ -1406,6 +1432,25 @@ impl Set {
         id.do_not_free_on_drop();
         let id = id.ptr;
         let isl_rs_result = unsafe { isl_set_project_out_param_id(set, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_project_out_param_id_list`.
+    pub fn project_out_param_id_list(self, list: IdList) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_set_project_out_param_id_list(set, list) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2157,6 +2202,20 @@ impl Set {
         let set = self;
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_set_n_basic_set(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_basic_set_list`.
+    pub fn get_basic_set_list(&self) -> BasicSetList {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_basic_set_list(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSetList { ptr: isl_rs_result,
+                                           should_free_on_drop: true };
         isl_rs_result
     }
 

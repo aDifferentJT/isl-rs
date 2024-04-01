@@ -2,7 +2,8 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, BasicMap, Constraint, Context, DimType, FixedBox, Id, PwAff, Set, Space, StrideInfo, Val,
+    Aff, BasicMap, BasicMapList, Constraint, Context, DimType, FixedBox, Id, IdList, MapList,
+    PwAff, Set, Space, StrideInfo, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
@@ -78,6 +79,8 @@ extern "C" {
     fn isl_map_unshifted_simple_hull(map: uintptr_t) -> uintptr_t;
 
     fn isl_map_plain_unshifted_simple_hull(map: uintptr_t) -> uintptr_t;
+
+    fn isl_map_unshifted_simple_hull_from_map_list(map: uintptr_t, list: uintptr_t) -> uintptr_t;
 
     fn isl_map_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
@@ -233,6 +236,8 @@ extern "C" {
 
     fn isl_map_project_out_param_id(map: uintptr_t, id: uintptr_t) -> uintptr_t;
 
+    fn isl_map_project_out_param_id_list(map: uintptr_t, list: uintptr_t) -> uintptr_t;
+
     fn isl_map_project_out(map: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
 
     fn isl_map_project_out_all_params(map: uintptr_t) -> uintptr_t;
@@ -382,6 +387,8 @@ extern "C" {
     fn isl_map_get_hash(map: uintptr_t) -> u32;
 
     fn isl_map_n_basic_map(map: uintptr_t) -> i32;
+
+    fn isl_map_get_basic_map_list(map: uintptr_t) -> uintptr_t;
 
     fn isl_map_fixed_power_val(map: uintptr_t, exp: uintptr_t) -> uintptr_t;
 
@@ -854,6 +861,25 @@ impl Map {
         map.do_not_free_on_drop();
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_plain_unshifted_simple_hull(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicMap { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_unshifted_simple_hull_from_map_list`.
+    pub fn unshifted_simple_hull_from_map_list(self, list: MapList) -> BasicMap {
+        let context_for_error_message = self.get_ctx();
+        let map = self;
+        let mut map = map;
+        map.do_not_free_on_drop();
+        let map = map.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_unshifted_simple_hull_from_map_list(map, list) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2104,6 +2130,25 @@ impl Map {
         isl_rs_result
     }
 
+    /// Wraps `isl_map_project_out_param_id_list`.
+    pub fn project_out_param_id_list(self, list: IdList) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let map = self;
+        let mut map = map;
+        map.do_not_free_on_drop();
+        let map = map.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_project_out_param_id_list(map, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_map_project_out`.
     pub fn project_out(self, type_: DimType, first: u32, n: u32) -> Map {
         let context_for_error_message = self.get_ctx();
@@ -3167,6 +3212,20 @@ impl Map {
         let map = self;
         let map = map.ptr;
         let isl_rs_result = unsafe { isl_map_n_basic_map(map) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_get_basic_map_list`.
+    pub fn get_basic_map_list(&self) -> BasicMapList {
+        let context_for_error_message = self.get_ctx();
+        let map = self;
+        let map = map.ptr;
+        let isl_rs_result = unsafe { isl_map_get_basic_map_list(map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicMapList { ptr: isl_rs_result,
+                                           should_free_on_drop: true };
         isl_rs_result
     }
 
