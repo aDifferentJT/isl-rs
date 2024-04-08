@@ -14,211 +14,211 @@ pub struct Space {
 
 extern "C" {
 
-    fn isl_space_get_ctx(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_unit(ctx: uintptr_t) -> uintptr_t;
-
-    fn isl_space_alloc(ctx: uintptr_t, nparam: u32, n_in: u32, n_out: u32) -> uintptr_t;
-
-    fn isl_space_set_alloc(ctx: uintptr_t, nparam: u32, dim: u32) -> uintptr_t;
-
-    fn isl_space_params_alloc(ctx: uintptr_t, nparam: u32) -> uintptr_t;
-
-    fn isl_space_copy(space: uintptr_t) -> uintptr_t;
+    fn isl_space_is_equal(space1: uintptr_t, space2: uintptr_t) -> i32;
 
     fn isl_space_free(space: uintptr_t) -> uintptr_t;
 
-    fn isl_space_is_params(space: uintptr_t) -> i32;
-
-    fn isl_space_is_set(space: uintptr_t) -> i32;
-
-    fn isl_space_is_map(space: uintptr_t) -> i32;
-
-    fn isl_space_add_param_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_space_set_tuple_name(space: uintptr_t, type_: DimType, s: *const c_char) -> uintptr_t;
-
-    fn isl_space_has_tuple_name(space: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_space_get_tuple_name(space: uintptr_t, type_: DimType) -> *const c_char;
-
-    fn isl_space_set_domain_tuple_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_space_set_range_tuple_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
+    fn isl_space_from_range(space: uintptr_t) -> uintptr_t;
 
     fn isl_space_set_tuple_id(space: uintptr_t, type_: DimType, id: uintptr_t) -> uintptr_t;
 
-    fn isl_space_reset_tuple_id(space: uintptr_t, type_: DimType) -> uintptr_t;
-
-    fn isl_space_has_domain_tuple_id(space: uintptr_t) -> i32;
-
-    fn isl_space_has_range_tuple_id(space: uintptr_t) -> i32;
-
-    fn isl_space_has_tuple_id(space: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_space_get_domain_tuple_id(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_get_range_tuple_id(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_get_tuple_id(space: uintptr_t, type_: DimType) -> uintptr_t;
-
-    fn isl_space_reset_user(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_set_dim_id(space: uintptr_t, type_: DimType, pos: u32, id: uintptr_t)
-                            -> uintptr_t;
-
-    fn isl_space_has_dim_id(space: uintptr_t, type_: DimType, pos: u32) -> i32;
-
-    fn isl_space_get_dim_id(space: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_space_find_dim_by_id(space: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
-
-    fn isl_space_find_dim_by_name(space: uintptr_t, type_: DimType, name: *const c_char) -> i32;
-
-    fn isl_space_has_dim_name(space: uintptr_t, type_: DimType, pos: u32) -> i32;
-
-    fn isl_space_set_dim_name(space: uintptr_t, type_: DimType, pos: u32, name: *const c_char)
-                              -> uintptr_t;
-
-    fn isl_space_get_dim_name(space: uintptr_t, type_: DimType, pos: u32) -> *const c_char;
-
-    fn isl_space_extend(space: uintptr_t, nparam: u32, n_in: u32, n_out: u32) -> uintptr_t;
-
-    fn isl_space_add_dims(space: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
-
-    fn isl_space_move_dims(space: uintptr_t, dst_type: DimType, dst_pos: u32, src_type: DimType,
-                           src_pos: u32, n: u32)
-                           -> uintptr_t;
-
-    fn isl_space_insert_dims(space: uintptr_t, type_: DimType, pos: u32, n: u32) -> uintptr_t;
-
     fn isl_space_join(left: uintptr_t, right: uintptr_t) -> uintptr_t;
-
-    fn isl_space_product(left: uintptr_t, right: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_product(left: uintptr_t, right: uintptr_t) -> uintptr_t;
 
     fn isl_space_range_product(left: uintptr_t, right: uintptr_t) -> uintptr_t;
 
-    fn isl_space_factor_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_factor_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_factor_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_factor_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range_factor_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range_factor_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_wrapped_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_wrapped_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range_wrapped_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range_wrapped_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_map_from_set(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_map_from_domain_and_range(domain: uintptr_t, range: uintptr_t) -> uintptr_t;
-
-    fn isl_space_reverse(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_wrapped_reverse(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_reverse(space: uintptr_t) -> uintptr_t;
-
     fn isl_space_range_reverse(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_drop_dims(space: uintptr_t, type_: DimType, first: u32, num: u32) -> uintptr_t;
-
-    fn isl_space_drop_inputs(space: uintptr_t, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_space_drop_outputs(space: uintptr_t, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_space_drop_all_params(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_from_domain(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_from_range(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_domain_map(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_range_map(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_params(space: uintptr_t) -> uintptr_t;
 
     fn isl_space_add_unnamed_tuple_ui(space: uintptr_t, dim: u32) -> uintptr_t;
 
-    fn isl_space_add_named_tuple_id_ui(space: uintptr_t, tuple_id: uintptr_t, dim: u32)
-                                       -> uintptr_t;
-
-    fn isl_space_set_from_params(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_align_params(space1: uintptr_t, space2: uintptr_t) -> uintptr_t;
-
     fn isl_space_is_wrapping(space: uintptr_t) -> i32;
-
-    fn isl_space_domain_is_wrapping(space: uintptr_t) -> i32;
-
-    fn isl_space_range_is_wrapping(space: uintptr_t) -> i32;
-
-    fn isl_space_is_product(space: uintptr_t) -> i32;
-
-    fn isl_space_wrap(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_unwrap(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_can_zip(space: uintptr_t) -> i32;
-
-    fn isl_space_zip(space: uintptr_t) -> uintptr_t;
 
     fn isl_space_can_curry(space: uintptr_t) -> i32;
 
-    fn isl_space_curry(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_can_range_curry(space: uintptr_t) -> i32;
-
-    fn isl_space_range_curry(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_can_uncurry(space: uintptr_t) -> i32;
-
-    fn isl_space_uncurry(space: uintptr_t) -> uintptr_t;
-
-    fn isl_space_is_domain(space1: uintptr_t, space2: uintptr_t) -> i32;
-
-    fn isl_space_is_range(space1: uintptr_t, space2: uintptr_t) -> i32;
-
-    fn isl_space_is_equal(space1: uintptr_t, space2: uintptr_t) -> i32;
-
-    fn isl_space_has_equal_params(space1: uintptr_t, space2: uintptr_t) -> i32;
-
-    fn isl_space_has_equal_tuples(space1: uintptr_t, space2: uintptr_t) -> i32;
+    fn isl_space_drop_dims(space: uintptr_t, type_: DimType, first: u32, num: u32) -> uintptr_t;
 
     fn isl_space_tuple_is_equal(space1: uintptr_t, type1: DimType, space2: uintptr_t,
                                 type2: DimType)
                                 -> i32;
 
-    fn isl_space_match(space1: uintptr_t, type1: DimType, space2: uintptr_t, type2: DimType)
-                       -> i32;
-
-    fn isl_space_dim(space: uintptr_t, type_: DimType) -> i32;
-
     fn isl_space_flatten_domain(space: uintptr_t) -> uintptr_t;
 
-    fn isl_space_flatten_range(space: uintptr_t) -> uintptr_t;
+    fn isl_space_domain_wrapped_range(space: uintptr_t) -> uintptr_t;
 
     fn isl_space_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
+    fn isl_space_insert_dims(space: uintptr_t, type_: DimType, pos: u32, n: u32) -> uintptr_t;
+
+    fn isl_space_find_dim_by_id(space: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
+
+    fn isl_space_domain_is_wrapping(space: uintptr_t) -> i32;
+
+    fn isl_space_is_params(space: uintptr_t) -> i32;
+
+    fn isl_space_domain_factor_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_is_product(space: uintptr_t) -> i32;
+
+    fn isl_space_curry(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_can_range_curry(space: uintptr_t) -> i32;
+
+    fn isl_space_set_tuple_name(space: uintptr_t, type_: DimType, s: *const c_char) -> uintptr_t;
+
+    fn isl_space_set_dim_id(space: uintptr_t, type_: DimType, pos: u32, id: uintptr_t)
+                            -> uintptr_t;
+
+    fn isl_space_params(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_add_named_tuple_id_ui(space: uintptr_t, tuple_id: uintptr_t, dim: u32)
+                                       -> uintptr_t;
+
+    fn isl_space_domain_factor_range(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_add_param_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_space_reset_tuple_id(space: uintptr_t, type_: DimType) -> uintptr_t;
+
+    fn isl_space_range(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_is_map(space: uintptr_t) -> i32;
+
+    fn isl_space_set_domain_tuple_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_space_has_tuple_name(space: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_space_domain_product(left: uintptr_t, right: uintptr_t) -> uintptr_t;
+
+    fn isl_space_reverse(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_range_is_wrapping(space: uintptr_t) -> i32;
+
+    fn isl_space_is_domain(space1: uintptr_t, space2: uintptr_t) -> i32;
+
+    fn isl_space_is_range(space1: uintptr_t, space2: uintptr_t) -> i32;
+
+    fn isl_space_domain_reverse(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_dim(space: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_space_wrapped_reverse(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_can_zip(space: uintptr_t) -> i32;
+
+    fn isl_space_match(space1: uintptr_t, type1: DimType, space2: uintptr_t, type2: DimType)
+                       -> i32;
+
+    fn isl_space_has_domain_tuple_id(space: uintptr_t) -> i32;
+
+    fn isl_space_copy(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_has_dim_id(space: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_space_product(left: uintptr_t, right: uintptr_t) -> uintptr_t;
+
+    fn isl_space_move_dims(space: uintptr_t, dst_type: DimType, dst_pos: u32, src_type: DimType,
+                           src_pos: u32, n: u32)
+                           -> uintptr_t;
+
+    fn isl_space_set_from_params(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_extend(space: uintptr_t, nparam: u32, n_in: u32, n_out: u32) -> uintptr_t;
+
+    fn isl_space_uncurry(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_has_equal_params(space1: uintptr_t, space2: uintptr_t) -> i32;
+
+    fn isl_space_flatten_range(space: uintptr_t) -> uintptr_t;
+
     fn isl_space_to_str(space: uintptr_t) -> *const c_char;
 
+    fn isl_space_has_dim_name(space: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_space_reset_user(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_get_tuple_name(space: uintptr_t, type_: DimType) -> *const c_char;
+
+    fn isl_space_set_alloc(ctx: uintptr_t, nparam: u32, dim: u32) -> uintptr_t;
+
+    fn isl_space_map_from_domain_and_range(domain: uintptr_t, range: uintptr_t) -> uintptr_t;
+
     fn isl_space_dump(space: uintptr_t);
+
+    fn isl_space_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_from_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_add_dims(space: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
+
+    fn isl_space_set_range_tuple_id(space: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_space_range_factor_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_unit(ctx: uintptr_t) -> uintptr_t;
+
+    fn isl_space_get_tuple_id(space: uintptr_t, type_: DimType) -> uintptr_t;
+
+    fn isl_space_factor_range(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_domain_wrapped_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_params_alloc(ctx: uintptr_t, nparam: u32) -> uintptr_t;
+
+    fn isl_space_drop_inputs(space: uintptr_t, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_space_zip(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_drop_outputs(space: uintptr_t, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_space_range_wrapped_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_map_from_set(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_drop_all_params(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_range_wrapped_range(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_is_set(space: uintptr_t) -> i32;
+
+    fn isl_space_align_params(space1: uintptr_t, space2: uintptr_t) -> uintptr_t;
+
+    fn isl_space_can_uncurry(space: uintptr_t) -> i32;
+
+    fn isl_space_get_dim_id(space: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
+
+    fn isl_space_find_dim_by_name(space: uintptr_t, type_: DimType, name: *const c_char) -> i32;
+
+    fn isl_space_range_factor_range(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_has_equal_tuples(space1: uintptr_t, space2: uintptr_t) -> i32;
+
+    fn isl_space_has_range_tuple_id(space: uintptr_t) -> i32;
+
+    fn isl_space_get_ctx(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_range_map(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_wrap(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_range_curry(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_get_dim_name(space: uintptr_t, type_: DimType, pos: u32) -> *const c_char;
+
+    fn isl_space_set_dim_name(space: uintptr_t, type_: DimType, pos: u32, name: *const c_char)
+                              -> uintptr_t;
+
+    fn isl_space_has_tuple_id(space: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_space_factor_domain(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_unwrap(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_get_domain_tuple_id(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_domain_map(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_get_range_tuple_id(space: uintptr_t) -> uintptr_t;
+
+    fn isl_space_alloc(ctx: uintptr_t, nparam: u32, n_in: u32, n_out: u32) -> uintptr_t;
 
 }
 
@@ -237,80 +237,18 @@ impl PartialEq for Space {
 impl Eq for Space {}
 
 impl Space {
-    /// Wraps `isl_space_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_ctx(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_unit`.
-    pub fn unit(ctx: &Context) -> Space {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_space_unit(ctx) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_alloc`.
-    pub fn alloc(ctx: &Context, nparam: u32, n_in: u32, n_out: u32) -> Space {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_space_alloc(ctx, nparam, n_in, n_out) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_alloc`.
-    pub fn set_alloc(ctx: &Context, nparam: u32, dim: u32) -> Space {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_space_set_alloc(ctx, nparam, dim) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_params_alloc`.
-    pub fn params_alloc(ctx: &Context, nparam: u32) -> Space {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_space_params_alloc(ctx, nparam) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_copy`.
-    pub fn copy(&self) -> Space {
+    /// Wraps `isl_space_is_equal`.
+    pub fn is_equal(&self, space2: &Space) -> bool {
         let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_copy(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
+        let space1 = self;
+        let space1 = space1.ptr;
+        let space2 = space2.ptr;
+        let isl_rs_result = unsafe { isl_space_is_equal(space1, space2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -330,139 +268,14 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_is_params`.
-    pub fn is_params(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_is_params(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_is_set`.
-    pub fn is_set(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_is_set(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_is_map`.
-    pub fn is_map(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_is_map(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_add_param_id`.
-    pub fn add_param_id(self, id: Id) -> Space {
+    /// Wraps `isl_space_from_range`.
+    pub fn from_range(self) -> Space {
         let context_for_error_message = self.get_ctx();
         let space = self;
         let mut space = space;
         space.do_not_free_on_drop();
         let space = space.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_space_add_param_id(space, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_tuple_name`.
-    pub fn set_tuple_name(self, type_: DimType, s: &str) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_space_set_tuple_name(space, type_, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_tuple_name`.
-    pub fn has_tuple_name(&self, type_: DimType) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_tuple_name(space, type_) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_tuple_name`.
-    pub fn get_tuple_name(&self, type_: DimType) -> &str {
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_tuple_name(space, type_) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_domain_tuple_id`.
-    pub fn set_domain_tuple_id(self, id: Id) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_space_set_domain_tuple_id(space, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_range_tuple_id`.
-    pub fn set_range_tuple_id(self, id: Id) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_space_set_range_tuple_id(space, id) };
+        let isl_rs_result = unsafe { isl_space_from_range(space) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -490,297 +303,6 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_reset_tuple_id`.
-    pub fn reset_tuple_id(self, type_: DimType) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_reset_tuple_id(space, type_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_domain_tuple_id`.
-    pub fn has_domain_tuple_id(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_domain_tuple_id(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_range_tuple_id`.
-    pub fn has_range_tuple_id(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_range_tuple_id(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_tuple_id`.
-    pub fn has_tuple_id(&self, type_: DimType) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_tuple_id(space, type_) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_domain_tuple_id`.
-    pub fn get_domain_tuple_id(&self) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_domain_tuple_id(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_range_tuple_id`.
-    pub fn get_range_tuple_id(&self) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_range_tuple_id(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_tuple_id`.
-    pub fn get_tuple_id(&self, type_: DimType) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_tuple_id(space, type_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_reset_user`.
-    pub fn reset_user(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_reset_user(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_dim_id`.
-    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_space_set_dim_id(space, type_, pos, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_dim_id`.
-    pub fn has_dim_id(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_dim_id(space, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_dim_id`.
-    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_dim_id(space, type_, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_find_dim_by_id`.
-    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
-        let space = self;
-        let space = space.ptr;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_space_find_dim_by_id(space, type_, id) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_find_dim_by_name`.
-    pub fn find_dim_by_name(&self, type_: DimType, name: &str) -> i32 {
-        let space = self;
-        let space = space.ptr;
-        let name = CString::new(name).unwrap();
-        let name = name.as_ptr();
-        let isl_rs_result = unsafe { isl_space_find_dim_by_name(space, type_, name) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_has_dim_name`.
-    pub fn has_dim_name(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_has_dim_name(space, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_dim_name`.
-    pub fn set_dim_name(self, type_: DimType, pos: u32, name: &str) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let name = CString::new(name).unwrap();
-        let name = name.as_ptr();
-        let isl_rs_result = unsafe { isl_space_set_dim_name(space, type_, pos, name) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_get_dim_name`.
-    pub fn get_dim_name(&self, type_: DimType, pos: u32) -> &str {
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_get_dim_name(space, type_, pos) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_extend`.
-    pub fn extend(self, nparam: u32, n_in: u32, n_out: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_extend(space, nparam, n_in, n_out) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_add_dims`.
-    pub fn add_dims(self, type_: DimType, n: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_add_dims(space, type_, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_move_dims`.
-    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
-                     n: u32)
-                     -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result =
-            unsafe { isl_space_move_dims(space, dst_type, dst_pos, src_type, src_pos, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_insert_dims`.
-    pub fn insert_dims(self, type_: DimType, pos: u32, n: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_insert_dims(space, type_, pos, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_space_join`.
     pub fn join(self, right: Space) -> Space {
         let context_for_error_message = self.get_ctx();
@@ -792,44 +314,6 @@ impl Space {
         right.do_not_free_on_drop();
         let right = right.ptr;
         let isl_rs_result = unsafe { isl_space_join(left, right) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_product`.
-    pub fn product(self, right: Space) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let left = self;
-        let mut left = left;
-        left.do_not_free_on_drop();
-        let left = left.ptr;
-        let mut right = right;
-        right.do_not_free_on_drop();
-        let right = right.ptr;
-        let isl_rs_result = unsafe { isl_space_product(left, right) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_product`.
-    pub fn domain_product(self, right: Space) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let left = self;
-        let mut left = left;
-        left.do_not_free_on_drop();
-        let left = left.ptr;
-        let mut right = right;
-        right.do_not_free_on_drop();
-        let right = right.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_product(left, right) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -857,249 +341,6 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_factor_domain`.
-    pub fn factor_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_factor_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_factor_range`.
-    pub fn factor_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_factor_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_factor_domain`.
-    pub fn domain_factor_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_factor_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_factor_range`.
-    pub fn domain_factor_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_factor_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range_factor_domain`.
-    pub fn range_factor_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_factor_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range_factor_range`.
-    pub fn range_factor_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_factor_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_wrapped_domain`.
-    pub fn domain_wrapped_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_wrapped_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_wrapped_range`.
-    pub fn domain_wrapped_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_wrapped_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range_wrapped_domain`.
-    pub fn range_wrapped_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_wrapped_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range_wrapped_range`.
-    pub fn range_wrapped_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_wrapped_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_map_from_set`.
-    pub fn map_from_set(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_map_from_set(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_map_from_domain_and_range`.
-    pub fn map_from_domain_and_range(self, range: Space) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let domain = self;
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let mut range = range;
-        range.do_not_free_on_drop();
-        let range = range.ptr;
-        let isl_rs_result = unsafe { isl_space_map_from_domain_and_range(domain, range) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_reverse`.
-    pub fn reverse(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_reverse(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_wrapped_reverse`.
-    pub fn wrapped_reverse(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_wrapped_reverse(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_reverse`.
-    pub fn domain_reverse(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_reverse(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_space_range_reverse`.
     pub fn range_reverse(self) -> Space {
         let context_for_error_message = self.get_ctx();
@@ -1108,182 +349,6 @@ impl Space {
         space.do_not_free_on_drop();
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_space_range_reverse(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_drop_dims`.
-    pub fn drop_dims(self, type_: DimType, first: u32, num: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_drop_dims(space, type_, first, num) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_drop_inputs`.
-    pub fn drop_inputs(self, first: u32, n: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_drop_inputs(space, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_drop_outputs`.
-    pub fn drop_outputs(self, first: u32, n: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_drop_outputs(space, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_drop_all_params`.
-    pub fn drop_all_params(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_drop_all_params(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain`.
-    pub fn domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_from_domain`.
-    pub fn from_domain(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_from_domain(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range`.
-    pub fn range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_from_range`.
-    pub fn from_range(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_from_range(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_domain_map`.
-    pub fn domain_map(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_domain_map(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_range_map`.
-    pub fn range_map(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_map(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_params`.
-    pub fn params(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_params(space) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1308,60 +373,6 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_add_named_tuple_id_ui`.
-    pub fn add_named_tuple_id_ui(self, tuple_id: Id, dim: u32) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut tuple_id = tuple_id;
-        tuple_id.do_not_free_on_drop();
-        let tuple_id = tuple_id.ptr;
-        let isl_rs_result = unsafe { isl_space_add_named_tuple_id_ui(space, tuple_id, dim) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_set_from_params`.
-    pub fn set_from_params(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_set_from_params(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_align_params`.
-    pub fn align_params(self, space2: Space) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space1 = self;
-        let mut space1 = space1;
-        space1.do_not_free_on_drop();
-        let space1 = space1.ptr;
-        let mut space2 = space2;
-        space2.do_not_free_on_drop();
-        let space2 = space2.ptr;
-        let isl_rs_result = unsafe { isl_space_align_params(space1, space2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_space_is_wrapping`.
     pub fn is_wrapping(&self) -> bool {
         let context_for_error_message = self.get_ctx();
@@ -1373,6 +384,122 @@ impl Space {
             1 => true,
             _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_can_curry`.
+    pub fn can_curry(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_can_curry(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_drop_dims`.
+    pub fn drop_dims(self, type_: DimType, first: u32, num: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_drop_dims(space, type_, first, num) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_tuple_is_equal`.
+    pub fn tuple_is_equal(&self, type1: DimType, space2: &Space, type2: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space1 = self;
+        let space1 = space1.ptr;
+        let space2 = space2.ptr;
+        let isl_rs_result = unsafe { isl_space_tuple_is_equal(space1, type1, space2, type2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_flatten_domain`.
+    pub fn flatten_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_flatten_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_wrapped_range`.
+    pub fn domain_wrapped_range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_wrapped_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_read_from_str`.
+    pub fn read_from_str(ctx: &Context, str_: &str) -> Space {
+        let ctx = ctx.ptr;
+        let str_ = CString::new(str_).unwrap();
+        let str_ = str_.as_ptr();
+        let isl_rs_result = unsafe { isl_space_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_insert_dims`.
+    pub fn insert_dims(self, type_: DimType, pos: u32, n: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_insert_dims(space, type_, pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_find_dim_by_id`.
+    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
+        let space = self;
+        let space = space.ptr;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_space_find_dim_by_id(space, type_, id) };
         isl_rs_result
     }
 
@@ -1390,17 +517,33 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_range_is_wrapping`.
-    pub fn range_is_wrapping(&self) -> bool {
+    /// Wraps `isl_space_is_params`.
+    pub fn is_params(&self) -> bool {
         let context_for_error_message = self.get_ctx();
         let space = self;
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_is_wrapping(space) };
+        let isl_rs_result = unsafe { isl_space_is_params(space) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
             _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_factor_domain`.
+    pub fn domain_factor_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_factor_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -1410,82 +553,6 @@ impl Space {
         let space = self;
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_space_is_product(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_wrap`.
-    pub fn wrap(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_wrap(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_unwrap`.
-    pub fn unwrap(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_unwrap(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_can_zip`.
-    pub fn can_zip(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_can_zip(space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_zip`.
-    pub fn zip(self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_zip(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_space_can_curry`.
-    pub fn can_curry(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space = self;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_can_curry(space) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1524,14 +591,16 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_range_curry`.
-    pub fn range_curry(self) -> Space {
+    /// Wraps `isl_space_set_tuple_name`.
+    pub fn set_tuple_name(self, type_: DimType, s: &str) -> Space {
         let context_for_error_message = self.get_ctx();
         let space = self;
         let mut space = space;
         space.do_not_free_on_drop();
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_range_curry(space) };
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_space_set_tuple_name(space, type_, s) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1540,12 +609,133 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_can_uncurry`.
-    pub fn can_uncurry(&self) -> bool {
+    /// Wraps `isl_space_set_dim_id`.
+    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_space_set_dim_id(space, type_, pos, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_params`.
+    pub fn params(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_params(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_add_named_tuple_id_ui`.
+    pub fn add_named_tuple_id_ui(self, tuple_id: Id, dim: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut tuple_id = tuple_id;
+        tuple_id.do_not_free_on_drop();
+        let tuple_id = tuple_id.ptr;
+        let isl_rs_result = unsafe { isl_space_add_named_tuple_id_ui(space, tuple_id, dim) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_factor_range`.
+    pub fn domain_factor_range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_factor_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_add_param_id`.
+    pub fn add_param_id(self, id: Id) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_space_add_param_id(space, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_reset_tuple_id`.
+    pub fn reset_tuple_id(self, type_: DimType) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_reset_tuple_id(space, type_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range`.
+    pub fn range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_is_map`.
+    pub fn is_map(&self) -> bool {
         let context_for_error_message = self.get_ctx();
         let space = self;
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_can_uncurry(space) };
+        let isl_rs_result = unsafe { isl_space_is_map(space) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1554,19 +744,85 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_uncurry`.
-    pub fn uncurry(self) -> Space {
+    /// Wraps `isl_space_set_domain_tuple_id`.
+    pub fn set_domain_tuple_id(self, id: Id) -> Space {
         let context_for_error_message = self.get_ctx();
         let space = self;
         let mut space = space;
         space.do_not_free_on_drop();
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_uncurry(space) };
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_space_set_domain_tuple_id(space, id) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_tuple_name`.
+    pub fn has_tuple_name(&self, type_: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_has_tuple_name(space, type_) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_product`.
+    pub fn domain_product(self, right: Space) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let left = self;
+        let mut left = left;
+        left.do_not_free_on_drop();
+        let left = left.ptr;
+        let mut right = right;
+        right.do_not_free_on_drop();
+        let right = right.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_product(left, right) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_reverse`.
+    pub fn reverse(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_reverse(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_is_wrapping`.
+    pub fn range_is_wrapping(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_is_wrapping(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -1600,58 +856,52 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_is_equal`.
-    pub fn is_equal(&self, space2: &Space) -> bool {
+    /// Wraps `isl_space_domain_reverse`.
+    pub fn domain_reverse(self) -> Space {
         let context_for_error_message = self.get_ctx();
-        let space1 = self;
-        let space1 = space1.ptr;
-        let space2 = space2.ptr;
-        let isl_rs_result = unsafe { isl_space_is_equal(space1, space2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_reverse(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_space_has_equal_params`.
-    pub fn has_equal_params(&self, space2: &Space) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let space1 = self;
-        let space1 = space1.ptr;
-        let space2 = space2.ptr;
-        let isl_rs_result = unsafe { isl_space_has_equal_params(space1, space2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+    /// Wraps `isl_space_dim`.
+    pub fn dim(&self, type_: DimType) -> i32 {
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_dim(space, type_) };
         isl_rs_result
     }
 
-    /// Wraps `isl_space_has_equal_tuples`.
-    pub fn has_equal_tuples(&self, space2: &Space) -> bool {
+    /// Wraps `isl_space_wrapped_reverse`.
+    pub fn wrapped_reverse(self) -> Space {
         let context_for_error_message = self.get_ctx();
-        let space1 = self;
-        let space1 = space1.ptr;
-        let space2 = space2.ptr;
-        let isl_rs_result = unsafe { isl_space_has_equal_tuples(space1, space2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_wrapped_reverse(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_space_tuple_is_equal`.
-    pub fn tuple_is_equal(&self, type1: DimType, space2: &Space, type2: DimType) -> bool {
+    /// Wraps `isl_space_can_zip`.
+    pub fn can_zip(&self) -> bool {
         let context_for_error_message = self.get_ctx();
-        let space1 = self;
-        let space1 = space1.ptr;
-        let space2 = space2.ptr;
-        let isl_rs_result = unsafe { isl_space_tuple_is_equal(space1, type1, space2, type2) };
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_can_zip(space) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1675,27 +925,146 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_dim`.
-    pub fn dim(&self, type_: DimType) -> i32 {
+    /// Wraps `isl_space_has_domain_tuple_id`.
+    pub fn has_domain_tuple_id(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
         let space = self;
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_dim(space, type_) };
+        let isl_rs_result = unsafe { isl_space_has_domain_tuple_id(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
-    /// Wraps `isl_space_flatten_domain`.
-    pub fn flatten_domain(self) -> Space {
+    /// Wraps `isl_space_copy`.
+    pub fn copy(&self) -> Space {
         let context_for_error_message = self.get_ctx();
         let space = self;
-        let mut space = space;
-        space.do_not_free_on_drop();
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_space_flatten_domain(space) };
+        let isl_rs_result = unsafe { isl_space_copy(space) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_dim_id`.
+    pub fn has_dim_id(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_has_dim_id(space, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_product`.
+    pub fn product(self, right: Space) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let left = self;
+        let mut left = left;
+        left.do_not_free_on_drop();
+        let left = left.ptr;
+        let mut right = right;
+        right.do_not_free_on_drop();
+        let right = right.ptr;
+        let isl_rs_result = unsafe { isl_space_product(left, right) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_move_dims`.
+    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
+                     n: u32)
+                     -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result =
+            unsafe { isl_space_move_dims(space, dst_type, dst_pos, src_type, src_pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_set_from_params`.
+    pub fn set_from_params(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_set_from_params(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_extend`.
+    pub fn extend(self, nparam: u32, n_in: u32, n_out: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_extend(space, nparam, n_in, n_out) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_uncurry`.
+    pub fn uncurry(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_uncurry(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_equal_params`.
+    pub fn has_equal_params(&self, space2: &Space) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space1 = self;
+        let space1 = space1.ptr;
+        let space2 = space2.ptr;
+        let isl_rs_result = unsafe { isl_space_has_equal_params(space1, space2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -1715,20 +1084,6 @@ impl Space {
         isl_rs_result
     }
 
-    /// Wraps `isl_space_read_from_str`.
-    pub fn read_from_str(ctx: &Context, str_: &str) -> Space {
-        let ctx = ctx.ptr;
-        let str_ = CString::new(str_).unwrap();
-        let str_ = str_.as_ptr();
-        let isl_rs_result = unsafe { isl_space_read_from_str(ctx, str_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_space_to_str`.
     pub fn to_str(&self) -> &str {
         let space = self;
@@ -1739,11 +1094,656 @@ impl Space {
         isl_rs_result
     }
 
+    /// Wraps `isl_space_has_dim_name`.
+    pub fn has_dim_name(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_has_dim_name(space, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_reset_user`.
+    pub fn reset_user(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_reset_user(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_tuple_name`.
+    pub fn get_tuple_name(&self, type_: DimType) -> &str {
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_tuple_name(space, type_) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_set_alloc`.
+    pub fn set_alloc(ctx: &Context, nparam: u32, dim: u32) -> Space {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_space_set_alloc(ctx, nparam, dim) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_map_from_domain_and_range`.
+    pub fn map_from_domain_and_range(self, range: Space) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let domain = self;
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let mut range = range;
+        range.do_not_free_on_drop();
+        let range = range.ptr;
+        let isl_rs_result = unsafe { isl_space_map_from_domain_and_range(domain, range) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_space_dump`.
     pub fn dump(&self) {
         let space = self;
         let space = space.ptr;
         let isl_rs_result = unsafe { isl_space_dump(space) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain`.
+    pub fn domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_from_domain`.
+    pub fn from_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_from_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_add_dims`.
+    pub fn add_dims(self, type_: DimType, n: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_add_dims(space, type_, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_set_range_tuple_id`.
+    pub fn set_range_tuple_id(self, id: Id) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_space_set_range_tuple_id(space, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_factor_domain`.
+    pub fn range_factor_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_factor_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_unit`.
+    pub fn unit(ctx: &Context) -> Space {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_space_unit(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_tuple_id`.
+    pub fn get_tuple_id(&self, type_: DimType) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_tuple_id(space, type_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_factor_range`.
+    pub fn factor_range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_factor_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_wrapped_domain`.
+    pub fn domain_wrapped_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_wrapped_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_params_alloc`.
+    pub fn params_alloc(ctx: &Context, nparam: u32) -> Space {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_space_params_alloc(ctx, nparam) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_drop_inputs`.
+    pub fn drop_inputs(self, first: u32, n: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_drop_inputs(space, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_zip`.
+    pub fn zip(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_zip(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_drop_outputs`.
+    pub fn drop_outputs(self, first: u32, n: u32) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_drop_outputs(space, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_wrapped_domain`.
+    pub fn range_wrapped_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_wrapped_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_map_from_set`.
+    pub fn map_from_set(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_map_from_set(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_drop_all_params`.
+    pub fn drop_all_params(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_drop_all_params(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_wrapped_range`.
+    pub fn range_wrapped_range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_wrapped_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_is_set`.
+    pub fn is_set(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_is_set(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_align_params`.
+    pub fn align_params(self, space2: Space) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space1 = self;
+        let mut space1 = space1;
+        space1.do_not_free_on_drop();
+        let space1 = space1.ptr;
+        let mut space2 = space2;
+        space2.do_not_free_on_drop();
+        let space2 = space2.ptr;
+        let isl_rs_result = unsafe { isl_space_align_params(space1, space2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_can_uncurry`.
+    pub fn can_uncurry(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_can_uncurry(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_dim_id`.
+    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_dim_id(space, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_find_dim_by_name`.
+    pub fn find_dim_by_name(&self, type_: DimType, name: &str) -> i32 {
+        let space = self;
+        let space = space.ptr;
+        let name = CString::new(name).unwrap();
+        let name = name.as_ptr();
+        let isl_rs_result = unsafe { isl_space_find_dim_by_name(space, type_, name) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_factor_range`.
+    pub fn range_factor_range(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_factor_range(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_equal_tuples`.
+    pub fn has_equal_tuples(&self, space2: &Space) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space1 = self;
+        let space1 = space1.ptr;
+        let space2 = space2.ptr;
+        let isl_rs_result = unsafe { isl_space_has_equal_tuples(space1, space2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_range_tuple_id`.
+    pub fn has_range_tuple_id(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_has_range_tuple_id(space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_ctx(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_map`.
+    pub fn range_map(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_map(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_wrap`.
+    pub fn wrap(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_wrap(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_range_curry`.
+    pub fn range_curry(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_range_curry(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_dim_name`.
+    pub fn get_dim_name(&self, type_: DimType, pos: u32) -> &str {
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_dim_name(space, type_, pos) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_set_dim_name`.
+    pub fn set_dim_name(self, type_: DimType, pos: u32, name: &str) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let name = CString::new(name).unwrap();
+        let name = name.as_ptr();
+        let isl_rs_result = unsafe { isl_space_set_dim_name(space, type_, pos, name) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_has_tuple_id`.
+    pub fn has_tuple_id(&self, type_: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_has_tuple_id(space, type_) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_factor_domain`.
+    pub fn factor_domain(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_factor_domain(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_unwrap`.
+    pub fn unwrap(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_unwrap(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_domain_tuple_id`.
+    pub fn get_domain_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_domain_tuple_id(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_domain_map`.
+    pub fn domain_map(self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_domain_map(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_get_range_tuple_id`.
+    pub fn get_range_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let space = self;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_space_get_range_tuple_id(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_space_alloc`.
+    pub fn alloc(ctx: &Context, nparam: u32, n_in: u32, n_out: u32) -> Space {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_space_alloc(ctx, nparam, n_in, n_out) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 

@@ -12,61 +12,61 @@ pub struct Vec {
 
 extern "C" {
 
-    fn isl_vec_alloc(ctx: uintptr_t, size: u32) -> uintptr_t;
-
-    fn isl_vec_zero(ctx: uintptr_t, size: u32) -> uintptr_t;
-
-    fn isl_vec_copy(vec: uintptr_t) -> uintptr_t;
-
     fn isl_vec_free(vec: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_get_ctx(vec: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_size(vec: uintptr_t) -> i32;
-
-    fn isl_vec_get_element_val(vec: uintptr_t, pos: i32) -> uintptr_t;
-
-    fn isl_vec_set_element_si(vec: uintptr_t, pos: i32, v: i32) -> uintptr_t;
-
-    fn isl_vec_set_element_val(vec: uintptr_t, pos: i32, v: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_is_equal(vec1: uintptr_t, vec2: uintptr_t) -> i32;
-
-    fn isl_vec_cmp_element(vec1: uintptr_t, vec2: uintptr_t, pos: i32) -> i32;
-
-    fn isl_vec_dump(vec: uintptr_t);
-
-    fn isl_vec_ceil(vec: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_normalize(vec: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_set_si(vec: uintptr_t, v: i32) -> uintptr_t;
-
-    fn isl_vec_set_val(vec: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_vec_clr(vec: uintptr_t) -> uintptr_t;
 
     fn isl_vec_neg(vec: uintptr_t) -> uintptr_t;
 
-    fn isl_vec_add(vec1: uintptr_t, vec2: uintptr_t) -> uintptr_t;
+    fn isl_vec_drop_els(vec: uintptr_t, pos: u32, n: u32) -> uintptr_t;
 
-    fn isl_vec_extend(vec: uintptr_t, size: u32) -> uintptr_t;
+    fn isl_vec_set_element_si(vec: uintptr_t, pos: i32, v: i32) -> uintptr_t;
 
-    fn isl_vec_zero_extend(vec: uintptr_t, size: u32) -> uintptr_t;
+    fn isl_vec_zero(ctx: uintptr_t, size: u32) -> uintptr_t;
+
+    fn isl_vec_insert_zero_els(vec: uintptr_t, pos: u32, n: u32) -> uintptr_t;
+
+    fn isl_vec_ceil(vec: uintptr_t) -> uintptr_t;
 
     fn isl_vec_concat(vec1: uintptr_t, vec2: uintptr_t) -> uintptr_t;
 
     fn isl_vec_sort(vec: uintptr_t) -> uintptr_t;
 
-    fn isl_vec_drop_els(vec: uintptr_t, pos: u32, n: u32) -> uintptr_t;
-
-    fn isl_vec_add_els(vec: uintptr_t, n: u32) -> uintptr_t;
+    fn isl_vec_zero_extend(vec: uintptr_t, size: u32) -> uintptr_t;
 
     fn isl_vec_insert_els(vec: uintptr_t, pos: u32, n: u32) -> uintptr_t;
 
-    fn isl_vec_insert_zero_els(vec: uintptr_t, pos: u32, n: u32) -> uintptr_t;
+    fn isl_vec_set_val(vec: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_dump(vec: uintptr_t);
 
     fn isl_vec_move_els(vec: uintptr_t, dst_col: u32, src_col: u32, n: u32) -> uintptr_t;
+
+    fn isl_vec_copy(vec: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_add(vec1: uintptr_t, vec2: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_get_ctx(vec: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_clr(vec: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_is_equal(vec1: uintptr_t, vec2: uintptr_t) -> i32;
+
+    fn isl_vec_get_element_val(vec: uintptr_t, pos: i32) -> uintptr_t;
+
+    fn isl_vec_alloc(ctx: uintptr_t, size: u32) -> uintptr_t;
+
+    fn isl_vec_cmp_element(vec1: uintptr_t, vec2: uintptr_t, pos: i32) -> i32;
+
+    fn isl_vec_normalize(vec: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_set_si(vec: uintptr_t, v: i32) -> uintptr_t;
+
+    fn isl_vec_extend(vec: uintptr_t, size: u32) -> uintptr_t;
+
+    fn isl_vec_add_els(vec: uintptr_t, n: u32) -> uintptr_t;
+
+    fn isl_vec_set_element_val(vec: uintptr_t, pos: i32, v: uintptr_t) -> uintptr_t;
+
+    fn isl_vec_size(vec: uintptr_t) -> i32;
 
 }
 
@@ -93,44 +93,6 @@ impl core::ops::Add for Vec {
 }
 
 impl Vec {
-    /// Wraps `isl_vec_alloc`.
-    pub fn alloc(ctx: &Context, size: u32) -> Vec {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_vec_alloc(ctx, size) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_zero`.
-    pub fn zero(ctx: &Context, size: u32) -> Vec {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_vec_zero(ctx, size) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_copy`.
-    pub fn copy(&self) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_copy(vec) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_vec_free`.
     pub fn free(self) -> Vec {
         let context_for_error_message = self.get_ctx();
@@ -139,193 +101,6 @@ impl Vec {
         vec.do_not_free_on_drop();
         let vec = vec.ptr;
         let isl_rs_result = unsafe { isl_vec_free(vec) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let vec = self;
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_get_ctx(vec) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_size`.
-    pub fn size(&self) -> i32 {
-        let vec = self;
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_size(vec) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_get_element_val`.
-    pub fn get_element_val(&self, pos: i32) -> Val {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_get_element_val(vec, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Val { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_set_element_si`.
-    pub fn set_element_si(self, pos: i32, v: i32) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_set_element_si(vec, pos, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_set_element_val`.
-    pub fn set_element_val(self, pos: i32, v: Val) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_vec_set_element_val(vec, pos, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_is_equal`.
-    pub fn is_equal(&self, vec2: &Vec) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let vec1 = self;
-        let vec1 = vec1.ptr;
-        let vec2 = vec2.ptr;
-        let isl_rs_result = unsafe { isl_vec_is_equal(vec1, vec2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_cmp_element`.
-    pub fn cmp_element(&self, vec2: &Vec, pos: i32) -> i32 {
-        let vec1 = self;
-        let vec1 = vec1.ptr;
-        let vec2 = vec2.ptr;
-        let isl_rs_result = unsafe { isl_vec_cmp_element(vec1, vec2, pos) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_dump`.
-    pub fn dump(&self) {
-        let vec = self;
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_dump(vec) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_ceil`.
-    pub fn ceil(self) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_ceil(vec) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_normalize`.
-    pub fn normalize(self) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_normalize(vec) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_set_si`.
-    pub fn set_si(self, v: i32) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_set_si(vec, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_set_val`.
-    pub fn set_val(self, v: Val) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_vec_set_val(vec, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_clr`.
-    pub fn clr(self) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_clr(vec) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -350,17 +125,14 @@ impl Vec {
         isl_rs_result
     }
 
-    /// Wraps `isl_vec_add`.
-    pub fn add(self, vec2: Vec) -> Vec {
+    /// Wraps `isl_vec_drop_els`.
+    pub fn drop_els(self, pos: u32, n: u32) -> Vec {
         let context_for_error_message = self.get_ctx();
-        let vec1 = self;
-        let mut vec1 = vec1;
-        vec1.do_not_free_on_drop();
-        let vec1 = vec1.ptr;
-        let mut vec2 = vec2;
-        vec2.do_not_free_on_drop();
-        let vec2 = vec2.ptr;
-        let isl_rs_result = unsafe { isl_vec_add(vec1, vec2) };
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_drop_els(vec, pos, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -369,14 +141,14 @@ impl Vec {
         isl_rs_result
     }
 
-    /// Wraps `isl_vec_extend`.
-    pub fn extend(self, size: u32) -> Vec {
+    /// Wraps `isl_vec_set_element_si`.
+    pub fn set_element_si(self, pos: i32, v: i32) -> Vec {
         let context_for_error_message = self.get_ctx();
         let vec = self;
         let mut vec = vec;
         vec.do_not_free_on_drop();
         let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_extend(vec, size) };
+        let isl_rs_result = unsafe { isl_vec_set_element_si(vec, pos, v) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -385,14 +157,42 @@ impl Vec {
         isl_rs_result
     }
 
-    /// Wraps `isl_vec_zero_extend`.
-    pub fn zero_extend(self, size: u32) -> Vec {
+    /// Wraps `isl_vec_zero`.
+    pub fn zero(ctx: &Context, size: u32) -> Vec {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_vec_zero(ctx, size) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_insert_zero_els`.
+    pub fn insert_zero_els(self, pos: u32, n: u32) -> Vec {
         let context_for_error_message = self.get_ctx();
         let vec = self;
         let mut vec = vec;
         vec.do_not_free_on_drop();
         let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_zero_extend(vec, size) };
+        let isl_rs_result = unsafe { isl_vec_insert_zero_els(vec, pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_ceil`.
+    pub fn ceil(self) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_ceil(vec) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -436,30 +236,14 @@ impl Vec {
         isl_rs_result
     }
 
-    /// Wraps `isl_vec_drop_els`.
-    pub fn drop_els(self, pos: u32, n: u32) -> Vec {
+    /// Wraps `isl_vec_zero_extend`.
+    pub fn zero_extend(self, size: u32) -> Vec {
         let context_for_error_message = self.get_ctx();
         let vec = self;
         let mut vec = vec;
         vec.do_not_free_on_drop();
         let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_drop_els(vec, pos, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Vec { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_vec_add_els`.
-    pub fn add_els(self, n: u32) -> Vec {
-        let context_for_error_message = self.get_ctx();
-        let vec = self;
-        let mut vec = vec;
-        vec.do_not_free_on_drop();
-        let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_add_els(vec, n) };
+        let isl_rs_result = unsafe { isl_vec_zero_extend(vec, size) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -484,19 +268,30 @@ impl Vec {
         isl_rs_result
     }
 
-    /// Wraps `isl_vec_insert_zero_els`.
-    pub fn insert_zero_els(self, pos: u32, n: u32) -> Vec {
+    /// Wraps `isl_vec_set_val`.
+    pub fn set_val(self, v: Val) -> Vec {
         let context_for_error_message = self.get_ctx();
         let vec = self;
         let mut vec = vec;
         vec.do_not_free_on_drop();
         let vec = vec.ptr;
-        let isl_rs_result = unsafe { isl_vec_insert_zero_els(vec, pos, n) };
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_vec_set_val(vec, v) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Vec { ptr: isl_rs_result,
                                   should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_dump`.
+    pub fn dump(&self) {
+        let vec = self;
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_dump(vec) };
         isl_rs_result
     }
 
@@ -513,6 +308,211 @@ impl Vec {
         }
         let isl_rs_result = Vec { ptr: isl_rs_result,
                                   should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_copy`.
+    pub fn copy(&self) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_copy(vec) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_add`.
+    pub fn add(self, vec2: Vec) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec1 = self;
+        let mut vec1 = vec1;
+        vec1.do_not_free_on_drop();
+        let vec1 = vec1.ptr;
+        let mut vec2 = vec2;
+        vec2.do_not_free_on_drop();
+        let vec2 = vec2.ptr;
+        let isl_rs_result = unsafe { isl_vec_add(vec1, vec2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let vec = self;
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_get_ctx(vec) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_clr`.
+    pub fn clr(self) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_clr(vec) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_is_equal`.
+    pub fn is_equal(&self, vec2: &Vec) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let vec1 = self;
+        let vec1 = vec1.ptr;
+        let vec2 = vec2.ptr;
+        let isl_rs_result = unsafe { isl_vec_is_equal(vec1, vec2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_get_element_val`.
+    pub fn get_element_val(&self, pos: i32) -> Val {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_get_element_val(vec, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Val { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_alloc`.
+    pub fn alloc(ctx: &Context, size: u32) -> Vec {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_vec_alloc(ctx, size) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_cmp_element`.
+    pub fn cmp_element(&self, vec2: &Vec, pos: i32) -> i32 {
+        let vec1 = self;
+        let vec1 = vec1.ptr;
+        let vec2 = vec2.ptr;
+        let isl_rs_result = unsafe { isl_vec_cmp_element(vec1, vec2, pos) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_normalize`.
+    pub fn normalize(self) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_normalize(vec) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_set_si`.
+    pub fn set_si(self, v: i32) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_set_si(vec, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_extend`.
+    pub fn extend(self, size: u32) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_extend(vec, size) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_add_els`.
+    pub fn add_els(self, n: u32) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_add_els(vec, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_set_element_val`.
+    pub fn set_element_val(self, pos: i32, v: Val) -> Vec {
+        let context_for_error_message = self.get_ctx();
+        let vec = self;
+        let mut vec = vec;
+        vec.do_not_free_on_drop();
+        let vec = vec.ptr;
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_vec_set_element_val(vec, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Vec { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_vec_size`.
+    pub fn size(&self) -> i32 {
+        let vec = self;
+        let vec = vec.ptr;
+        let isl_rs_result = unsafe { isl_vec_size(vec) };
         isl_rs_result
     }
 

@@ -14,47 +14,47 @@ pub struct AffList {
 
 extern "C" {
 
-    fn isl_aff_list_get_ctx(list: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_from_aff(el: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
-
-    fn isl_aff_list_copy(list: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_free(list: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
+    fn isl_aff_list_dump(list: uintptr_t);
 
     fn isl_aff_list_drop(list: uintptr_t, first: u32, n: u32) -> uintptr_t;
 
+    fn isl_aff_list_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
+
     fn isl_aff_list_clear(list: uintptr_t) -> uintptr_t;
 
-    fn isl_aff_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
-
-    fn isl_aff_list_reverse(list: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
-
-    fn isl_aff_list_size(list: uintptr_t) -> i32;
+    fn isl_aff_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
 
     fn isl_aff_list_n_aff(list: uintptr_t) -> i32;
 
+    fn isl_aff_list_from_aff(el: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_reverse(list: uintptr_t) -> uintptr_t;
+
     fn isl_aff_list_get_at(list: uintptr_t, index: i32) -> uintptr_t;
+
+    fn isl_aff_list_set_aff(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
+
+    fn isl_aff_list_free(list: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_size(list: uintptr_t) -> i32;
 
     fn isl_aff_list_get_aff(list: uintptr_t, index: i32) -> uintptr_t;
 
     fn isl_aff_list_set_at(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
 
-    fn isl_aff_list_set_aff(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
-
     fn isl_aff_list_to_str(list: uintptr_t) -> *const c_char;
 
-    fn isl_aff_list_dump(list: uintptr_t);
+    fn isl_aff_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
 
-    fn isl_aff_list_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
+    fn isl_aff_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_get_ctx(list: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_copy(list: uintptr_t) -> uintptr_t;
+
+    fn isl_aff_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
 
 }
 
@@ -80,112 +80,11 @@ impl FromIterator<Aff> for AffList {
 }
 
 impl AffList {
-    /// Wraps `isl_aff_list_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
+    /// Wraps `isl_aff_list_dump`.
+    pub fn dump(&self) {
         let list = self;
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_get_ctx(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_from_aff`.
-    pub fn from_aff(el: Aff) -> AffList {
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_from_aff(el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_alloc`.
-    pub fn alloc(ctx: &Context, n: i32) -> AffList {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_alloc(ctx, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_copy`.
-    pub fn copy(&self) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_copy(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_free`.
-    pub fn free(self) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_free(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_add`.
-    pub fn add(self, el: Aff) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_add(list, el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_insert`.
-    pub fn insert(self, pos: u32, el: Aff) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_insert(list, pos, el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
+        let isl_rs_result = unsafe { isl_aff_list_dump(list) };
         isl_rs_result
     }
 
@@ -205,6 +104,20 @@ impl AffList {
         isl_rs_result
     }
 
+    /// Wraps `isl_aff_list_read_from_str`.
+    pub fn read_from_str(ctx: &Context, str_: &str) -> AffList {
+        let ctx = ctx.ptr;
+        let str_ = CString::new(str_).unwrap();
+        let str_ = str_.as_ptr();
+        let isl_rs_result = unsafe { isl_aff_list_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_aff_list_clear`.
     pub fn clear(self) -> AffList {
         let context_for_error_message = self.get_ctx();
@@ -213,6 +126,89 @@ impl AffList {
         list.do_not_free_on_drop();
         let list = list.ptr;
         let isl_rs_result = unsafe { isl_aff_list_clear(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_alloc`.
+    pub fn alloc(ctx: &Context, n: i32) -> AffList {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_alloc(ctx, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_n_aff`.
+    pub fn n_aff(&self) -> i32 {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_n_aff(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_from_aff`.
+    pub fn from_aff(el: Aff) -> AffList {
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_from_aff(el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_reverse`.
+    pub fn reverse(self) -> AffList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_reverse(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_get_at`.
+    pub fn get_at(&self, index: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_get_at(list, index) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Aff { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_set_aff`.
+    pub fn set_aff(self, index: i32, el: Aff) -> AffList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_set_aff(list, index, el) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -237,33 +233,14 @@ impl AffList {
         isl_rs_result
     }
 
-    /// Wraps `isl_aff_list_reverse`.
-    pub fn reverse(self) -> AffList {
+    /// Wraps `isl_aff_list_free`.
+    pub fn free(self) -> AffList {
         let context_for_error_message = self.get_ctx();
         let list = self;
         let mut list = list;
         list.do_not_free_on_drop();
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_reverse(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_concat`.
-    pub fn concat(self, list2: AffList) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list1 = self;
-        let mut list1 = list1;
-        list1.do_not_free_on_drop();
-        let list1 = list1.ptr;
-        let mut list2 = list2;
-        list2.do_not_free_on_drop();
-        let list2 = list2.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_concat(list1, list2) };
+        let isl_rs_result = unsafe { isl_aff_list_free(list) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -277,28 +254,6 @@ impl AffList {
         let list = self;
         let list = list.ptr;
         let isl_rs_result = unsafe { isl_aff_list_size(list) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_n_aff`.
-    pub fn n_aff(&self) -> i32 {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_n_aff(list) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_aff_list_get_at`.
-    pub fn get_at(&self, index: i32) -> Aff {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_get_at(list, index) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Aff { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -335,25 +290,6 @@ impl AffList {
         isl_rs_result
     }
 
-    /// Wraps `isl_aff_list_set_aff`.
-    pub fn set_aff(self, index: i32, el: Aff) -> AffList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_set_aff(list, index, el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_aff_list_to_str`.
     pub fn to_str(&self) -> &str {
         let list = self;
@@ -364,22 +300,86 @@ impl AffList {
         isl_rs_result
     }
 
-    /// Wraps `isl_aff_list_dump`.
-    pub fn dump(&self) {
+    /// Wraps `isl_aff_list_insert`.
+    pub fn insert(self, pos: u32, el: Aff) -> AffList {
+        let context_for_error_message = self.get_ctx();
         let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_aff_list_dump(list) };
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_insert(list, pos, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_aff_list_read_from_str`.
-    pub fn read_from_str(ctx: &Context, str_: &str) -> AffList {
-        let ctx = ctx.ptr;
-        let str_ = CString::new(str_).unwrap();
-        let str_ = str_.as_ptr();
-        let isl_rs_result = unsafe { isl_aff_list_read_from_str(ctx, str_) };
+    /// Wraps `isl_aff_list_add`.
+    pub fn add(self, el: Aff) -> AffList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_add(list, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_get_ctx(list) };
         if isl_rs_result == 0 {
             panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_copy`.
+    pub fn copy(&self) -> AffList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_copy(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_aff_list_concat`.
+    pub fn concat(self, list2: AffList) -> AffList {
+        let context_for_error_message = self.get_ctx();
+        let list1 = self;
+        let mut list1 = list1;
+        list1.do_not_free_on_drop();
+        let list1 = list1.ptr;
+        let mut list2 = list2;
+        list2.do_not_free_on_drop();
+        let list2 = list2.ptr;
+        let isl_rs_result = unsafe { isl_aff_list_concat(list1, list2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = AffList { ptr: isl_rs_result,
                                       should_free_on_drop: true };

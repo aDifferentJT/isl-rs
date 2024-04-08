@@ -14,47 +14,47 @@ pub struct MapList {
 
 extern "C" {
 
-    fn isl_map_list_get_ctx(list: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_from_map(el: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
-
-    fn isl_map_list_copy(list: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_free(list: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
+    fn isl_map_list_set_at(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
 
     fn isl_map_list_drop(list: uintptr_t, first: u32, n: u32) -> uintptr_t;
 
-    fn isl_map_list_clear(list: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
+    fn isl_map_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
 
     fn isl_map_list_reverse(list: uintptr_t) -> uintptr_t;
 
-    fn isl_map_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_size(list: uintptr_t) -> i32;
-
-    fn isl_map_list_n_map(list: uintptr_t) -> i32;
+    fn isl_map_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
 
     fn isl_map_list_get_at(list: uintptr_t, index: i32) -> uintptr_t;
 
-    fn isl_map_list_get_map(list: uintptr_t, index: i32) -> uintptr_t;
-
-    fn isl_map_list_set_at(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
-
-    fn isl_map_list_set_map(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
+    fn isl_map_list_n_map(list: uintptr_t) -> i32;
 
     fn isl_map_list_to_str(list: uintptr_t) -> *const c_char;
 
-    fn isl_map_list_dump(list: uintptr_t);
+    fn isl_map_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
+
+    fn isl_map_list_set_map(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
 
     fn isl_map_list_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
+
+    fn isl_map_list_from_map(el: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_dump(list: uintptr_t);
+
+    fn isl_map_list_size(list: uintptr_t) -> i32;
+
+    fn isl_map_list_free(list: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_copy(list: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_get_ctx(list: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_clear(list: uintptr_t) -> uintptr_t;
+
+    fn isl_map_list_get_map(list: uintptr_t, index: i32) -> uintptr_t;
 
 }
 
@@ -80,79 +80,8 @@ impl FromIterator<Map> for MapList {
 }
 
 impl MapList {
-    /// Wraps `isl_map_list_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_get_ctx(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_from_map`.
-    pub fn from_map(el: Map) -> MapList {
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_map_list_from_map(el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_alloc`.
-    pub fn alloc(ctx: &Context, n: i32) -> MapList {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_map_list_alloc(ctx, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_copy`.
-    pub fn copy(&self) -> MapList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_copy(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_free`.
-    pub fn free(self) -> MapList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_free(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_add`.
-    pub fn add(self, el: Map) -> MapList {
+    /// Wraps `isl_map_list_set_at`.
+    pub fn set_at(self, index: i32, el: Map) -> MapList {
         let context_for_error_message = self.get_ctx();
         let list = self;
         let mut list = list;
@@ -161,7 +90,23 @@ impl MapList {
         let mut el = el;
         el.do_not_free_on_drop();
         let el = el.ptr;
-        let isl_rs_result = unsafe { isl_map_list_add(list, el) };
+        let isl_rs_result = unsafe { isl_map_list_set_at(list, index, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_drop`.
+    pub fn drop(self, first: u32, n: u32) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_drop(list, first, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -189,30 +134,14 @@ impl MapList {
         isl_rs_result
     }
 
-    /// Wraps `isl_map_list_drop`.
-    pub fn drop(self, first: u32, n: u32) -> MapList {
+    /// Wraps `isl_map_list_reverse`.
+    pub fn reverse(self) -> MapList {
         let context_for_error_message = self.get_ctx();
         let list = self;
         let mut list = list;
         list.do_not_free_on_drop();
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_drop(list, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_clear`.
-    pub fn clear(self) -> MapList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_clear(list) };
+        let isl_rs_result = unsafe { isl_map_list_reverse(list) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -237,57 +166,6 @@ impl MapList {
         isl_rs_result
     }
 
-    /// Wraps `isl_map_list_reverse`.
-    pub fn reverse(self) -> MapList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_reverse(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_concat`.
-    pub fn concat(self, list2: MapList) -> MapList {
-        let context_for_error_message = self.get_ctx();
-        let list1 = self;
-        let mut list1 = list1;
-        list1.do_not_free_on_drop();
-        let list1 = list1.ptr;
-        let mut list2 = list2;
-        list2.do_not_free_on_drop();
-        let list2 = list2.ptr;
-        let isl_rs_result = unsafe { isl_map_list_concat(list1, list2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MapList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_size`.
-    pub fn size(&self) -> i32 {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_size(list) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_n_map`.
-    pub fn n_map(&self) -> i32 {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_n_map(list) };
-        isl_rs_result
-    }
-
     /// Wraps `isl_map_list_get_at`.
     pub fn get_at(&self, index: i32) -> Map {
         let context_for_error_message = self.get_ctx();
@@ -302,33 +180,30 @@ impl MapList {
         isl_rs_result
     }
 
-    /// Wraps `isl_map_list_get_map`.
-    pub fn get_map(&self, index: i32) -> Map {
-        let context_for_error_message = self.get_ctx();
+    /// Wraps `isl_map_list_n_map`.
+    pub fn n_map(&self) -> i32 {
         let list = self;
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_get_map(list, index) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = unsafe { isl_map_list_n_map(list) };
         isl_rs_result
     }
 
-    /// Wraps `isl_map_list_set_at`.
-    pub fn set_at(self, index: i32, el: Map) -> MapList {
-        let context_for_error_message = self.get_ctx();
+    /// Wraps `isl_map_list_to_str`.
+    pub fn to_str(&self) -> &str {
         let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
         let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_map_list_set_at(list, index, el) };
+        let isl_rs_result = unsafe { isl_map_list_to_str(list) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_alloc`.
+    pub fn alloc(ctx: &Context, n: i32) -> MapList {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_map_list_alloc(ctx, n) };
         if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+            panic!("ISL error");
         }
         let isl_rs_result = MapList { ptr: isl_rs_result,
                                       should_free_on_drop: true };
@@ -354,24 +229,6 @@ impl MapList {
         isl_rs_result
     }
 
-    /// Wraps `isl_map_list_to_str`.
-    pub fn to_str(&self) -> &str {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_to_str(list) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_map_list_dump`.
-    pub fn dump(&self) {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_map_list_dump(list) };
-        isl_rs_result
-    }
-
     /// Wraps `isl_map_list_read_from_str`.
     pub fn read_from_str(ctx: &Context, str_: &str) -> MapList {
         let ctx = ctx.ptr;
@@ -383,6 +240,149 @@ impl MapList {
         }
         let isl_rs_result = MapList { ptr: isl_rs_result,
                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_from_map`.
+    pub fn from_map(el: Map) -> MapList {
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_map_list_from_map(el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_concat`.
+    pub fn concat(self, list2: MapList) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list1 = self;
+        let mut list1 = list1;
+        list1.do_not_free_on_drop();
+        let list1 = list1.ptr;
+        let mut list2 = list2;
+        list2.do_not_free_on_drop();
+        let list2 = list2.ptr;
+        let isl_rs_result = unsafe { isl_map_list_concat(list1, list2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_dump`.
+    pub fn dump(&self) {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_dump(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_size`.
+    pub fn size(&self) -> i32 {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_size(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_free`.
+    pub fn free(self) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_free(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_copy`.
+    pub fn copy(&self) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_copy(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_add`.
+    pub fn add(self, el: Map) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_map_list_add(list, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_get_ctx(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_clear`.
+    pub fn clear(self) -> MapList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_clear(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MapList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_map_list_get_map`.
+    pub fn get_map(&self, index: i32) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_map_list_get_map(list, index) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 

@@ -14,45 +14,45 @@ pub struct ConstraintList {
 
 extern "C" {
 
-    fn isl_constraint_list_get_ctx(list: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_from_constraint(el: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
-
-    fn isl_constraint_list_copy(list: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_free(list: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_drop(list: uintptr_t, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_constraint_list_clear(list: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
-
-    fn isl_constraint_list_reverse(list: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
-
-    fn isl_constraint_list_size(list: uintptr_t) -> i32;
-
-    fn isl_constraint_list_n_constraint(list: uintptr_t) -> i32;
+    fn isl_constraint_list_to_str(list: uintptr_t) -> *const c_char;
 
     fn isl_constraint_list_get_at(list: uintptr_t, index: i32) -> uintptr_t;
 
-    fn isl_constraint_list_get_constraint(list: uintptr_t, index: i32) -> uintptr_t;
-
     fn isl_constraint_list_set_at(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
 
-    fn isl_constraint_list_set_constraint(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
+    fn isl_constraint_list_copy(list: uintptr_t) -> uintptr_t;
 
-    fn isl_constraint_list_to_str(list: uintptr_t) -> *const c_char;
+    fn isl_constraint_list_reverse(list: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_insert(list: uintptr_t, pos: u32, el: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_size(list: uintptr_t) -> i32;
+
+    fn isl_constraint_list_drop(list: uintptr_t, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_constraint_list_alloc(ctx: uintptr_t, n: i32) -> uintptr_t;
+
+    fn isl_constraint_list_from_constraint(el: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_n_constraint(list: uintptr_t) -> i32;
+
+    fn isl_constraint_list_clear(list: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_free(list: uintptr_t) -> uintptr_t;
 
     fn isl_constraint_list_dump(list: uintptr_t);
+
+    fn isl_constraint_list_add(list: uintptr_t, el: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_swap(list: uintptr_t, pos1: u32, pos2: u32) -> uintptr_t;
+
+    fn isl_constraint_list_get_ctx(list: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_concat(list1: uintptr_t, list2: uintptr_t) -> uintptr_t;
+
+    fn isl_constraint_list_get_constraint(list: uintptr_t, index: i32) -> uintptr_t;
+
+    fn isl_constraint_list_set_constraint(list: uintptr_t, index: i32, el: uintptr_t) -> uintptr_t;
 
 }
 
@@ -78,211 +78,13 @@ impl FromIterator<Constraint> for ConstraintList {
 }
 
 impl ConstraintList {
-    /// Wraps `isl_constraint_list_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
+    /// Wraps `isl_constraint_list_to_str`.
+    pub fn to_str(&self) -> &str {
         let list = self;
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_get_ctx(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_from_constraint`.
-    pub fn from_constraint(el: Constraint) -> ConstraintList {
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_from_constraint(el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_alloc`.
-    pub fn alloc(ctx: &Context, n: i32) -> ConstraintList {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_alloc(ctx, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_copy`.
-    pub fn copy(&self) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_copy(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_free`.
-    pub fn free(self) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_free(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_add`.
-    pub fn add(self, el: Constraint) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_add(list, el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_insert`.
-    pub fn insert(self, pos: u32, el: Constraint) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_insert(list, pos, el) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_drop`.
-    pub fn drop(self, first: u32, n: u32) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_drop(list, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_clear`.
-    pub fn clear(self) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_clear(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_swap`.
-    pub fn swap(self, pos1: u32, pos2: u32) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_swap(list, pos1, pos2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_reverse`.
-    pub fn reverse(self) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_reverse(list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_concat`.
-    pub fn concat(self, list2: ConstraintList) -> ConstraintList {
-        let context_for_error_message = self.get_ctx();
-        let list1 = self;
-        let mut list1 = list1;
-        list1.do_not_free_on_drop();
-        let list1 = list1.ptr;
-        let mut list2 = list2;
-        list2.do_not_free_on_drop();
-        let list2 = list2.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_concat(list1, list2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
-                                             should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_size`.
-    pub fn size(&self) -> i32 {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_size(list) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_n_constraint`.
-    pub fn n_constraint(&self) -> i32 {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_n_constraint(list) };
+        let isl_rs_result = unsafe { isl_constraint_list_to_str(list) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
         isl_rs_result
     }
 
@@ -292,20 +94,6 @@ impl ConstraintList {
         let list = self;
         let list = list.ptr;
         let isl_rs_result = unsafe { isl_constraint_list_get_at(list, index) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Constraint { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_get_constraint`.
-    pub fn get_constraint(&self, index: i32) -> Constraint {
-        let context_for_error_message = self.get_ctx();
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_get_constraint(list, index) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -333,6 +121,236 @@ impl ConstraintList {
         isl_rs_result
     }
 
+    /// Wraps `isl_constraint_list_copy`.
+    pub fn copy(&self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_copy(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_reverse`.
+    pub fn reverse(self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_reverse(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_insert`.
+    pub fn insert(self, pos: u32, el: Constraint) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_insert(list, pos, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_size`.
+    pub fn size(&self) -> i32 {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_size(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_drop`.
+    pub fn drop(self, first: u32, n: u32) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_drop(list, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_alloc`.
+    pub fn alloc(ctx: &Context, n: i32) -> ConstraintList {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_alloc(ctx, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_from_constraint`.
+    pub fn from_constraint(el: Constraint) -> ConstraintList {
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_from_constraint(el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_n_constraint`.
+    pub fn n_constraint(&self) -> i32 {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_n_constraint(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_clear`.
+    pub fn clear(self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_clear(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_free`.
+    pub fn free(self) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_free(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_dump`.
+    pub fn dump(&self) {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_dump(list) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_add`.
+    pub fn add(self, el: Constraint) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_add(list, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_swap`.
+    pub fn swap(self, pos1: u32, pos2: u32) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_swap(list, pos1, pos2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_get_ctx(list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_concat`.
+    pub fn concat(self, list2: ConstraintList) -> ConstraintList {
+        let context_for_error_message = self.get_ctx();
+        let list1 = self;
+        let mut list1 = list1;
+        list1.do_not_free_on_drop();
+        let list1 = list1.ptr;
+        let mut list2 = list2;
+        list2.do_not_free_on_drop();
+        let list2 = list2.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_concat(list1, list2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = ConstraintList { ptr: isl_rs_result,
+                                             should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_constraint_list_get_constraint`.
+    pub fn get_constraint(&self, index: i32) -> Constraint {
+        let context_for_error_message = self.get_ctx();
+        let list = self;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_constraint_list_get_constraint(list, index) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Constraint { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_constraint_list_set_constraint`.
     pub fn set_constraint(self, index: i32, el: Constraint) -> ConstraintList {
         let context_for_error_message = self.get_ctx();
@@ -349,24 +367,6 @@ impl ConstraintList {
         }
         let isl_rs_result = ConstraintList { ptr: isl_rs_result,
                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_to_str`.
-    pub fn to_str(&self) -> &str {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_to_str(list) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_constraint_list_dump`.
-    pub fn dump(&self) {
-        let list = self;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_constraint_list_dump(list) };
         isl_rs_result
     }
 
