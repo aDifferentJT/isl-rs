@@ -1,43 +1,48 @@
-use fs_extra::dir::{copy, CopyOptions};
-use std::path::Path;
-use std::process::Command;
-use std::{env, fs};
+use std::{env, fs::File, io::Write, path::Path, process::Command};
+use tar::Archive;
+use xz::read::XzDecoder;
 
-fn main() {
-    let out_dir = env::var("OUT_DIR").unwrap();
-    let num_jobs = env::var("NUM_JOBS").unwrap();
-    let isl_dir_path = Path::new("isl/");
-    let pwd_at_build_start_path = env::current_dir().unwrap();
-    let mut copy_options = CopyOptions::new();
-    copy_options.skip_exist = true;
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let out_dir = env::var("OUT_DIR")?;
+    let num_jobs = env::var("NUM_JOBS")?;
+    let isl_url = "https://libisl.sourceforge.io/isl-0.27.tar.xz";
+    let isl_tar_path = Path::new(&out_dir).join("isl-0.27.tar.xz");
+    let isl_dir_path = Path::new(&out_dir).join("isl-0.27/");
+    let pwd_at_build_start_path = env::current_dir()?;
 
-    if !isl_dir_path.is_dir() {
-        panic!(concat!("`isl/` directory not found. Most likely",
-                       " `git submdoule update --init --recursive` was not invoked."));
-    }
+    // Extract only if not already extracted
+    if !isl_dir_path.exists() {
+        // Download only if file not already present
+        if !isl_tar_path.exists() {
+            println!("Downloading {}...", isl_url);
+            let resp = reqwest::blocking::get(isl_url)?;
+            if !resp.status().is_success() {
+                return Err(format!("Failed to download {}: {}", isl_url, resp.status()).into());
+            }
+            let mut file = File::create(&isl_tar_path)?;
+            let bytes = resp.bytes()?;
+            file.write_all(&bytes)?;
+        } else {
+            println!("Using cached archive: {}", isl_tar_path.display());
+        }
 
-    if !Path::new("isl/imath").is_dir() {
-        panic!(concat!("`isl/imath/` directory not found. Most likely",
-                       " `git submdoule update --init --recursive` was not invoked."));
-    }
-
-    // Copy to out_dir and change isl path
-    copy(isl_dir_path, out_dir.to_string().as_str(), &copy_options).unwrap();
-    let isl_dir_path = Path::new(&out_dir).join("isl/");
-
-    if Path::new("isl/").join(".git").is_file() {
-        let mut copy_options = CopyOptions::new();
-        copy_options.overwrite = true;
-        fs::remove_file(isl_dir_path.join(".git")).unwrap();
-        copy(".git/modules/isl/", &isl_dir_path, &copy_options).unwrap();
+        println!("Extracting to {}...", isl_tar_path.display());
+        let file = File::open(&isl_tar_path)?;
+        let decompressor = XzDecoder::new(file);
+        let mut archive = Archive::new(decompressor);
+        archive.unpack(&out_dir)?;
+    } else {
+        println!("Already extracted: {}", isl_tar_path.display());
     }
 
     // Goto isl/ before building anything
     // (Not ideal but better than `make` emitting intermediary files into tree)
     env::set_current_dir(&isl_dir_path).expect("Could not cd into isl/");
 
+    /* autogen.sh is only for git, not tar
     Command::new("./autogen.sh").status()
                                 .expect("failed to autoreconf!");
+    */
     Command::new("./configure").args(["--prefix",
                                       out_dir.as_str(),
                                       "--with-pic=isl",
@@ -57,7 +62,9 @@ fn main() {
     // Go back to old_pwd
     env::set_current_dir(pwd_at_build_start_path).expect("Could not cd back into OUT_DIR");
 
-    println!("cargo:rustc-link-search=native={}/lib/", out_dir);
+    println!("cargo:rustc-link-search=native={out_dir}/lib/");
     println!("cargo:rustc-link-lib=static=isl");
-    println!("cargo:rerun-if-changed=isl/");
+    println!("cargo:rerun-if-changed=build.rs");
+
+    Ok(())
 }

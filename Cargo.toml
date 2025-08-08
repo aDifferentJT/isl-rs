@@ -17,4 +17,6 @@ path = "src/lib.rs"
 libc = "0.2.133"
 
 [build-dependencies]
-fs_extra = "1.2.0"
+reqwest = { version = "0.12.22", features = ["blocking"] }
+tar = "0.4.44"
+xz = "0.1.0"
