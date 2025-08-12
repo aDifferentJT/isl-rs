@@ -5,9 +5,9 @@ use xz::read::XzDecoder;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out_dir = env::var("OUT_DIR")?;
     let num_jobs = env::var("NUM_JOBS")?;
-    let isl_url = "https://libisl.sourceforge.io/isl-0.27.tar.xz";
-    let isl_tar_path = Path::new(&out_dir).join("isl-0.27.tar.xz");
-    let isl_dir_path = Path::new(&out_dir).join("isl-0.27/");
+    let isl_url = "https://libisl.sourceforge.io/isl-0.25.tar.xz";
+    let isl_tar_path = Path::new(&out_dir).join("isl-0.25.tar.xz");
+    let isl_dir_path = Path::new(&out_dir).join("isl-0.25/");
     let pwd_at_build_start_path = env::current_dir()?;
 
     // Extract only if not already extracted
