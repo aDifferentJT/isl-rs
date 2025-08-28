@@ -7,5 +7,4 @@ pub enum Stat {
     Ok = 0,
 }
 
-impl Stat {
-}
+impl Stat {}
