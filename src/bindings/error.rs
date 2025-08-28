@@ -13,4 +13,5 @@ pub enum Error {
     Unsupported,
 }
 
-impl Error {}
+impl Error {
+}

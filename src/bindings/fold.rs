@@ -9,4 +9,5 @@ pub enum Fold {
     List,
 }
 
-impl Fold {}
+impl Fold {
+}
