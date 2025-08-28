@@ -2,12 +2,12 @@
 // LICENSE: MIT
 
 use crate::bindings::{
-    Aff, Constraint, Context, DimType, Fold, Point, QPolynomialFold, QPolynomialList, Set, Space,
-    Term, Val,
+    Aff, BasicSet, Constraint, Context, DimType, Fold, Point, QPolynomialFold, QPolynomialList,
+    Set, Space, Stat, Term, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 
 /// Wraps `isl_qpolynomial`.
 pub struct QPolynomial {
@@ -17,142 +17,156 @@ pub struct QPolynomial {
 
 extern "C" {
 
-    fn isl_qpolynomial_is_nan(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_isa_aff(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_fold_is_empty(fold: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_nan_on_domain(domain: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_get_space(qp: uintptr_t) -> uintptr_t;
 
     fn isl_qpolynomial_copy(qp: uintptr_t) -> uintptr_t;
 
-    fn isl_qpolynomial_fold_copy(fold: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_plain_is_equal(fold1: uintptr_t, fold2: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_pow(qp: uintptr_t, power: u32) -> uintptr_t;
-
-    fn isl_qpolynomial_sgn(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_one_on_domain(domain: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_gist(qp: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_gist(fold: uintptr_t, context: uintptr_t) -> uintptr_t;
-
     fn isl_qpolynomial_align_params(qp: uintptr_t, model: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_dump(fold: uintptr_t);
-
-    fn isl_qpolynomial_sub(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_infty_on_domain(domain: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_get_type(fold: uintptr_t) -> Fold;
-
-    fn isl_qpolynomial_from_aff(aff: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_drop_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_qpolynomial_insert_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_qpolynomial_homogenize(poly: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_from_constraint(c: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_scale_down_val(fold: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_scale_down_val(qp: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_gist_params(fold: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_alloc(type_: Fold, qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_move_dims(fold: uintptr_t, dst_type: DimType, dst_pos: u32,
-                                      src_type: DimType, src_pos: u32, n: u32)
-                                      -> uintptr_t;
-
-    fn isl_qpolynomial_scale_val(qp: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_involves_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
-
-    fn isl_qpolynomial_fold_eval(fold: uintptr_t, pnt: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_neginfty_on_domain(domain: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_get_domain_space(fold: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_free(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_gist_params(qp: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_from_term(term: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_get_space(fold: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_get_space(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_empty(type_: Fold, space: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_scale_val(fold: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_is_zero(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_add(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_is_neginfty(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_get_constant_val(qp: uintptr_t) -> uintptr_t;
 
     fn isl_qpolynomial_to_list(el: uintptr_t) -> uintptr_t;
 
     fn isl_qpolynomial_project_domain_on_params(qp: uintptr_t) -> uintptr_t;
 
-    fn isl_qpolynomial_eval(qp: uintptr_t, pnt: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_zero_on_domain(domain: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_scale_down_val(qp: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_add_dims(qp: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
+
+    fn isl_qpolynomial_pow(qp: uintptr_t, power: u32) -> uintptr_t;
+
+    fn isl_qpolynomial_neginfty_on_domain(domain: uintptr_t) -> uintptr_t;
 
     fn isl_qpolynomial_fold_get_ctx(fold: uintptr_t) -> uintptr_t;
 
-    fn isl_qpolynomial_as_aff(qp: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_from_constraint(c: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
 
-    fn isl_qpolynomial_is_infty(qp: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_fold_fold(fold1: uintptr_t, fold2: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_dump(qp: uintptr_t);
-
-    fn isl_qpolynomial_dim(qp: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_qpolynomial_domain_reverse(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_var_on_domain(domain: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_qpolynomial_fold_is_nan(fold: uintptr_t) -> i32;
-
-    fn isl_qpolynomial_get_ctx(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_get_domain_space(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_add_dims(qp: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
+    fn isl_qpolynomial_fold_foreach_qpolynomial(fold: uintptr_t,
+                                                fn_: unsafe extern "C" fn(uintptr_t,
+                                                                     *mut c_void)
+                                                                     -> Stat,
+                                                user: *mut c_void)
+                                                -> Stat;
 
     fn isl_qpolynomial_set_dim_name(qp: uintptr_t, type_: DimType, pos: u32, s: *const c_char)
                                     -> uintptr_t;
 
-    fn isl_qpolynomial_fold_free(fold: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_from_aff(aff: uintptr_t) -> uintptr_t;
 
-    fn isl_qpolynomial_mul(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_is_zero(qp: uintptr_t) -> i32;
 
-    fn isl_qpolynomial_plain_is_equal(qp1: uintptr_t, qp2: uintptr_t) -> i32;
+    fn isl_qpolynomial_add(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_from_term(term: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_one_on_domain(domain: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_eval(qp: uintptr_t, pnt: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_sub(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_plain_is_equal(fold1: uintptr_t, fold2: uintptr_t) -> i32;
 
     fn isl_qpolynomial_val_on_domain(space: uintptr_t, val: uintptr_t) -> uintptr_t;
 
-    fn isl_qpolynomial_neg(qp: uintptr_t) -> uintptr_t;
-
-    fn isl_qpolynomial_zero_on_domain(domain: uintptr_t) -> uintptr_t;
+    fn isl_qpolynomial_free(qp: uintptr_t) -> uintptr_t;
 
     fn isl_qpolynomial_move_dims(qp: uintptr_t, dst_type: DimType, dst_pos: u32,
                                  src_type: DimType, src_pos: u32, n: u32)
                                  -> uintptr_t;
+
+    fn isl_qpolynomial_gist(qp: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_is_infty(qp: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_get_constant_val(qp: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_dump(qp: uintptr_t);
+
+    fn isl_qpolynomial_fold_empty(type_: Fold, space: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_eval(fold: uintptr_t, pnt: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_plain_is_equal(qp1: uintptr_t, qp2: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_neg(qp: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_alloc(type_: Fold, qp: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_mul(qp1: uintptr_t, qp2: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_as_polynomial_on_domain(qp: uintptr_t, bset: uintptr_t,
+                                               fn_: unsafe extern "C" fn(uintptr_t,
+                                                                    uintptr_t,
+                                                                    *mut c_void)
+                                                                    -> Stat,
+                                               user: *mut c_void)
+                                               -> Stat;
+
+    fn isl_qpolynomial_is_nan(qp: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_fold_get_space(fold: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_dim(qp: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_qpolynomial_nan_on_domain(domain: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_is_neginfty(qp: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_insert_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_copy(fold: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_var_on_domain(domain: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_is_empty(fold: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_infty_on_domain(domain: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_sgn(qp: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_involves_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
+
+    fn isl_qpolynomial_fold_free(fold: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_gist(fold: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_scale_down_val(fold: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_get_ctx(qp: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_drop_dims(qp: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_move_dims(fold: uintptr_t, dst_type: DimType, dst_pos: u32,
+                                      src_type: DimType, src_pos: u32, n: u32)
+                                      -> uintptr_t;
+
+    fn isl_qpolynomial_fold_dump(fold: uintptr_t);
+
+    fn isl_qpolynomial_gist_params(qp: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_gist_params(fold: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_foreach_term(qp: uintptr_t,
+                                    fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                                    user: *mut c_void)
+                                    -> Stat;
+
+    fn isl_qpolynomial_get_domain_space(qp: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_is_nan(fold: uintptr_t) -> i32;
+
+    fn isl_qpolynomial_fold_get_domain_space(fold: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_homogenize(poly: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_fold(fold1: uintptr_t, fold2: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_scale_val(fold: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_scale_val(qp: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_qpolynomial_fold_get_type(fold: uintptr_t) -> Fold;
 
 }
 
@@ -187,57 +201,17 @@ impl core::ops::Mul for QPolynomial {
 }
 
 impl QPolynomial {
-    /// Wraps `isl_qpolynomial_is_nan`.
-    pub fn is_nan(&self) -> bool {
+    /// Wraps `isl_qpolynomial_get_space`.
+    pub fn get_space(&self) -> Space {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_is_nan(qp) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_isa_aff`.
-    pub fn isa_aff(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_isa_aff(qp) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_is_empty`.
-    pub fn fold_is_empty(fold: &QPolynomialFold) -> bool {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_is_empty(fold) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error"),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_nan_on_domain`.
-    pub fn nan_on_domain(domain: Space) -> QPolynomial {
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_nan_on_domain(domain) };
+        let isl_rs_result = unsafe { isl_qpolynomial_get_space(qp) };
         if isl_rs_result == 0 {
-            panic!("ISL error");
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -252,105 +226,6 @@ impl QPolynomial {
         }
         let isl_rs_result = QPolynomial { ptr: isl_rs_result,
                                           should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_copy`.
-    pub fn fold_copy(fold: &QPolynomialFold) -> QPolynomialFold {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_copy(fold) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_plain_is_equal`.
-    pub fn fold_plain_is_equal(fold1: &QPolynomialFold, fold2: &QPolynomialFold) -> bool {
-        let fold1 = fold1.ptr;
-        let fold2 = fold2.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_plain_is_equal(fold1, fold2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error"),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_pow`.
-    pub fn pow(self, power: u32) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_pow(qp, power) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_sgn`.
-    pub fn sgn(&self) -> i32 {
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_sgn(qp) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_one_on_domain`.
-    pub fn one_on_domain(domain: Space) -> QPolynomial {
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_one_on_domain(domain) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_gist`.
-    pub fn gist(self, context: Set) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_gist(qp, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_gist`.
-    pub fn fold_gist(fold: QPolynomialFold, context: Set) -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_gist(fold, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -373,24 +248,30 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_dump`.
-    pub fn fold_dump(fold: &QPolynomialFold) {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_dump(fold) };
+    /// Wraps `isl_qpolynomial_to_list`.
+    pub fn to_list(self) -> QPolynomialList {
+        let context_for_error_message = self.get_ctx();
+        let el = self;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_to_list(el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomialList { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_sub`.
-    pub fn sub(self, qp2: QPolynomial) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_project_domain_on_params`.
+    pub fn project_domain_on_params(self) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
-        let qp1 = self;
-        let mut qp1 = qp1;
-        qp1.do_not_free_on_drop();
-        let qp1 = qp1.ptr;
-        let mut qp2 = qp2;
-        qp2.do_not_free_on_drop();
-        let qp2 = qp2.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_sub(qp1, qp2) };
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_project_domain_on_params(qp) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -399,117 +280,17 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_infty_on_domain`.
-    pub fn infty_on_domain(domain: Space) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_zero_on_domain`.
+    pub fn zero_on_domain(domain: Space) -> QPolynomial {
         let mut domain = domain;
         domain.do_not_free_on_drop();
         let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_infty_on_domain(domain) };
+        let isl_rs_result = unsafe { isl_qpolynomial_zero_on_domain(domain) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
         let isl_rs_result = QPolynomial { ptr: isl_rs_result,
                                           should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_get_type`.
-    pub fn fold_get_type(fold: &QPolynomialFold) -> Fold {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_type(fold) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_from_aff`.
-    pub fn from_aff(aff: Aff) -> QPolynomial {
-        let mut aff = aff;
-        aff.do_not_free_on_drop();
-        let aff = aff.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_from_aff(aff) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_drop_dims`.
-    pub fn drop_dims(self, type_: DimType, first: u32, n: u32) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_drop_dims(qp, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_insert_dims`.
-    pub fn insert_dims(self, type_: DimType, first: u32, n: u32) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_insert_dims(qp, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_homogenize`.
-    pub fn homogenize(self) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let poly = self;
-        let mut poly = poly;
-        poly.do_not_free_on_drop();
-        let poly = poly.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_homogenize(poly) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_from_constraint`.
-    pub fn from_constraint(c: Constraint, type_: DimType, pos: u32) -> QPolynomial {
-        let mut c = c;
-        c.do_not_free_on_drop();
-        let c = c.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_from_constraint(c, type_, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_scale_down_val`.
-    pub fn fold_scale_down_val(fold: QPolynomialFold, v: Val) -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_scale_down_val(fold, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -532,66 +313,14 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_gist_params`.
-    pub fn fold_gist_params(fold: QPolynomialFold, context: Set) -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_gist_params(fold, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_alloc`.
-    pub fn fold_alloc(type_: Fold, qp: QPolynomial) -> QPolynomialFold {
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_alloc(type_, qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_move_dims`.
-    pub fn fold_move_dims(fold: QPolynomialFold, dst_type: DimType, dst_pos: u32,
-                          src_type: DimType, src_pos: u32, n: u32)
-                          -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe {
-            isl_qpolynomial_fold_move_dims(fold, dst_type, dst_pos, src_type, src_pos, n)
-        };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_scale_val`.
-    pub fn scale_val(self, v: Val) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_add_dims`.
+    pub fn add_dims(self, type_: DimType, n: u32) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_scale_val(qp, v) };
+        let isl_rs_result = unsafe { isl_qpolynomial_add_dims(qp, type_, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -600,34 +329,19 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_involves_dims`.
-    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+    /// Wraps `isl_qpolynomial_pow`.
+    pub fn pow(self, power: u32) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_involves_dims(qp, type_, first, n) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_eval`.
-    pub fn fold_eval(fold: QPolynomialFold, pnt: Point) -> Val {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let mut pnt = pnt;
-        pnt.do_not_free_on_drop();
-        let pnt = pnt.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_eval(fold, pnt) };
+        let isl_rs_result = unsafe { isl_qpolynomial_pow(qp, power) };
         if isl_rs_result == 0 {
-            panic!("ISL error");
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Val { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -645,26 +359,54 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_get_domain_space`.
-    pub fn fold_get_domain_space(fold: &QPolynomialFold) -> Space {
+    /// Wraps `isl_qpolynomial_fold_get_ctx`.
+    pub fn fold_get_ctx(fold: &QPolynomialFold) -> Context {
         let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_domain_space(fold) };
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_ctx(fold) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_free`.
-    pub fn free(self) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_from_constraint`.
+    pub fn from_constraint(c: Constraint, type_: DimType, pos: u32) -> QPolynomial {
+        let mut c = c;
+        c.do_not_free_on_drop();
+        let c = c.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_from_constraint(c, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_foreach_qpolynomial`.
+    pub fn fold_foreach_qpolynomial(fold: &QPolynomialFold,
+                                    fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                                    user: *mut c_void)
+                                    -> Stat {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_foreach_qpolynomial(fold, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_set_dim_name`.
+    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_free(qp) };
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_qpolynomial_set_dim_name(qp, type_, pos, s) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -673,93 +415,17 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_gist_params`.
-    pub fn gist_params(self, context: Set) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_gist_params(qp, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_from_term`.
-    pub fn from_term(term: Term) -> QPolynomial {
-        let mut term = term;
-        term.do_not_free_on_drop();
-        let term = term.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_from_term(term) };
+    /// Wraps `isl_qpolynomial_from_aff`.
+    pub fn from_aff(aff: Aff) -> QPolynomial {
+        let mut aff = aff;
+        aff.do_not_free_on_drop();
+        let aff = aff.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_from_aff(aff) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
         let isl_rs_result = QPolynomial { ptr: isl_rs_result,
                                           should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_get_space`.
-    pub fn fold_get_space(fold: &QPolynomialFold) -> Space {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_space(fold) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_get_space`.
-    pub fn get_space(&self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_get_space(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_empty`.
-    pub fn fold_empty(type_: Fold, space: Space) -> QPolynomialFold {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_empty(type_, space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_scale_val`.
-    pub fn fold_scale_val(fold: QPolynomialFold, v: Val) -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_scale_val(fold, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -796,60 +462,28 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_is_neginfty`.
-    pub fn is_neginfty(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_is_neginfty(qp) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_get_constant_val`.
-    pub fn get_constant_val(&self) -> Val {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_get_constant_val(qp) };
+    /// Wraps `isl_qpolynomial_from_term`.
+    pub fn from_term(term: Term) -> QPolynomial {
+        let mut term = term;
+        term.do_not_free_on_drop();
+        let term = term.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_from_term(term) };
         if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+            panic!("ISL error");
         }
-        let isl_rs_result = Val { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_to_list`.
-    pub fn to_list(self) -> QPolynomialList {
-        let context_for_error_message = self.get_ctx();
-        let el = self;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_to_list(el) };
+    /// Wraps `isl_qpolynomial_one_on_domain`.
+    pub fn one_on_domain(domain: Space) -> QPolynomial {
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_one_on_domain(domain) };
         if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomialList { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_project_domain_on_params`.
-    pub fn project_domain_on_params(self) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_project_domain_on_params(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+            panic!("ISL error");
         }
         let isl_rs_result = QPolynomial { ptr: isl_rs_result,
                                           should_free_on_drop: true };
@@ -875,33 +509,106 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_get_ctx`.
-    pub fn fold_get_ctx(fold: &QPolynomialFold) -> Context {
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_ctx(fold) };
+    /// Wraps `isl_qpolynomial_sub`.
+    pub fn sub(self, qp2: QPolynomial) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp1 = self;
+        let mut qp1 = qp1;
+        qp1.do_not_free_on_drop();
+        let qp1 = qp1.ptr;
+        let mut qp2 = qp2;
+        qp2.do_not_free_on_drop();
+        let qp2 = qp2.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_sub(qp1, qp2) };
         if isl_rs_result == 0 {
-            panic!("ISL error");
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_as_aff`.
-    pub fn as_aff(self) -> Aff {
+    /// Wraps `isl_qpolynomial_fold_plain_is_equal`.
+    pub fn fold_plain_is_equal(fold1: &QPolynomialFold, fold2: &QPolynomialFold) -> bool {
+        let fold1 = fold1.ptr;
+        let fold2 = fold2.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_plain_is_equal(fold1, fold2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error"),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_val_on_domain`.
+    pub fn val_on_domain(space: Space, val: Val) -> QPolynomial {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut val = val;
+        val.do_not_free_on_drop();
+        let val = val.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_val_on_domain(space, val) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_free`.
+    pub fn free(self) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_as_aff(qp) };
+        let isl_rs_result = unsafe { isl_qpolynomial_free(qp) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Aff { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_move_dims`.
+    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
+                     n: u32)
+                     -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let isl_rs_result =
+            unsafe { isl_qpolynomial_move_dims(qp, dst_type, dst_pos, src_type, src_pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_gist`.
+    pub fn gist(self, context: Set) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_gist(qp, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -919,20 +626,17 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_fold`.
-    pub fn fold_fold(fold1: QPolynomialFold, fold2: QPolynomialFold) -> QPolynomialFold {
-        let mut fold1 = fold1;
-        fold1.do_not_free_on_drop();
-        let fold1 = fold1.ptr;
-        let mut fold2 = fold2;
-        fold2.do_not_free_on_drop();
-        let fold2 = fold2.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_fold(fold1, fold2) };
+    /// Wraps `isl_qpolynomial_get_constant_val`.
+    pub fn get_constant_val(&self) -> Val {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_get_constant_val(qp) };
         if isl_rs_result == 0 {
-            panic!("ISL error");
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
+        let isl_rs_result = Val { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -944,93 +648,60 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_dim`.
-    pub fn dim(&self, type_: DimType) -> i32 {
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_dim(qp, type_) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_domain_reverse`.
-    pub fn domain_reverse(self) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_domain_reverse(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_var_on_domain`.
-    pub fn var_on_domain(domain: Space, type_: DimType, pos: u32) -> QPolynomial {
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_var_on_domain(domain, type_, pos) };
+    /// Wraps `isl_qpolynomial_fold_empty`.
+    pub fn fold_empty(type_: Fold, space: Space) -> QPolynomialFold {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_empty(type_, space) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_fold_is_nan`.
-    pub fn fold_is_nan(fold: &QPolynomialFold) -> bool {
+    /// Wraps `isl_qpolynomial_fold_eval`.
+    pub fn fold_eval(fold: QPolynomialFold, pnt: Point) -> Val {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
         let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_is_nan(fold) };
+        let mut pnt = pnt;
+        pnt.do_not_free_on_drop();
+        let pnt = pnt.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_eval(fold, pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Val { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_plain_is_equal`.
+    pub fn plain_is_equal(&self, qp2: &QPolynomial) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let qp1 = self;
+        let qp1 = qp1.ptr;
+        let qp2 = qp2.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_plain_is_equal(qp1, qp2) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
-            _ => panic!("ISL error"),
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
         };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_get_ctx(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_get_domain_space`.
-    pub fn get_domain_space(&self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_get_domain_space(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_add_dims`.
-    pub fn add_dims(self, type_: DimType, n: u32) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_neg`.
+    pub fn neg(self) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_add_dims(qp, type_, n) };
+        let isl_rs_result = unsafe { isl_qpolynomial_neg(qp) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1039,30 +710,12 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_set_dim_name`.
-    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
-        let qp = self;
+    /// Wraps `isl_qpolynomial_fold_alloc`.
+    pub fn fold_alloc(type_: Fold, qp: QPolynomial) -> QPolynomialFold {
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_qpolynomial_set_dim_name(qp, type_, pos, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_qpolynomial_fold_free`.
-    pub fn fold_free(fold: QPolynomialFold) -> QPolynomialFold {
-        let mut fold = fold;
-        fold.do_not_free_on_drop();
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_fold_free(fold) };
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_alloc(type_, qp) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -1090,13 +743,28 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_plain_is_equal`.
-    pub fn plain_is_equal(&self, qp2: &QPolynomial) -> bool {
+    /// Wraps `isl_qpolynomial_as_polynomial_on_domain`.
+    pub fn as_polynomial_on_domain(&self, bset: &BasicSet,
+                                   fn_: unsafe extern "C" fn(uintptr_t,
+                                                        uintptr_t,
+                                                        *mut c_void)
+                                                        -> Stat,
+                                   user: *mut c_void)
+                                   -> Stat {
         let context_for_error_message = self.get_ctx();
-        let qp1 = self;
-        let qp1 = qp1.ptr;
-        let qp2 = qp2.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_plain_is_equal(qp1, qp2) };
+        let qp = self;
+        let qp = qp.ptr;
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_as_polynomial_on_domain(qp, bset, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_is_nan`.
+    pub fn is_nan(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_is_nan(qp) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1105,45 +773,32 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_val_on_domain`.
-    pub fn val_on_domain(space: Space, val: Val) -> QPolynomial {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut val = val;
-        val.do_not_free_on_drop();
-        let val = val.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_val_on_domain(space, val) };
+    /// Wraps `isl_qpolynomial_fold_get_space`.
+    pub fn fold_get_space(fold: &QPolynomialFold) -> Space {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_space(fold) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_neg`.
-    pub fn neg(self) -> QPolynomial {
-        let context_for_error_message = self.get_ctx();
+    /// Wraps `isl_qpolynomial_dim`.
+    pub fn dim(&self, type_: DimType) -> i32 {
         let qp = self;
-        let mut qp = qp;
-        qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_neg(qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
-                                          should_free_on_drop: true };
+        let isl_rs_result = unsafe { isl_qpolynomial_dim(qp, type_) };
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_zero_on_domain`.
-    pub fn zero_on_domain(domain: Space) -> QPolynomial {
+    /// Wraps `isl_qpolynomial_nan_on_domain`.
+    pub fn nan_on_domain(domain: Space) -> QPolynomial {
         let mut domain = domain;
         domain.do_not_free_on_drop();
         let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_qpolynomial_zero_on_domain(domain) };
+        let isl_rs_result = unsafe { isl_qpolynomial_nan_on_domain(domain) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -1152,22 +807,372 @@ impl QPolynomial {
         isl_rs_result
     }
 
-    /// Wraps `isl_qpolynomial_move_dims`.
-    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
-                     n: u32)
-                     -> QPolynomial {
+    /// Wraps `isl_qpolynomial_is_neginfty`.
+    pub fn is_neginfty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_is_neginfty(qp) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_insert_dims`.
+    pub fn insert_dims(self, type_: DimType, first: u32, n: u32) -> QPolynomial {
         let context_for_error_message = self.get_ctx();
         let qp = self;
         let mut qp = qp;
         qp.do_not_free_on_drop();
         let qp = qp.ptr;
-        let isl_rs_result =
-            unsafe { isl_qpolynomial_move_dims(qp, dst_type, dst_pos, src_type, src_pos, n) };
+        let isl_rs_result = unsafe { isl_qpolynomial_insert_dims(qp, type_, first, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = QPolynomial { ptr: isl_rs_result,
                                           should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_copy`.
+    pub fn fold_copy(fold: &QPolynomialFold) -> QPolynomialFold {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_copy(fold) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_var_on_domain`.
+    pub fn var_on_domain(domain: Space, type_: DimType, pos: u32) -> QPolynomial {
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_var_on_domain(domain, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_is_empty`.
+    pub fn fold_is_empty(fold: &QPolynomialFold) -> bool {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_is_empty(fold) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error"),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_infty_on_domain`.
+    pub fn infty_on_domain(domain: Space) -> QPolynomial {
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_infty_on_domain(domain) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_sgn`.
+    pub fn sgn(&self) -> i32 {
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_sgn(qp) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_involves_dims`.
+    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_involves_dims(qp, type_, first, n) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_free`.
+    pub fn fold_free(fold: QPolynomialFold) -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_free(fold) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_gist`.
+    pub fn fold_gist(fold: QPolynomialFold, context: Set) -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_gist(fold, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_scale_down_val`.
+    pub fn fold_scale_down_val(fold: QPolynomialFold, v: Val) -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_scale_down_val(fold, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_get_ctx(qp) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_drop_dims`.
+    pub fn drop_dims(self, type_: DimType, first: u32, n: u32) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_drop_dims(qp, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_move_dims`.
+    pub fn fold_move_dims(fold: QPolynomialFold, dst_type: DimType, dst_pos: u32,
+                          src_type: DimType, src_pos: u32, n: u32)
+                          -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe {
+            isl_qpolynomial_fold_move_dims(fold, dst_type, dst_pos, src_type, src_pos, n)
+        };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_dump`.
+    pub fn fold_dump(fold: &QPolynomialFold) {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_dump(fold) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_gist_params`.
+    pub fn gist_params(self, context: Set) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_gist_params(qp, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_gist_params`.
+    pub fn fold_gist_params(fold: QPolynomialFold, context: Set) -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_gist_params(fold, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_foreach_term`.
+    pub fn foreach_term(&self, fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                        user: *mut c_void)
+                        -> Stat {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_foreach_term(qp, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_get_domain_space`.
+    pub fn get_domain_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_get_domain_space(qp) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_is_nan`.
+    pub fn fold_is_nan(fold: &QPolynomialFold) -> bool {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_is_nan(fold) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error"),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_get_domain_space`.
+    pub fn fold_get_domain_space(fold: &QPolynomialFold) -> Space {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_domain_space(fold) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_homogenize`.
+    pub fn homogenize(self) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let poly = self;
+        let mut poly = poly;
+        poly.do_not_free_on_drop();
+        let poly = poly.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_homogenize(poly) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_fold`.
+    pub fn fold_fold(fold1: QPolynomialFold, fold2: QPolynomialFold) -> QPolynomialFold {
+        let mut fold1 = fold1;
+        fold1.do_not_free_on_drop();
+        let fold1 = fold1.ptr;
+        let mut fold2 = fold2;
+        fold2.do_not_free_on_drop();
+        let fold2 = fold2.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_fold(fold1, fold2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_scale_val`.
+    pub fn fold_scale_val(fold: QPolynomialFold, v: Val) -> QPolynomialFold {
+        let mut fold = fold;
+        fold.do_not_free_on_drop();
+        let fold = fold.ptr;
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_scale_val(fold, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = QPolynomialFold { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_scale_val`.
+    pub fn scale_val(self, v: Val) -> QPolynomial {
+        let context_for_error_message = self.get_ctx();
+        let qp = self;
+        let mut qp = qp;
+        qp.do_not_free_on_drop();
+        let qp = qp.ptr;
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_scale_val(qp, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = QPolynomial { ptr: isl_rs_result,
+                                          should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_qpolynomial_fold_get_type`.
+    pub fn fold_get_type(fold: &QPolynomialFold) -> Fold {
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_qpolynomial_fold_get_type(fold) };
         isl_rs_result
     }
 

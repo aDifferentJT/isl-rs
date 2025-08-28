@@ -21,141 +21,375 @@ pub struct Printer {
 
 extern "C" {
 
+    fn isl_printer_print_qpolynomial_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_set_output_format(p: uintptr_t, output_format: i32) -> uintptr_t;
+
+    fn isl_printer_print_str(p: uintptr_t, s: *const c_char) -> uintptr_t;
+
+    fn isl_printer_print_val(p: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_start_line(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_yaml_start_mapping(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_aff(p: uintptr_t, aff: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_pw_multi_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_flush(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_basic_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_basic_map(printer: uintptr_t, bmap: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_multi_id(p: uintptr_t, mi: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_indent(p: uintptr_t, indent: i32) -> uintptr_t;
+
+    fn isl_printer_print_multi_union_pw_aff(p: uintptr_t, mupa: uintptr_t) -> uintptr_t;
+
     fn isl_printer_print_val_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
 
     fn isl_printer_set_prefix(p: uintptr_t, prefix: *const c_char) -> uintptr_t;
 
-    fn isl_printer_print_id_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_pw_qpolynomial_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_multi_id(p: uintptr_t, mi: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_pw_multi_aff(p: uintptr_t, pma: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_union_set(p: uintptr_t, uset: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_set_note(p: uintptr_t, id: uintptr_t, note: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_set_suffix(p: uintptr_t, suffix: *const c_char) -> uintptr_t;
-
-    fn isl_printer_start_line(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_yaml_next(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_multi_val(p: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_multi_pw_aff(p: uintptr_t, mpa: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_set_indent(p: uintptr_t, indent: i32) -> uintptr_t;
-
-    fn isl_printer_print_union_pw_multi_aff(p: uintptr_t, upma: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_union_map(p: uintptr_t, umap: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_set_yaml_style(p: uintptr_t, yaml_style: i32) -> uintptr_t;
-
-    fn isl_printer_print_qpolynomial_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_free(printer: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_flush(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_basic_set(printer: uintptr_t, bset: uintptr_t) -> uintptr_t;
-
     fn isl_printer_get_note(p: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_multi_aff(p: uintptr_t, maff: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_union_set_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_yaml_end_sequence(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_qpolynomial(p: uintptr_t, qp: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_set_isl_int_width(p: uintptr_t, width: i32) -> uintptr_t;
-
-    fn isl_printer_print_int(p: uintptr_t, i: i32) -> uintptr_t;
-
-    fn isl_printer_set_output_format(p: uintptr_t, output_format: i32) -> uintptr_t;
-
-    fn isl_printer_print_basic_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_union_pw_multi_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_get_ctx(printer: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_union_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
 
     fn isl_printer_end_line(p: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_print_pw_qpolynomial(p: uintptr_t, pwqp: uintptr_t) -> uintptr_t;
+    fn isl_printer_get_yaml_style(p: uintptr_t) -> i32;
 
-    fn isl_printer_print_union_pw_qpolynomial(p: uintptr_t, upwqp: uintptr_t) -> uintptr_t;
+    fn isl_printer_set_yaml_style(p: uintptr_t, yaml_style: i32) -> uintptr_t;
 
-    fn isl_printer_print_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_id(p: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_get_str(printer: uintptr_t) -> *const c_char;
-
-    fn isl_printer_print_val(p: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_str(p: uintptr_t, s: *const c_char) -> uintptr_t;
-
-    fn isl_printer_yaml_start_sequence(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_aff(p: uintptr_t, aff: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_yaml_end_mapping(p: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_get_output_format(p: uintptr_t) -> i32;
-
-    fn isl_printer_print_union_pw_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+    fn isl_printer_print_basic_set(printer: uintptr_t, bset: uintptr_t) -> uintptr_t;
 
     fn isl_printer_print_map(printer: uintptr_t, map: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_print_double(p: uintptr_t, d: f64) -> uintptr_t;
-
     fn isl_printer_print_pw_aff(p: uintptr_t, pwaff: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_has_note(p: uintptr_t, id: uintptr_t) -> i32;
+    fn isl_printer_print_pw_multi_aff(p: uintptr_t, pma: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_to_str(ctx: uintptr_t) -> uintptr_t;
+    fn isl_printer_free(printer: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_print_qpolynomial_fold(p: uintptr_t, fold: uintptr_t) -> uintptr_t;
+    fn isl_printer_print_pw_qpolynomial_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_yaml_start_mapping(p: uintptr_t) -> uintptr_t;
+    fn isl_printer_print_multi_val(p: uintptr_t, mv: uintptr_t) -> uintptr_t;
 
-    fn isl_printer_print_set(printer: uintptr_t, map: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_multi_union_pw_aff(p: uintptr_t, mupa: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_pw_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_pw_multi_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_indent(p: uintptr_t, indent: i32) -> uintptr_t;
-
-    fn isl_printer_print_union_pw_aff(p: uintptr_t, upa: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_get_yaml_style(p: uintptr_t) -> i32;
-
-    fn isl_printer_print_pw_qpolynomial_fold_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_printer_print_basic_map(printer: uintptr_t, bmap: uintptr_t) -> uintptr_t;
+    fn isl_printer_print_int(p: uintptr_t, i: i32) -> uintptr_t;
 
     fn isl_printer_set_indent_prefix(p: uintptr_t, prefix: *const c_char) -> uintptr_t;
 
+    fn isl_printer_print_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_set(p: uintptr_t, uset: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_has_note(p: uintptr_t, id: uintptr_t) -> i32;
+
+    fn isl_printer_print_multi_pw_aff(p: uintptr_t, mpa: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_qpolynomial(p: uintptr_t, qp: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_yaml_end_sequence(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_set_isl_int_width(p: uintptr_t, width: i32) -> uintptr_t;
+
+    fn isl_printer_print_id_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_set_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_pw_aff(p: uintptr_t, upa: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_id(p: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_qpolynomial_fold(p: uintptr_t, fold: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_get_str(printer: uintptr_t) -> *const c_char;
+
+    fn isl_printer_print_union_pw_multi_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_map(p: uintptr_t, umap: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_map_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
     fn isl_printer_print_pw_qpolynomial_fold(p: uintptr_t, pwf: uintptr_t) -> uintptr_t;
 
+    fn isl_printer_get_ctx(printer: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_set_indent(p: uintptr_t, indent: i32) -> uintptr_t;
+
+    fn isl_printer_set_suffix(p: uintptr_t, suffix: *const c_char) -> uintptr_t;
+
+    fn isl_printer_print_set(printer: uintptr_t, map: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_pw_qpolynomial_fold_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_double(p: uintptr_t, d: f64) -> uintptr_t;
+
+    fn isl_printer_get_output_format(p: uintptr_t) -> i32;
+
+    fn isl_printer_print_union_pw_multi_aff(p: uintptr_t, upma: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_set_note(p: uintptr_t, id: uintptr_t, note: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_yaml_start_sequence(p: uintptr_t) -> uintptr_t;
+
     fn isl_printer_print_union_pw_qpolynomial_fold(p: uintptr_t, upwf: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_yaml_end_mapping(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_to_str(ctx: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_yaml_next(p: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_pw_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_multi_aff(p: uintptr_t, maff: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_union_pw_qpolynomial(p: uintptr_t, upwqp: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_pw_qpolynomial(p: uintptr_t, pwqp: uintptr_t) -> uintptr_t;
+
+    fn isl_printer_print_pw_aff_list(p: uintptr_t, list: uintptr_t) -> uintptr_t;
 
 }
 
 impl Printer {
+    /// Wraps `isl_printer_print_qpolynomial_list`.
+    pub fn print_qpolynomial_list(self, list: &QPolynomialList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_qpolynomial_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_output_format`.
+    pub fn set_output_format(self, output_format: i32) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_set_output_format(p, output_format) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_str`.
+    pub fn print_str(self, s: &str) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_printer_print_str(p, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_val`.
+    pub fn print_val(self, v: &Val) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_val(p, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_start_line`.
+    pub fn start_line(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_start_line(p) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_yaml_start_mapping`.
+    pub fn yaml_start_mapping(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_yaml_start_mapping(p) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_aff`.
+    pub fn print_aff(self, aff: &Aff) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let aff = aff.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_aff(p, aff) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_pw_multi_aff_list`.
+    pub fn print_pw_multi_aff_list(self, list: &PwMultiAffList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_multi_aff_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_flush`.
+    pub fn flush(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_flush(p) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_basic_map_list`.
+    pub fn print_basic_map_list(self, list: &BasicMapList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_basic_map_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_basic_map`.
+    pub fn print_basic_map(self, bmap: &BasicMap) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let printer = self;
+        let mut printer = printer;
+        printer.do_not_free_on_drop();
+        let printer = printer.ptr;
+        let bmap = bmap.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_basic_map(printer, bmap) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_multi_id`.
+    pub fn print_multi_id(self, mi: &MultiId) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let mi = mi.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_multi_id(p, mi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_indent`.
+    pub fn indent(self, indent: i32) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_indent(p, indent) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_multi_union_pw_aff`.
+    pub fn print_multi_union_pw_aff(self, mupa: &MultiUnionPwAff) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let mupa = mupa.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_multi_union_pw_aff(p, mupa) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_printer_print_val_list`.
     pub fn print_val_list(self, list: &ValList) -> Printer {
         let context_for_error_message = self.get_ctx();
@@ -191,15 +425,31 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_print_id_list`.
-    pub fn print_id_list(self, list: &IdList) -> Printer {
+    /// Wraps `isl_printer_get_note`.
+    pub fn get_note(&self, id: Id) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let p = p.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_printer_get_note(p, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_end_line`.
+    pub fn end_line(self) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_id_list(p, list) };
+        let isl_rs_result = unsafe { isl_printer_end_line(p) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -208,15 +458,22 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_print_pw_qpolynomial_list`.
-    pub fn print_pw_qpolynomial_list(self, list: &PwQPolynomialList) -> Printer {
+    /// Wraps `isl_printer_get_yaml_style`.
+    pub fn get_yaml_style(&self) -> i32 {
+        let p = self;
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_get_yaml_style(p) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_yaml_style`.
+    pub fn set_yaml_style(self, yaml_style: i32) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_list(p, list) };
+        let isl_rs_result = unsafe { isl_printer_set_yaml_style(p, yaml_style) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -225,15 +482,49 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_print_multi_id`.
-    pub fn print_multi_id(self, mi: &MultiId) -> Printer {
+    /// Wraps `isl_printer_print_basic_set`.
+    pub fn print_basic_set(self, bset: &BasicSet) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let printer = self;
+        let mut printer = printer;
+        printer.do_not_free_on_drop();
+        let printer = printer.ptr;
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_basic_set(printer, bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_map`.
+    pub fn print_map(self, map: &Map) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let printer = self;
+        let mut printer = printer;
+        printer.do_not_free_on_drop();
+        let printer = printer.ptr;
+        let map = map.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_map(printer, map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_pw_aff`.
+    pub fn print_pw_aff(self, pwaff: &PwAff) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let mi = mi.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_multi_id(p, mi) };
+        let pwaff = pwaff.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_aff(p, pwaff) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -259,6 +550,107 @@ impl Printer {
         isl_rs_result
     }
 
+    /// Wraps `isl_printer_free`.
+    pub fn free(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let printer = self;
+        let mut printer = printer;
+        printer.do_not_free_on_drop();
+        let printer = printer.ptr;
+        let isl_rs_result = unsafe { isl_printer_free(printer) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_pw_qpolynomial_list`.
+    pub fn print_pw_qpolynomial_list(self, list: &PwQPolynomialList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_multi_val`.
+    pub fn print_multi_val(self, mv: &MultiVal) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_multi_val(p, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_int`.
+    pub fn print_int(self, i: i32) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_int(p, i) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_indent_prefix`.
+    pub fn set_indent_prefix(self, prefix: &str) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let prefix = CString::new(prefix).unwrap();
+        let prefix = prefix.as_ptr();
+        let isl_rs_result = unsafe { isl_printer_set_indent_prefix(p, prefix) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_map_list`.
+    pub fn print_map_list(self, list: &MapList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_map_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
     /// Wraps `isl_printer_print_union_set`.
     pub fn print_union_set(self, uset: &UnionSet) -> Printer {
         let context_for_error_message = self.get_ctx();
@@ -268,6 +660,391 @@ impl Printer {
         let p = p.ptr;
         let uset = uset.ptr;
         let isl_rs_result = unsafe { isl_printer_print_union_set(p, uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_has_note`.
+    pub fn has_note(&self, id: &Id) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let p = p.ptr;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_printer_has_note(p, id) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_multi_pw_aff`.
+    pub fn print_multi_pw_aff(self, mpa: &MultiPwAff) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let mpa = mpa.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_multi_pw_aff(p, mpa) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_qpolynomial`.
+    pub fn print_qpolynomial(self, qp: &QPolynomial) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let qp = qp.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_qpolynomial(p, qp) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_yaml_end_sequence`.
+    pub fn yaml_end_sequence(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_yaml_end_sequence(p) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_isl_int_width`.
+    pub fn set_isl_int_width(self, width: i32) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_set_isl_int_width(p, width) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_id_list`.
+    pub fn print_id_list(self, list: &IdList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_id_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_aff_list`.
+    pub fn print_aff_list(self, list: &AffList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_aff_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_set_list`.
+    pub fn print_union_set_list(self, list: &UnionSetList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_set_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_pw_aff`.
+    pub fn print_union_pw_aff(self, upa: &UnionPwAff) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let upa = upa.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_pw_aff(p, upa) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_id`.
+    pub fn print_id(self, id: &Id) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_id(p, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_qpolynomial_fold`.
+    pub fn print_qpolynomial_fold(self, fold: &QPolynomialFold) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let fold = fold.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_qpolynomial_fold(p, fold) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_get_str`.
+    pub fn get_str(&self) -> &str {
+        let printer = self;
+        let printer = printer.ptr;
+        let isl_rs_result = unsafe { isl_printer_get_str(printer) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_pw_multi_aff_list`.
+    pub fn print_union_pw_multi_aff_list(self, list: &UnionPwMultiAffList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_pw_multi_aff_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_map`.
+    pub fn print_union_map(self, umap: &UnionMap) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let umap = umap.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_map(p, umap) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_map_list`.
+    pub fn print_union_map_list(self, list: &UnionMapList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_map_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_pw_qpolynomial_fold`.
+    pub fn print_pw_qpolynomial_fold(self, pwf: &PwQPolynomialFold) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let pwf = pwf.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_fold(p, pwf) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let printer = self;
+        let printer = printer.ptr;
+        let isl_rs_result = unsafe { isl_printer_get_ctx(printer) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_indent`.
+    pub fn set_indent(self, indent: i32) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_set_indent(p, indent) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_set_suffix`.
+    pub fn set_suffix(self, suffix: &str) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let suffix = CString::new(suffix).unwrap();
+        let suffix = suffix.as_ptr();
+        let isl_rs_result = unsafe { isl_printer_set_suffix(p, suffix) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_set`.
+    pub fn print_set(self, map: &Set) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let printer = self;
+        let mut printer = printer;
+        printer.do_not_free_on_drop();
+        let printer = printer.ptr;
+        let map = map.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_set(printer, map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_pw_qpolynomial_fold_list`.
+    pub fn print_pw_qpolynomial_fold_list(self, list: &PwQPolynomialFoldList) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_fold_list(p, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_double`.
+    pub fn print_double(self, d: f64) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_double(p, d) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_get_output_format`.
+    pub fn get_output_format(&self) -> i32 {
+        let p = self;
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_get_output_format(p) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_print_union_pw_multi_aff`.
+    pub fn print_union_pw_multi_aff(self, upma: &UnionPwMultiAff) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let upma = upma.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_pw_multi_aff(p, upma) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -298,16 +1075,14 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_set_suffix`.
-    pub fn set_suffix(self, suffix: &str) -> Printer {
+    /// Wraps `isl_printer_yaml_start_sequence`.
+    pub fn yaml_start_sequence(self) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let suffix = CString::new(suffix).unwrap();
-        let suffix = suffix.as_ptr();
-        let isl_rs_result = unsafe { isl_printer_set_suffix(p, suffix) };
+        let isl_rs_result = unsafe { isl_printer_yaml_start_sequence(p) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -316,16 +1091,45 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_start_line`.
-    pub fn start_line(self) -> Printer {
+    /// Wraps `isl_printer_print_union_pw_qpolynomial_fold`.
+    pub fn print_union_pw_qpolynomial_fold(self, upwf: &UnionPwQPolynomialFold) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_start_line(p) };
+        let upwf = upwf.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_union_pw_qpolynomial_fold(p, upwf) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_yaml_end_mapping`.
+    pub fn yaml_end_mapping(self) -> Printer {
+        let context_for_error_message = self.get_ctx();
+        let p = self;
+        let mut p = p;
+        p.do_not_free_on_drop();
+        let p = p.ptr;
+        let isl_rs_result = unsafe { isl_printer_yaml_end_mapping(p) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Printer { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_printer_to_str`.
+    pub fn to_str(ctx: &Context) -> Printer {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_printer_to_str(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
         }
         let isl_rs_result = Printer { ptr: isl_rs_result,
                                       should_free_on_drop: true };
@@ -348,186 +1152,20 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_print_multi_val`.
-    pub fn print_multi_val(self, mv: &MultiVal) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_multi_val(p, mv) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_multi_pw_aff`.
-    pub fn print_multi_pw_aff(self, mpa: &MultiPwAff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let mpa = mpa.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_multi_pw_aff(p, mpa) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_set_indent`.
-    pub fn set_indent(self, indent: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_set_indent(p, indent) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_pw_multi_aff`.
-    pub fn print_union_pw_multi_aff(self, upma: &UnionPwMultiAff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let upma = upma.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_pw_multi_aff(p, upma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_map`.
-    pub fn print_union_map(self, umap: &UnionMap) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let umap = umap.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_map(p, umap) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_set_yaml_style`.
-    pub fn set_yaml_style(self, yaml_style: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_set_yaml_style(p, yaml_style) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_qpolynomial_list`.
-    pub fn print_qpolynomial_list(self, list: &QPolynomialList) -> Printer {
+    /// Wraps `isl_printer_print_union_pw_aff_list`.
+    pub fn print_union_pw_aff_list(self, list: &UnionPwAffList) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
         let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_qpolynomial_list(p, list) };
+        let isl_rs_result = unsafe { isl_printer_print_union_pw_aff_list(p, list) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Printer { ptr: isl_rs_result,
                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_free`.
-    pub fn free(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let printer = self;
-        let mut printer = printer;
-        printer.do_not_free_on_drop();
-        let printer = printer.ptr;
-        let isl_rs_result = unsafe { isl_printer_free(printer) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_flush`.
-    pub fn flush(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_flush(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_basic_set`.
-    pub fn print_basic_set(self, bset: &BasicSet) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let printer = self;
-        let mut printer = printer;
-        printer.do_not_free_on_drop();
-        let printer = printer.ptr;
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_basic_set(printer, bset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_get_note`.
-    pub fn get_note(&self, id: Id) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let p = p.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_printer_get_note(p, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -540,203 +1178,6 @@ impl Printer {
         let p = p.ptr;
         let maff = maff.ptr;
         let isl_rs_result = unsafe { isl_printer_print_multi_aff(p, maff) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_set_list`.
-    pub fn print_union_set_list(self, list: &UnionSetList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_set_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_yaml_end_sequence`.
-    pub fn yaml_end_sequence(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_yaml_end_sequence(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_qpolynomial`.
-    pub fn print_qpolynomial(self, qp: &QPolynomial) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let qp = qp.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_qpolynomial(p, qp) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_set_isl_int_width`.
-    pub fn set_isl_int_width(self, width: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_set_isl_int_width(p, width) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_int`.
-    pub fn print_int(self, i: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_int(p, i) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_set_output_format`.
-    pub fn set_output_format(self, output_format: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_set_output_format(p, output_format) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_basic_map_list`.
-    pub fn print_basic_map_list(self, list: &BasicMapList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_basic_map_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_pw_multi_aff_list`.
-    pub fn print_union_pw_multi_aff_list(self, list: &UnionPwMultiAffList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_pw_multi_aff_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let printer = self;
-        let printer = printer.ptr;
-        let isl_rs_result = unsafe { isl_printer_get_ctx(printer) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_map_list`.
-    pub fn print_union_map_list(self, list: &UnionMapList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_map_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_end_line`.
-    pub fn end_line(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_end_line(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_pw_qpolynomial`.
-    pub fn print_pw_qpolynomial(self, pwqp: &PwQPolynomial) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let pwqp = pwqp.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial(p, pwqp) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -762,295 +1203,15 @@ impl Printer {
         isl_rs_result
     }
 
-    /// Wraps `isl_printer_print_aff_list`.
-    pub fn print_aff_list(self, list: &AffList) -> Printer {
+    /// Wraps `isl_printer_print_pw_qpolynomial`.
+    pub fn print_pw_qpolynomial(self, pwqp: &PwQPolynomial) -> Printer {
         let context_for_error_message = self.get_ctx();
         let p = self;
         let mut p = p;
         p.do_not_free_on_drop();
         let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_aff_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_id`.
-    pub fn print_id(self, id: &Id) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_id(p, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_get_str`.
-    pub fn get_str(&self) -> &str {
-        let printer = self;
-        let printer = printer.ptr;
-        let isl_rs_result = unsafe { isl_printer_get_str(printer) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_val`.
-    pub fn print_val(self, v: &Val) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_val(p, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_str`.
-    pub fn print_str(self, s: &str) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_printer_print_str(p, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_yaml_start_sequence`.
-    pub fn yaml_start_sequence(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_yaml_start_sequence(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_aff`.
-    pub fn print_aff(self, aff: &Aff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let aff = aff.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_aff(p, aff) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_yaml_end_mapping`.
-    pub fn yaml_end_mapping(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_yaml_end_mapping(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_get_output_format`.
-    pub fn get_output_format(&self) -> i32 {
-        let p = self;
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_get_output_format(p) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_pw_aff_list`.
-    pub fn print_union_pw_aff_list(self, list: &UnionPwAffList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_pw_aff_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_map`.
-    pub fn print_map(self, map: &Map) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let printer = self;
-        let mut printer = printer;
-        printer.do_not_free_on_drop();
-        let printer = printer.ptr;
-        let map = map.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_map(printer, map) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_double`.
-    pub fn print_double(self, d: f64) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_double(p, d) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_pw_aff`.
-    pub fn print_pw_aff(self, pwaff: &PwAff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let pwaff = pwaff.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_aff(p, pwaff) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_has_note`.
-    pub fn has_note(&self, id: &Id) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let p = p.ptr;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_printer_has_note(p, id) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_to_str`.
-    pub fn to_str(ctx: &Context) -> Printer {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_printer_to_str(ctx) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_qpolynomial_fold`.
-    pub fn print_qpolynomial_fold(self, fold: &QPolynomialFold) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let fold = fold.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_qpolynomial_fold(p, fold) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_yaml_start_mapping`.
-    pub fn yaml_start_mapping(self) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_yaml_start_mapping(p) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_set`.
-    pub fn print_set(self, map: &Set) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let printer = self;
-        let mut printer = printer;
-        printer.do_not_free_on_drop();
-        let printer = printer.ptr;
-        let map = map.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_set(printer, map) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_multi_union_pw_aff`.
-    pub fn print_multi_union_pw_aff(self, mupa: &MultiUnionPwAff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let mupa = mupa.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_multi_union_pw_aff(p, mupa) };
+        let pwqp = pwqp.ptr;
+        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial(p, pwqp) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1068,167 +1229,6 @@ impl Printer {
         let p = p.ptr;
         let list = list.ptr;
         let isl_rs_result = unsafe { isl_printer_print_pw_aff_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_map_list`.
-    pub fn print_map_list(self, list: &MapList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_map_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_pw_multi_aff_list`.
-    pub fn print_pw_multi_aff_list(self, list: &PwMultiAffList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_multi_aff_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_indent`.
-    pub fn indent(self, indent: i32) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_indent(p, indent) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_pw_aff`.
-    pub fn print_union_pw_aff(self, upa: &UnionPwAff) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let upa = upa.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_pw_aff(p, upa) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_get_yaml_style`.
-    pub fn get_yaml_style(&self) -> i32 {
-        let p = self;
-        let p = p.ptr;
-        let isl_rs_result = unsafe { isl_printer_get_yaml_style(p) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_pw_qpolynomial_fold_list`.
-    pub fn print_pw_qpolynomial_fold_list(self, list: &PwQPolynomialFoldList) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_fold_list(p, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_basic_map`.
-    pub fn print_basic_map(self, bmap: &BasicMap) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let printer = self;
-        let mut printer = printer;
-        printer.do_not_free_on_drop();
-        let printer = printer.ptr;
-        let bmap = bmap.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_basic_map(printer, bmap) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_set_indent_prefix`.
-    pub fn set_indent_prefix(self, prefix: &str) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let prefix = CString::new(prefix).unwrap();
-        let prefix = prefix.as_ptr();
-        let isl_rs_result = unsafe { isl_printer_set_indent_prefix(p, prefix) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_pw_qpolynomial_fold`.
-    pub fn print_pw_qpolynomial_fold(self, pwf: &PwQPolynomialFold) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let pwf = pwf.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_pw_qpolynomial_fold(p, pwf) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Printer { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_printer_print_union_pw_qpolynomial_fold`.
-    pub fn print_union_pw_qpolynomial_fold(self, upwf: &UnionPwQPolynomialFold) -> Printer {
-        let context_for_error_message = self.get_ctx();
-        let p = self;
-        let mut p = p;
-        p.do_not_free_on_drop();
-        let p = p.ptr;
-        let upwf = upwf.ptr;
-        let isl_rs_result = unsafe { isl_printer_print_union_pw_qpolynomial_fold(p, upwf) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }

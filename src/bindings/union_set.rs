@@ -3,11 +3,11 @@
 
 use crate::bindings::{
     BasicSet, BasicSetList, Context, DimType, MultiAff, Point, PwMultiAff, Set, SetList, Space,
-    UnionMap, UnionPwMultiAff, UnionSetList,
+    Stat, UnionMap, UnionPwMultiAff, UnionSetList,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 
 /// Wraps `isl_union_set`.
 pub struct UnionSet {
@@ -17,137 +17,150 @@ pub struct UnionSet {
 
 extern "C" {
 
+    fn isl_union_set_to_str(uset: uintptr_t) -> *const c_char;
+
+    fn isl_union_set_isa_set(uset: uintptr_t) -> i32;
+
+    fn isl_union_set_lexmin(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_polyhedral_hull(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_product(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_empty(space: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_project_out_all_params(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_foreach_set(uset: uintptr_t,
+                                 fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                                 user: *mut c_void)
+                                 -> Stat;
+
+    fn isl_union_set_sample(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_coefficients(bset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_dim(uset: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_union_set_gist_params(uset: uintptr_t, set: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_subtract(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_get_ctx(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_is_params(uset: uintptr_t) -> i32;
+
+    fn isl_union_set_preimage_multi_aff(uset: uintptr_t, ma: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_remove_redundancies(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_detect_equalities(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_contains(uset: uintptr_t, space: uintptr_t) -> i32;
+
     fn isl_union_set_add_set(uset: uintptr_t, set: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_project_out(uset: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_union_set_lift(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_get_basic_set_list(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_as_set(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_lex_lt_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_from_set(set: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_is_disjoint(uset1: uintptr_t, uset2: uintptr_t) -> i32;
+
+    fn isl_union_set_reset_user(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_intersect(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_foreach_point(uset: uintptr_t,
+                                   fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                                   user: *mut c_void)
+                                   -> Stat;
+
+    fn isl_union_set_get_space(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_from_basic_set(bset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_universe(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_lexmax(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_params(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_is_strict_subset(uset1: uintptr_t, uset2: uintptr_t) -> i32;
+
+    fn isl_union_set_compute_divs(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_copy(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_empty_ctx(ctx: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_preimage_pw_multi_aff(uset: uintptr_t, pma: uintptr_t) -> uintptr_t;
 
     fn isl_union_set_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
     fn isl_union_set_dump(uset: uintptr_t);
 
-    fn isl_union_set_coefficients(bset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_preimage_pw_multi_aff(uset: uintptr_t, pma: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_solutions(bset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_detect_equalities(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_intersect(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_from_set(set: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_project_out_all_params(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_is_strict_subset(uset1: uintptr_t, uset2: uintptr_t) -> i32;
-
-    fn isl_union_set_preimage_multi_aff(uset: uintptr_t, ma: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_lex_ge_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_coalesce(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_subtract(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_is_empty(uset: uintptr_t) -> i32;
-
-    fn isl_union_set_intersect_params(uset: uintptr_t, set: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_is_disjoint(uset1: uintptr_t, uset2: uintptr_t) -> i32;
-
-    fn isl_union_set_affine_hull(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_simple_hull(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_contains(uset: uintptr_t, space: uintptr_t) -> i32;
-
-    fn isl_union_set_remove_redundancies(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_apply(uset: uintptr_t, umap: uintptr_t) -> uintptr_t;
+    fn isl_union_set_to_list(el: uintptr_t) -> uintptr_t;
 
     fn isl_union_set_sample_point(uset: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_product(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_get_space(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_union(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_preimage_union_pw_multi_aff(uset: uintptr_t, upma: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_sample(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_params(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_empty_ctx(ctx: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_lexmax(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_from_point(pnt: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_extract_set(uset: uintptr_t, space: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_from_basic_set(bset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_polyhedral_hull(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_gist_params(uset: uintptr_t, set: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_get_set_list(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_lift(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_dim(uset: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_union_set_free(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_copy(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_gist(uset: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_reset_user(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_compute_divs(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_project_out(uset: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_union_set_drop_unused_params(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_to_str(uset: uintptr_t) -> *const c_char;
-
-    fn isl_union_set_remove_divs(bset: uintptr_t) -> uintptr_t;
+    fn isl_union_set_simple_hull(uset: uintptr_t) -> uintptr_t;
 
     fn isl_union_set_lex_gt_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_get_basic_set_list(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_isa_set(uset: uintptr_t) -> i32;
-
-    fn isl_union_set_get_ctx(uset: uintptr_t) -> uintptr_t;
-
-    fn isl_union_set_lexmin(uset: uintptr_t) -> uintptr_t;
+    fn isl_union_set_free(uset: uintptr_t) -> uintptr_t;
 
     fn isl_union_set_is_subset(uset1: uintptr_t, uset2: uintptr_t) -> i32;
 
-    fn isl_union_set_as_set(uset: uintptr_t) -> uintptr_t;
+    fn isl_union_set_remove_divs(bset: uintptr_t) -> uintptr_t;
 
     fn isl_union_set_empty_space(space: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_to_list(el: uintptr_t) -> uintptr_t;
+    fn isl_union_set_get_hash(uset: uintptr_t) -> u32;
 
-    fn isl_union_set_lex_le_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+    fn isl_union_set_lex_ge_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_is_params(uset: uintptr_t) -> i32;
+    fn isl_union_set_get_set_list(uset: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_empty(space: uintptr_t) -> uintptr_t;
+    fn isl_union_set_from_point(pnt: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_gist(uset: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_is_empty(uset: uintptr_t) -> i32;
 
     fn isl_union_set_is_equal(uset1: uintptr_t, uset2: uintptr_t) -> i32;
 
-    fn isl_union_set_lex_lt_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
-
     fn isl_union_set_n_set(uset: uintptr_t) -> i32;
 
-    fn isl_union_set_universe(uset: uintptr_t) -> uintptr_t;
+    fn isl_union_set_solutions(bset: uintptr_t) -> uintptr_t;
 
-    fn isl_union_set_get_hash(uset: uintptr_t) -> u32;
+    fn isl_union_set_union(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_intersect_params(uset: uintptr_t, set: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_coalesce(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_affine_hull(uset: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_lex_le_union_set(uset1: uintptr_t, uset2: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_apply(uset: uintptr_t, umap: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_extract_set(uset: uintptr_t, space: uintptr_t) -> uintptr_t;
+
+    fn isl_union_set_every_set(uset: uintptr_t,
+                               test: unsafe extern "C" fn(uintptr_t, *mut c_void) -> i32,
+                               user: *mut c_void)
+                               -> i32;
+
+    fn isl_union_set_preimage_union_pw_multi_aff(uset: uintptr_t, upma: uintptr_t) -> uintptr_t;
 
 }
 
@@ -166,6 +179,295 @@ impl PartialEq for UnionSet {
 impl Eq for UnionSet {}
 
 impl UnionSet {
+    /// Wraps `isl_union_set_to_str`.
+    pub fn to_str(&self) -> &str {
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_to_str(uset) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_isa_set`.
+    pub fn isa_set(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_isa_set(uset) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_lexmin`.
+    pub fn lexmin(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_lexmin(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_polyhedral_hull`.
+    pub fn polyhedral_hull(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_polyhedral_hull(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_product`.
+    pub fn product(self, uset2: UnionSet) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_product(uset1, uset2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_empty`.
+    pub fn empty(space: Space) -> UnionSet {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_union_set_empty(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_project_out_all_params`.
+    pub fn project_out_all_params(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_project_out_all_params(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_foreach_set`.
+    pub fn foreach_set(&self, fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                       user: *mut c_void)
+                       -> Stat {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_foreach_set(uset, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_sample`.
+    pub fn sample(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_sample(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_coefficients`.
+    pub fn coefficients(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let bset = self;
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_coefficients(bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_dim`.
+    pub fn dim(&self, type_: DimType) -> i32 {
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_dim(uset, type_) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_gist_params`.
+    pub fn gist_params(self, set: Set) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_union_set_gist_params(uset, set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_subtract`.
+    pub fn subtract(self, uset2: UnionSet) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_subtract(uset1, uset2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_get_ctx(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_is_params`.
+    pub fn is_params(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_is_params(uset) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_preimage_multi_aff`.
+    pub fn preimage_multi_aff(self, ma: MultiAff) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_union_set_preimage_multi_aff(uset, ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_remove_redundancies`.
+    pub fn remove_redundancies(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_remove_redundancies(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_detect_equalities`.
+    pub fn detect_equalities(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_detect_equalities(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_contains`.
+    pub fn contains(&self, space: &Space) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_union_set_contains(uset, space) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
     /// Wraps `isl_union_set_add_set`.
     pub fn add_set(self, set: Set) -> UnionSet {
         let context_for_error_message = self.get_ctx();
@@ -177,6 +479,314 @@ impl UnionSet {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_union_set_add_set(uset, set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_project_out`.
+    pub fn project_out(self, type_: DimType, first: u32, n: u32) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_project_out(uset, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_lift`.
+    pub fn lift(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_lift(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_get_basic_set_list`.
+    pub fn get_basic_set_list(&self) -> BasicSetList {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_get_basic_set_list(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSetList { ptr: isl_rs_result,
+                                           should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_as_set`.
+    pub fn as_set(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_as_set(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_lex_lt_union_set`.
+    pub fn lex_lt_union_set(self, uset2: UnionSet) -> UnionMap {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_lex_lt_union_set(uset1, uset2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionMap { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_from_set`.
+    pub fn from_set(set: Set) -> UnionSet {
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_union_set_from_set(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_is_disjoint`.
+    pub fn is_disjoint(&self, uset2: &UnionSet) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let uset1 = uset1.ptr;
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_is_disjoint(uset1, uset2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_reset_user`.
+    pub fn reset_user(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_reset_user(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_intersect`.
+    pub fn intersect(self, uset2: UnionSet) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_intersect(uset1, uset2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_foreach_point`.
+    pub fn foreach_point(&self, fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                         user: *mut c_void)
+                         -> Stat {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_foreach_point(uset, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_get_space`.
+    pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_get_space(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_from_basic_set`.
+    pub fn from_basic_set(bset: BasicSet) -> UnionSet {
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_from_basic_set(bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_universe`.
+    pub fn universe(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_universe(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_lexmax`.
+    pub fn lexmax(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_lexmax(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_params`.
+    pub fn params(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_params(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_is_strict_subset`.
+    pub fn is_strict_subset(&self, uset2: &UnionSet) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let uset1 = uset1.ptr;
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_is_strict_subset(uset1, uset2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_compute_divs`.
+    pub fn compute_divs(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_compute_divs(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_copy`.
+    pub fn copy(&self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_copy(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_empty_ctx`.
+    pub fn empty_ctx(ctx: &Context) -> UnionSet {
+        let ctx = ctx.ptr;
+        let isl_rs_result = unsafe { isl_union_set_empty_ctx(ctx) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_preimage_pw_multi_aff`.
+    pub fn preimage_pw_multi_aff(self, pma: PwMultiAff) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut pma = pma;
+        pma.do_not_free_on_drop();
+        let pma = pma.ptr;
+        let isl_rs_result = unsafe { isl_union_set_preimage_pw_multi_aff(uset, pma) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -207,337 +817,19 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_coefficients`.
-    pub fn coefficients(self) -> UnionSet {
+    /// Wraps `isl_union_set_to_list`.
+    pub fn to_list(self) -> UnionSetList {
         let context_for_error_message = self.get_ctx();
-        let bset = self;
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_coefficients(bset) };
+        let el = self;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_union_set_to_list(el) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_preimage_pw_multi_aff`.
-    pub fn preimage_pw_multi_aff(self, pma: PwMultiAff) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut pma = pma;
-        pma.do_not_free_on_drop();
-        let pma = pma.ptr;
-        let isl_rs_result = unsafe { isl_union_set_preimage_pw_multi_aff(uset, pma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_solutions`.
-    pub fn solutions(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let bset = self;
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_solutions(bset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_detect_equalities`.
-    pub fn detect_equalities(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_detect_equalities(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_intersect`.
-    pub fn intersect(self, uset2: UnionSet) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_intersect(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_from_set`.
-    pub fn from_set(set: Set) -> UnionSet {
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_union_set_from_set(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_project_out_all_params`.
-    pub fn project_out_all_params(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_project_out_all_params(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_is_strict_subset`.
-    pub fn is_strict_subset(&self, uset2: &UnionSet) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let uset1 = uset1.ptr;
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_is_strict_subset(uset1, uset2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_preimage_multi_aff`.
-    pub fn preimage_multi_aff(self, ma: MultiAff) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_union_set_preimage_multi_aff(uset, ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_lex_ge_union_set`.
-    pub fn lex_ge_union_set(self, uset2: UnionSet) -> UnionMap {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_lex_ge_union_set(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionMap { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_coalesce`.
-    pub fn coalesce(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_coalesce(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_subtract`.
-    pub fn subtract(self, uset2: UnionSet) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_subtract(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_is_empty`.
-    pub fn is_empty(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_is_empty(uset) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_intersect_params`.
-    pub fn intersect_params(self, set: Set) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_union_set_intersect_params(uset, set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_is_disjoint`.
-    pub fn is_disjoint(&self, uset2: &UnionSet) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let uset1 = uset1.ptr;
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_is_disjoint(uset1, uset2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_affine_hull`.
-    pub fn affine_hull(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_affine_hull(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_simple_hull`.
-    pub fn simple_hull(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_simple_hull(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_contains`.
-    pub fn contains(&self, space: &Space) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_union_set_contains(uset, space) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_remove_redundancies`.
-    pub fn remove_redundancies(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_remove_redundancies(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_apply`.
-    pub fn apply(self, umap: UnionMap) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut umap = umap;
-        umap.do_not_free_on_drop();
-        let umap = umap.ptr;
-        let isl_rs_result = unsafe { isl_union_set_apply(uset, umap) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+        let isl_rs_result = UnionSetList { ptr: isl_rs_result,
+                                           should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -557,386 +849,14 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_product`.
-    pub fn product(self, uset2: UnionSet) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_product(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_get_space`.
-    pub fn get_space(&self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_get_space(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_union`.
-    pub fn union(self, uset2: UnionSet) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_union(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_preimage_union_pw_multi_aff`.
-    pub fn preimage_union_pw_multi_aff(self, upma: UnionPwMultiAff) -> UnionSet {
+    /// Wraps `isl_union_set_simple_hull`.
+    pub fn simple_hull(self) -> UnionSet {
         let context_for_error_message = self.get_ctx();
         let uset = self;
         let mut uset = uset;
         uset.do_not_free_on_drop();
         let uset = uset.ptr;
-        let mut upma = upma;
-        upma.do_not_free_on_drop();
-        let upma = upma.ptr;
-        let isl_rs_result = unsafe { isl_union_set_preimage_union_pw_multi_aff(uset, upma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_sample`.
-    pub fn sample(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_sample(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_params`.
-    pub fn params(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_params(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_empty_ctx`.
-    pub fn empty_ctx(ctx: &Context) -> UnionSet {
-        let ctx = ctx.ptr;
-        let isl_rs_result = unsafe { isl_union_set_empty_ctx(ctx) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_lexmax`.
-    pub fn lexmax(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_lexmax(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_from_point`.
-    pub fn from_point(pnt: Point) -> UnionSet {
-        let mut pnt = pnt;
-        pnt.do_not_free_on_drop();
-        let pnt = pnt.ptr;
-        let isl_rs_result = unsafe { isl_union_set_from_point(pnt) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_extract_set`.
-    pub fn extract_set(&self, space: Space) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_union_set_extract_set(uset, space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_from_basic_set`.
-    pub fn from_basic_set(bset: BasicSet) -> UnionSet {
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_from_basic_set(bset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_polyhedral_hull`.
-    pub fn polyhedral_hull(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_polyhedral_hull(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_gist_params`.
-    pub fn gist_params(self, set: Set) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_union_set_gist_params(uset, set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_get_set_list`.
-    pub fn get_set_list(&self) -> SetList {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_get_set_list(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = SetList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_lift`.
-    pub fn lift(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_lift(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_dim`.
-    pub fn dim(&self, type_: DimType) -> i32 {
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_dim(uset, type_) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_free`.
-    pub fn free(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_free(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_copy`.
-    pub fn copy(&self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_copy(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_gist`.
-    pub fn gist(self, context: UnionSet) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_union_set_gist(uset, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_reset_user`.
-    pub fn reset_user(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_reset_user(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_compute_divs`.
-    pub fn compute_divs(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_compute_divs(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_project_out`.
-    pub fn project_out(self, type_: DimType, first: u32, n: u32) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_project_out(uset, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_drop_unused_params`.
-    pub fn drop_unused_params(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_drop_unused_params(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_to_str`.
-    pub fn to_str(&self) -> &str {
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_to_str(uset) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_remove_divs`.
-    pub fn remove_divs(self) -> UnionSet {
-        let context_for_error_message = self.get_ctx();
-        let bset = self;
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_remove_divs(bset) };
+        let isl_rs_result = unsafe { isl_union_set_simple_hull(uset) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -964,57 +884,14 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_get_basic_set_list`.
-    pub fn get_basic_set_list(&self) -> BasicSetList {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_get_basic_set_list(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSetList { ptr: isl_rs_result,
-                                           should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_isa_set`.
-    pub fn isa_set(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_isa_set(uset) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_get_ctx(uset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_lexmin`.
-    pub fn lexmin(self) -> UnionSet {
+    /// Wraps `isl_union_set_free`.
+    pub fn free(self) -> UnionSet {
         let context_for_error_message = self.get_ctx();
         let uset = self;
         let mut uset = uset;
         uset.do_not_free_on_drop();
         let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_lexmin(uset) };
+        let isl_rs_result = unsafe { isl_union_set_free(uset) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1038,19 +915,19 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_as_set`.
-    pub fn as_set(self) -> Set {
+    /// Wraps `isl_union_set_remove_divs`.
+    pub fn remove_divs(self) -> UnionSet {
         let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let mut uset = uset;
-        uset.do_not_free_on_drop();
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_as_set(uset) };
+        let bset = self;
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_remove_divs(bset) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -1068,19 +945,200 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_to_list`.
-    pub fn to_list(self) -> UnionSetList {
+    /// Wraps `isl_union_set_get_hash`.
+    pub fn get_hash(&self) -> u32 {
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_get_hash(uset) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_lex_ge_union_set`.
+    pub fn lex_ge_union_set(self, uset2: UnionSet) -> UnionMap {
         let context_for_error_message = self.get_ctx();
-        let el = self;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_union_set_to_list(el) };
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_lex_ge_union_set(uset1, uset2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = UnionSetList { ptr: isl_rs_result,
-                                           should_free_on_drop: true };
+        let isl_rs_result = UnionMap { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_get_set_list`.
+    pub fn get_set_list(&self) -> SetList {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_get_set_list(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = SetList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_from_point`.
+    pub fn from_point(pnt: Point) -> UnionSet {
+        let mut pnt = pnt;
+        pnt.do_not_free_on_drop();
+        let pnt = pnt.ptr;
+        let isl_rs_result = unsafe { isl_union_set_from_point(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_gist`.
+    pub fn gist(self, context: UnionSet) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_union_set_gist(uset, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_is_empty`.
+    pub fn is_empty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_is_empty(uset) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_is_equal`.
+    pub fn is_equal(&self, uset2: &UnionSet) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let uset1 = uset1.ptr;
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_is_equal(uset1, uset2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_n_set`.
+    pub fn n_set(&self) -> i32 {
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_n_set(uset) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_solutions`.
+    pub fn solutions(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let bset = self;
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_solutions(bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_union`.
+    pub fn union(self, uset2: UnionSet) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset1 = self;
+        let mut uset1 = uset1;
+        uset1.do_not_free_on_drop();
+        let uset1 = uset1.ptr;
+        let mut uset2 = uset2;
+        uset2.do_not_free_on_drop();
+        let uset2 = uset2.ptr;
+        let isl_rs_result = unsafe { isl_union_set_union(uset1, uset2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_intersect_params`.
+    pub fn intersect_params(self, set: Set) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_union_set_intersect_params(uset, set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_coalesce`.
+    pub fn coalesce(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_coalesce(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_affine_hull`.
+    pub fn affine_hull(self) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_affine_hull(uset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -1103,84 +1161,17 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_is_params`.
-    pub fn is_params(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_is_params(uset) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_empty`.
-    pub fn empty(space: Space) -> UnionSet {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_union_set_empty(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = UnionSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_is_equal`.
-    pub fn is_equal(&self, uset2: &UnionSet) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let uset1 = uset1.ptr;
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_is_equal(uset1, uset2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_lex_lt_union_set`.
-    pub fn lex_lt_union_set(self, uset2: UnionSet) -> UnionMap {
-        let context_for_error_message = self.get_ctx();
-        let uset1 = self;
-        let mut uset1 = uset1;
-        uset1.do_not_free_on_drop();
-        let uset1 = uset1.ptr;
-        let mut uset2 = uset2;
-        uset2.do_not_free_on_drop();
-        let uset2 = uset2.ptr;
-        let isl_rs_result = unsafe { isl_union_set_lex_lt_union_set(uset1, uset2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = UnionMap { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_n_set`.
-    pub fn n_set(&self) -> i32 {
-        let uset = self;
-        let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_n_set(uset) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_union_set_universe`.
-    pub fn universe(self) -> UnionSet {
+    /// Wraps `isl_union_set_apply`.
+    pub fn apply(self, umap: UnionMap) -> UnionSet {
         let context_for_error_message = self.get_ctx();
         let uset = self;
         let mut uset = uset;
         uset.do_not_free_on_drop();
         let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_universe(uset) };
+        let mut umap = umap;
+        umap.do_not_free_on_drop();
+        let umap = umap.ptr;
+        let isl_rs_result = unsafe { isl_union_set_apply(uset, umap) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1189,11 +1180,55 @@ impl UnionSet {
         isl_rs_result
     }
 
-    /// Wraps `isl_union_set_get_hash`.
-    pub fn get_hash(&self) -> u32 {
+    /// Wraps `isl_union_set_extract_set`.
+    pub fn extract_set(&self, space: Space) -> Set {
+        let context_for_error_message = self.get_ctx();
         let uset = self;
         let uset = uset.ptr;
-        let isl_rs_result = unsafe { isl_union_set_get_hash(uset) };
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_union_set_extract_set(uset, space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_every_set`.
+    pub fn every_set(&self, test: unsafe extern "C" fn(uintptr_t, *mut c_void) -> i32,
+                     user: *mut c_void)
+                     -> bool {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let uset = uset.ptr;
+        let isl_rs_result = unsafe { isl_union_set_every_set(uset, test, user) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_union_set_preimage_union_pw_multi_aff`.
+    pub fn preimage_union_pw_multi_aff(self, upma: UnionPwMultiAff) -> UnionSet {
+        let context_for_error_message = self.get_ctx();
+        let uset = self;
+        let mut uset = uset;
+        uset.do_not_free_on_drop();
+        let uset = uset.ptr;
+        let mut upma = upma;
+        upma.do_not_free_on_drop();
+        let upma = upma.ptr;
+        let isl_rs_result = unsafe { isl_union_set_preimage_union_pw_multi_aff(uset, upma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = UnionSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 

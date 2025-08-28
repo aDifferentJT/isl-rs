@@ -17,200 +17,198 @@ pub struct MultiAff {
 
 extern "C" {
 
-    fn isl_multi_aff_to_str(ma: uintptr_t) -> *const c_char;
-
-    fn isl_multi_aff_domain_map(space: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_add_constant_multi_val(mpa: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_bind(ma: uintptr_t, tuple: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_range_splice(multi1: uintptr_t, pos: u32, multi2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_space(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_scale_down_val(multi: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_splice(multi1: uintptr_t, in_pos: u32, out_pos: u32, multi2: uintptr_t)
-                            -> uintptr_t;
-
-    fn isl_multi_aff_pullback_multi_aff(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_involves_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
-
-    fn isl_multi_aff_unbind_params_insert_domain(multi: uintptr_t, domain: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_range_is_wrapping(multi: uintptr_t) -> i32;
-
-    fn isl_multi_aff_to_pw_multi_aff(ma: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_plain_cmp(multi1: uintptr_t, multi2: uintptr_t) -> i32;
-
-    fn isl_multi_aff_set_at(multi: uintptr_t, pos: i32, el: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_range_factor_domain(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_find_dim_by_name(multi: uintptr_t, type_: DimType, name: *const c_char)
-                                      -> i32;
-
-    fn isl_multi_aff_plain_is_equal(multi1: uintptr_t, multi2: uintptr_t) -> i32;
-
-    fn isl_multi_aff_bind_domain(multi: uintptr_t, tuple: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_to_multi_union_pw_aff(ma: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_free(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_align_params(multi: uintptr_t, model: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_set_range_tuple_id(multi: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_constant_multi_val(ma: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_set_aff(multi: uintptr_t, pos: i32, el: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_add(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_factor_range(multi: uintptr_t) -> uintptr_t;
-
     fn isl_multi_aff_lex_ge_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_get_list(multi: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_get_tuple_id(multi: uintptr_t, type_: DimType) -> uintptr_t;
 
     fn isl_multi_aff_from_aff_list(space: uintptr_t, list: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_get_dim_id(multi: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_multi_aff_scale_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_insert_domain(multi: uintptr_t, domain: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_set_dim_name(multi: uintptr_t, type_: DimType, pos: u32, s: *const c_char)
-                                  -> uintptr_t;
-
-    fn isl_multi_aff_flat_range_product(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_identity(space: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_range_tuple_id(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_involves_nan(multi: uintptr_t) -> i32;
-
-    fn isl_multi_aff_reset_range_tuple_id(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_aff(multi: uintptr_t, pos: i32) -> uintptr_t;
-
-    fn isl_multi_aff_multi_val_on_domain_space(space: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_has_tuple_id(multi: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_multi_aff_get_ctx(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_lex_le_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
-
     fn isl_multi_aff_zero(space: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_set_tuple_name(multi: uintptr_t, type_: DimType, s: *const c_char)
-                                    -> uintptr_t;
-
-    fn isl_multi_aff_range_map(space: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_lex_lt_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_domain_space(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_range_factor_range(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_add_constant_val(mpa: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_find_dim_by_id(multi: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
-
-    fn isl_multi_aff_scale_down_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_add_dims(multi: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
-
-    fn isl_multi_aff_reset_tuple_id(multi: uintptr_t, type_: DimType) -> uintptr_t;
-
-    fn isl_multi_aff_reset_user(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_gist(maff: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_lex_gt_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_range_product(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_involves_locals(multi: uintptr_t) -> i32;
-
-    fn isl_multi_aff_from_range(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_copy(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_from_aff(aff: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_floor(ma: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_set_dim_id(multi: uintptr_t, type_: DimType, pos: u32, id: uintptr_t)
+                                -> uintptr_t;
 
     fn isl_multi_aff_size(multi: uintptr_t) -> i32;
 
-    fn isl_multi_aff_flatten_range(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_dim(multi: uintptr_t, type_: DimType) -> i32;
-
-    fn isl_multi_aff_mod_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_scale_val(multi: uintptr_t, v: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_drop_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_multi_aff_bind_domain_wrapped_domain(multi: uintptr_t, tuple: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_multi_val_on_space(space: uintptr_t, mv: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_gist_params(maff: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_has_range_tuple_id(multi: uintptr_t) -> i32;
-
-    fn isl_multi_aff_get_tuple_name(multi: uintptr_t, type_: DimType) -> *const c_char;
-
-    fn isl_multi_aff_project_domain_on_params(multi: uintptr_t) -> uintptr_t;
-
-    fn isl_multi_aff_get_at(multi: uintptr_t, pos: i32) -> uintptr_t;
-
     fn isl_multi_aff_product(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_to_multi_union_pw_aff(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_factor_range(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_neg(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_reset_range_tuple_id(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_pullback_multi_aff(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_get_constant_multi_val(ma: uintptr_t) -> uintptr_t;
 
     fn isl_multi_aff_move_dims(ma: uintptr_t, dst_type: DimType, dst_pos: u32, src_type: DimType,
                                src_pos: u32, n: u32)
                                -> uintptr_t;
 
-    fn isl_multi_aff_dump(maff: uintptr_t);
+    fn isl_multi_aff_range_splice(multi1: uintptr_t, pos: u32, multi2: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_flatten_domain(ma: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_find_dim_by_name(multi: uintptr_t, type_: DimType, name: *const c_char)
+                                      -> i32;
 
-    fn isl_multi_aff_identity_on_domain_space(space: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_gist(maff: uintptr_t, context: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_identity_multi_aff(multi: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_domain_map(space: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_neg(multi: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_multi_val_on_domain_space(space: uintptr_t, mv: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_get_tuple_id(multi: uintptr_t, type_: DimType) -> uintptr_t;
-
-    fn isl_multi_aff_set_dim_id(multi: uintptr_t, type_: DimType, pos: u32, id: uintptr_t)
-                                -> uintptr_t;
-
-    fn isl_multi_aff_insert_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32)
-                                 -> uintptr_t;
-
-    fn isl_multi_aff_to_multi_pw_aff(ma: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_plain_cmp(multi1: uintptr_t, multi2: uintptr_t) -> i32;
 
     fn isl_multi_aff_project_out_map(space: uintptr_t, type_: DimType, first: u32, n: u32)
                                      -> uintptr_t;
 
-    fn isl_multi_aff_domain_reverse(multi: uintptr_t) -> uintptr_t;
+    fn isl_multi_aff_lex_lt_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_free(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_align_params(multi: uintptr_t, model: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_identity_multi_aff(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_find_dim_by_id(multi: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
 
     fn isl_multi_aff_set_tuple_id(multi: uintptr_t, type_: DimType, id: uintptr_t) -> uintptr_t;
 
-    fn isl_multi_aff_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
+    fn isl_multi_aff_identity(space: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_involves_locals(multi: uintptr_t) -> i32;
+
+    fn isl_multi_aff_get_aff(multi: uintptr_t, pos: i32) -> uintptr_t;
 
     fn isl_multi_aff_sub(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_bind(ma: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_to_pw_multi_aff(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_flatten_range(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_add(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_has_range_tuple_id(multi: uintptr_t) -> i32;
+
+    fn isl_multi_aff_reset_user(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_add_constant_val(mpa: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_floor(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_get_dim_id(multi: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
+
+    fn isl_multi_aff_add_constant_multi_val(mpa: uintptr_t, mv: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_get_domain_space(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_set_at(multi: uintptr_t, pos: i32, el: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_get_range_tuple_id(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_identity_on_domain_space(space: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_insert_domain(multi: uintptr_t, domain: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_reset_tuple_id(multi: uintptr_t, type_: DimType) -> uintptr_t;
+
+    fn isl_multi_aff_from_aff(aff: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_lex_le_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_dump(maff: uintptr_t);
+
+    fn isl_multi_aff_get_ctx(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_bind_domain_wrapped_domain(multi: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_copy(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_scale_down_val(multi: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_flat_range_product(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_to_multi_pw_aff(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_flatten_domain(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_get_list(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_scale_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_involves_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
+
+    fn isl_multi_aff_get_space(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_splice(multi1: uintptr_t, in_pos: u32, out_pos: u32, multi2: uintptr_t)
+                            -> uintptr_t;
+
+    fn isl_multi_aff_set_dim_name(multi: uintptr_t, type_: DimType, pos: u32, s: *const c_char)
+                                  -> uintptr_t;
+
+    fn isl_multi_aff_range_factor_domain(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_scale_down_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_mod_multi_val(multi: uintptr_t, mv: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_project_domain_on_params(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_set_tuple_name(multi: uintptr_t, type_: DimType, s: *const c_char)
+                                    -> uintptr_t;
+
+    fn isl_multi_aff_multi_val_on_space(space: uintptr_t, mv: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_has_tuple_id(multi: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_multi_aff_add_dims(multi: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
+
+    fn isl_multi_aff_gist_params(maff: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_range_factor_range(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_from_range(multi: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_involves_nan(multi: uintptr_t) -> i32;
+
+    fn isl_multi_aff_get_tuple_name(multi: uintptr_t, type_: DimType) -> *const c_char;
+
+    fn isl_multi_aff_drop_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_multi_aff_bind_domain(multi: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_range_product(multi1: uintptr_t, multi2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_scale_val(multi: uintptr_t, v: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_lex_gt_set(ma1: uintptr_t, ma2: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_to_str(ma: uintptr_t) -> *const c_char;
+
+    fn isl_multi_aff_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
+
+    fn isl_multi_aff_set_aff(multi: uintptr_t, pos: i32, el: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_range_is_wrapping(multi: uintptr_t) -> i32;
+
+    fn isl_multi_aff_plain_is_equal(multi1: uintptr_t, multi2: uintptr_t) -> i32;
+
+    fn isl_multi_aff_insert_dims(multi: uintptr_t, type_: DimType, first: u32, n: u32)
+                                 -> uintptr_t;
+
+    fn isl_multi_aff_set_range_tuple_id(multi: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_unbind_params_insert_domain(multi: uintptr_t, domain: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_range_map(space: uintptr_t) -> uintptr_t;
+
+    fn isl_multi_aff_dim(multi: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_multi_aff_get_at(multi: uintptr_t, pos: i32) -> uintptr_t;
 
 }
 
@@ -237,22 +235,48 @@ impl core::ops::Sub for MultiAff {
 }
 
 impl MultiAff {
-    /// Wraps `isl_multi_aff_to_str`.
-    pub fn to_str(&self) -> &str {
-        let ma = self;
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_to_str(ma) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
+    /// Wraps `isl_multi_aff_lex_ge_set`.
+    pub fn lex_ge_set(self, ma2: MultiAff) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let ma1 = self;
+        let mut ma1 = ma1;
+        ma1.do_not_free_on_drop();
+        let ma1 = ma1.ptr;
+        let mut ma2 = ma2;
+        ma2.do_not_free_on_drop();
+        let ma2 = ma2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_lex_ge_set(ma1, ma2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_domain_map`.
-    pub fn domain_map(space: Space) -> MultiAff {
+    /// Wraps `isl_multi_aff_get_tuple_id`.
+    pub fn get_tuple_id(&self, type_: DimType) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_tuple_id(multi, type_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_from_aff_list`.
+    pub fn from_aff_list(space: Space, list: AffList) -> MultiAff {
         let mut space = space;
         space.do_not_free_on_drop();
         let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_domain_map(space) };
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_from_aff_list(space, list) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -261,88 +285,31 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_add_constant_multi_val`.
-    pub fn add_constant_multi_val(self, mv: MultiVal) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let mpa = self;
-        let mut mpa = mpa;
-        mpa.do_not_free_on_drop();
-        let mpa = mpa.ptr;
-        let mut mv = mv;
-        mv.do_not_free_on_drop();
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_add_constant_multi_val(mpa, mv) };
+    /// Wraps `isl_multi_aff_zero`.
+    pub fn zero(space: Space) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_zero(space) };
         if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+            panic!("ISL error");
         }
         let isl_rs_result = MultiAff { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_bind`.
-    pub fn bind(self, tuple: MultiId) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let mut tuple = tuple;
-        tuple.do_not_free_on_drop();
-        let tuple = tuple.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_bind(ma, tuple) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_range_splice`.
-    pub fn range_splice(self, pos: u32, multi2: MultiAff) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi1 = self;
-        let mut multi1 = multi1;
-        multi1.do_not_free_on_drop();
-        let multi1 = multi1.ptr;
-        let mut multi2 = multi2;
-        multi2.do_not_free_on_drop();
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_splice(multi1, pos, multi2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_space`.
-    pub fn get_space(&self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_space(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_scale_down_val`.
-    pub fn scale_down_val(self, v: Val) -> MultiAff {
+    /// Wraps `isl_multi_aff_set_dim_id`.
+    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_scale_down_val(multi, v) };
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_set_dim_id(multi, type_, pos, id) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -351,8 +318,16 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_splice`.
-    pub fn splice(self, in_pos: u32, out_pos: u32, multi2: MultiAff) -> MultiAff {
+    /// Wraps `isl_multi_aff_size`.
+    pub fn size(&self) -> i32 {
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_size(multi) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_product`.
+    pub fn product(self, multi2: MultiAff) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi1 = self;
         let mut multi1 = multi1;
@@ -361,7 +336,71 @@ impl MultiAff {
         let mut multi2 = multi2;
         multi2.do_not_free_on_drop();
         let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_splice(multi1, in_pos, out_pos, multi2) };
+        let isl_rs_result = unsafe { isl_multi_aff_product(multi1, multi2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_to_multi_union_pw_aff`.
+    pub fn to_multi_union_pw_aff(self) -> MultiUnionPwAff {
+        let context_for_error_message = self.get_ctx();
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_to_multi_union_pw_aff(ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiUnionPwAff { ptr: isl_rs_result,
+                                              should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_factor_range`.
+    pub fn factor_range(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_factor_range(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_neg`.
+    pub fn neg(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_neg(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_reset_range_tuple_id`.
+    pub fn reset_range_tuple_id(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_reset_range_tuple_id(multi) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -389,89 +428,31 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_involves_dims`.
-    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+    /// Wraps `isl_multi_aff_get_constant_multi_val`.
+    pub fn get_constant_multi_val(&self) -> MultiVal {
         let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_involves_dims(multi, type_, first, n) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_unbind_params_insert_domain`.
-    pub fn unbind_params_insert_domain(self, domain: MultiId) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_unbind_params_insert_domain(multi, domain) };
+        let ma = self;
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_constant_multi_val(ma) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+        let isl_rs_result = MultiVal { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_range_is_wrapping`.
-    pub fn range_is_wrapping(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_is_wrapping(multi) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_to_pw_multi_aff`.
-    pub fn to_pw_multi_aff(self) -> PwMultiAff {
+    /// Wraps `isl_multi_aff_move_dims`.
+    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
+                     n: u32)
+                     -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let ma = self;
         let mut ma = ma;
         ma.do_not_free_on_drop();
         let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_to_pw_multi_aff(ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_plain_cmp`.
-    pub fn plain_cmp(&self, multi2: &MultiAff) -> i32 {
-        let multi1 = self;
-        let multi1 = multi1.ptr;
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_plain_cmp(multi1, multi2) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_set_at`.
-    pub fn set_at(self, pos: i32, el: Aff) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_set_at(multi, pos, el) };
+        let isl_rs_result =
+            unsafe { isl_multi_aff_move_dims(ma, dst_type, dst_pos, src_type, src_pos, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -480,14 +461,17 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_range_factor_domain`.
-    pub fn range_factor_domain(self) -> MultiAff {
+    /// Wraps `isl_multi_aff_range_splice`.
+    pub fn range_splice(self, pos: u32, multi2: MultiAff) -> MultiAff {
         let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_factor_domain(multi) };
+        let multi1 = self;
+        let mut multi1 = multi1;
+        multi1.do_not_free_on_drop();
+        let multi1 = multi1.ptr;
+        let mut multi2 = multi2;
+        multi2.do_not_free_on_drop();
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_range_splice(multi1, pos, multi2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -506,32 +490,17 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_plain_is_equal`.
-    pub fn plain_is_equal(&self, multi2: &MultiAff) -> bool {
+    /// Wraps `isl_multi_aff_gist`.
+    pub fn gist(self, context: Set) -> MultiAff {
         let context_for_error_message = self.get_ctx();
-        let multi1 = self;
-        let multi1 = multi1.ptr;
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_plain_is_equal(multi1, multi2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_bind_domain`.
-    pub fn bind_domain(self, tuple: MultiId) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut tuple = tuple;
-        tuple.do_not_free_on_drop();
-        let tuple = tuple.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_bind_domain(multi, tuple) };
+        let maff = self;
+        let mut maff = maff;
+        maff.do_not_free_on_drop();
+        let maff = maff.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_gist(maff, context) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -540,19 +509,76 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_to_multi_union_pw_aff`.
-    pub fn to_multi_union_pw_aff(self) -> MultiUnionPwAff {
+    /// Wraps `isl_multi_aff_domain_map`.
+    pub fn domain_map(space: Space) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_domain_map(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_multi_val_on_domain_space`.
+    pub fn multi_val_on_domain_space(space: Space, mv: MultiVal) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut mv = mv;
+        mv.do_not_free_on_drop();
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_multi_val_on_domain_space(space, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_plain_cmp`.
+    pub fn plain_cmp(&self, multi2: &MultiAff) -> i32 {
+        let multi1 = self;
+        let multi1 = multi1.ptr;
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_plain_cmp(multi1, multi2) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_project_out_map`.
+    pub fn project_out_map(space: Space, type_: DimType, first: u32, n: u32) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_project_out_map(space, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_lex_lt_set`.
+    pub fn lex_lt_set(self, ma2: MultiAff) -> Set {
         let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_to_multi_union_pw_aff(ma) };
+        let ma1 = self;
+        let mut ma1 = ma1;
+        ma1.do_not_free_on_drop();
+        let ma1 = ma1.ptr;
+        let mut ma2 = ma2;
+        ma2.do_not_free_on_drop();
+        let ma2 = ma2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_lex_lt_set(ma1, ma2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = MultiUnionPwAff { ptr: isl_rs_result,
-                                              should_free_on_drop: true };
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -591,17 +617,14 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_set_range_tuple_id`.
-    pub fn set_range_tuple_id(self, id: Id) -> MultiAff {
+    /// Wraps `isl_multi_aff_identity_multi_aff`.
+    pub fn identity_multi_aff(self) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_set_range_tuple_id(multi, id) };
+        let isl_rs_result = unsafe { isl_multi_aff_identity_multi_aff(multi) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -610,31 +633,138 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_get_constant_multi_val`.
-    pub fn get_constant_multi_val(&self) -> MultiVal {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_constant_multi_val(ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiVal { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+    /// Wraps `isl_multi_aff_find_dim_by_id`.
+    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
+        let multi = self;
+        let multi = multi.ptr;
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_find_dim_by_id(multi, type_, id) };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_set_aff`.
-    pub fn set_aff(self, pos: i32, el: Aff) -> MultiAff {
+    /// Wraps `isl_multi_aff_set_tuple_id`.
+    pub fn set_tuple_id(self, type_: DimType, id: Id) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let mut el = el;
-        el.do_not_free_on_drop();
-        let el = el.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_set_aff(multi, pos, el) };
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_set_tuple_id(multi, type_, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_identity`.
+    pub fn identity(space: Space) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_identity(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_involves_locals`.
+    pub fn involves_locals(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_involves_locals(multi) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_aff`.
+    pub fn get_aff(&self, pos: i32) -> Aff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_aff(multi, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Aff { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_sub`.
+    pub fn sub(self, multi2: MultiAff) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi1 = self;
+        let mut multi1 = multi1;
+        multi1.do_not_free_on_drop();
+        let multi1 = multi1.ptr;
+        let mut multi2 = multi2;
+        multi2.do_not_free_on_drop();
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_sub(multi1, multi2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_bind`.
+    pub fn bind(self, tuple: MultiId) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let mut tuple = tuple;
+        tuple.do_not_free_on_drop();
+        let tuple = tuple.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_bind(ma, tuple) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_to_pw_multi_aff`.
+    pub fn to_pw_multi_aff(self) -> PwMultiAff {
+        let context_for_error_message = self.get_ctx();
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_to_pw_multi_aff(ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_flatten_range`.
+    pub fn flatten_range(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_flatten_range(multi) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -662,195 +792,12 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_factor_range`.
-    pub fn factor_range(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_factor_range(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_lex_ge_set`.
-    pub fn lex_ge_set(self, ma2: MultiAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let ma1 = self;
-        let mut ma1 = ma1;
-        ma1.do_not_free_on_drop();
-        let ma1 = ma1.ptr;
-        let mut ma2 = ma2;
-        ma2.do_not_free_on_drop();
-        let ma2 = ma2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_lex_ge_set(ma1, ma2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_list`.
-    pub fn get_list(&self) -> AffList {
+    /// Wraps `isl_multi_aff_has_range_tuple_id`.
+    pub fn has_range_tuple_id(&self) -> bool {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_list(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = AffList { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_from_aff_list`.
-    pub fn from_aff_list(space: Space, list: AffList) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_from_aff_list(space, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_dim_id`.
-    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_dim_id(multi, type_, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_scale_multi_val`.
-    pub fn scale_multi_val(self, mv: MultiVal) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut mv = mv;
-        mv.do_not_free_on_drop();
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_scale_multi_val(multi, mv) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_insert_domain`.
-    pub fn insert_domain(self, domain: Space) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_insert_domain(multi, domain) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_set_dim_name`.
-    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_multi_aff_set_dim_name(multi, type_, pos, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_flat_range_product`.
-    pub fn flat_range_product(self, multi2: MultiAff) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi1 = self;
-        let mut multi1 = multi1;
-        multi1.do_not_free_on_drop();
-        let multi1 = multi1.ptr;
-        let mut multi2 = multi2;
-        multi2.do_not_free_on_drop();
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_flat_range_product(multi1, multi2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_identity`.
-    pub fn identity(space: Space) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_identity(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_range_tuple_id`.
-    pub fn get_range_tuple_id(&self) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_range_tuple_id(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_involves_nan`.
-    pub fn involves_nan(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_involves_nan(multi) };
+        let isl_rs_result = unsafe { isl_multi_aff_has_range_tuple_id(multi) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -859,188 +806,14 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_reset_range_tuple_id`.
-    pub fn reset_range_tuple_id(self) -> MultiAff {
+    /// Wraps `isl_multi_aff_reset_user`.
+    pub fn reset_user(self) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_reset_range_tuple_id(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_aff`.
-    pub fn get_aff(&self, pos: i32) -> Aff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_aff(multi, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Aff { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_multi_val_on_domain_space`.
-    pub fn multi_val_on_domain_space(space: Space, mv: MultiVal) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut mv = mv;
-        mv.do_not_free_on_drop();
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_multi_val_on_domain_space(space, mv) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_has_tuple_id`.
-    pub fn has_tuple_id(&self, type_: DimType) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_has_tuple_id(multi, type_) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_ctx(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_lex_le_set`.
-    pub fn lex_le_set(self, ma2: MultiAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let ma1 = self;
-        let mut ma1 = ma1;
-        ma1.do_not_free_on_drop();
-        let ma1 = ma1.ptr;
-        let mut ma2 = ma2;
-        ma2.do_not_free_on_drop();
-        let ma2 = ma2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_lex_le_set(ma1, ma2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_zero`.
-    pub fn zero(space: Space) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_zero(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_set_tuple_name`.
-    pub fn set_tuple_name(self, type_: DimType, s: &str) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_multi_aff_set_tuple_name(multi, type_, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_range_map`.
-    pub fn range_map(space: Space) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_map(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_lex_lt_set`.
-    pub fn lex_lt_set(self, ma2: MultiAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let ma1 = self;
-        let mut ma1 = ma1;
-        ma1.do_not_free_on_drop();
-        let ma1 = ma1.ptr;
-        let mut ma2 = ma2;
-        ma2.do_not_free_on_drop();
-        let ma2 = ma2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_lex_lt_set(ma1, ma2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_domain_space`.
-    pub fn get_domain_space(&self) -> Space {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_domain_space(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_range_factor_range`.
-    pub fn range_factor_range(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_factor_range(multi) };
+        let isl_rs_result = unsafe { isl_multi_aff_reset_user(multi) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1068,26 +841,14 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_find_dim_by_id`.
-    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
-        let multi = self;
-        let multi = multi.ptr;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_find_dim_by_id(multi, type_, id) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_scale_down_multi_val`.
-    pub fn scale_down_multi_val(self, mv: MultiVal) -> MultiAff {
+    /// Wraps `isl_multi_aff_floor`.
+    pub fn floor(self) -> MultiAff {
         let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut mv = mv;
-        mv.do_not_free_on_drop();
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_scale_down_multi_val(multi, mv) };
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_floor(ma) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1096,14 +857,111 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_add_dims`.
-    pub fn add_dims(self, type_: DimType, n: u32) -> MultiAff {
+    /// Wraps `isl_multi_aff_get_dim_id`.
+    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_dim_id(multi, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_add_constant_multi_val`.
+    pub fn add_constant_multi_val(self, mv: MultiVal) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let mpa = self;
+        let mut mpa = mpa;
+        mpa.do_not_free_on_drop();
+        let mpa = mpa.ptr;
+        let mut mv = mv;
+        mv.do_not_free_on_drop();
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_add_constant_multi_val(mpa, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_domain_space`.
+    pub fn get_domain_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_domain_space(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_set_at`.
+    pub fn set_at(self, pos: i32, el: Aff) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_add_dims(multi, type_, n) };
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_set_at(multi, pos, el) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_range_tuple_id`.
+    pub fn get_range_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_range_tuple_id(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_identity_on_domain_space`.
+    pub fn identity_on_domain_space(space: Space) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_identity_on_domain_space(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_insert_domain`.
+    pub fn insert_domain(self, domain: Space) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_insert_domain(multi, domain) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1128,43 +986,22 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_reset_user`.
-    pub fn reset_user(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_reset_user(multi) };
+    /// Wraps `isl_multi_aff_from_aff`.
+    pub fn from_aff(aff: Aff) -> MultiAff {
+        let mut aff = aff;
+        aff.do_not_free_on_drop();
+        let aff = aff.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_from_aff(aff) };
         if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+            panic!("ISL error");
         }
         let isl_rs_result = MultiAff { ptr: isl_rs_result,
                                        should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_gist`.
-    pub fn gist(self, context: Set) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let maff = self;
-        let mut maff = maff;
-        maff.do_not_free_on_drop();
-        let maff = maff.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_gist(maff, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_lex_gt_set`.
-    pub fn lex_gt_set(self, ma2: MultiAff) -> Set {
+    /// Wraps `isl_multi_aff_lex_le_set`.
+    pub fn lex_le_set(self, ma2: MultiAff) -> Set {
         let context_for_error_message = self.get_ctx();
         let ma1 = self;
         let mut ma1 = ma1;
@@ -1173,7 +1010,7 @@ impl MultiAff {
         let mut ma2 = ma2;
         ma2.do_not_free_on_drop();
         let ma2 = ma2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_lex_gt_set(ma1, ma2) };
+        let isl_rs_result = unsafe { isl_multi_aff_lex_le_set(ma1, ma2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1182,47 +1019,40 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_range_product`.
-    pub fn range_product(self, multi2: MultiAff) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi1 = self;
-        let mut multi1 = multi1;
-        multi1.do_not_free_on_drop();
-        let multi1 = multi1.ptr;
-        let mut multi2 = multi2;
-        multi2.do_not_free_on_drop();
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_range_product(multi1, multi2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+    /// Wraps `isl_multi_aff_dump`.
+    pub fn dump(&self) {
+        let maff = self;
+        let maff = maff.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_dump(maff) };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_involves_locals`.
-    pub fn involves_locals(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
+    /// Wraps `isl_multi_aff_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
         let multi = self;
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_involves_locals(multi) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+        let isl_rs_result = unsafe { isl_multi_aff_get_ctx(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_from_range`.
-    pub fn from_range(self) -> MultiAff {
+    /// Wraps `isl_multi_aff_bind_domain_wrapped_domain`.
+    pub fn bind_domain_wrapped_domain(self, tuple: MultiId) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_from_range(multi) };
+        let mut tuple = tuple;
+        tuple.do_not_free_on_drop();
+        let tuple = tuple.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_bind_domain_wrapped_domain(multi, tuple) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1245,52 +1075,17 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_from_aff`.
-    pub fn from_aff(aff: Aff) -> MultiAff {
-        let mut aff = aff;
-        aff.do_not_free_on_drop();
-        let aff = aff.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_from_aff(aff) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_floor`.
-    pub fn floor(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_floor(ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_size`.
-    pub fn size(&self) -> i32 {
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_size(multi) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_flatten_range`.
-    pub fn flatten_range(self) -> MultiAff {
+    /// Wraps `isl_multi_aff_scale_down_val`.
+    pub fn scale_down_val(self, v: Val) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
         multi.do_not_free_on_drop();
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_flatten_range(multi) };
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_scale_down_val(multi, v) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1299,11 +1094,187 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_dim`.
-    pub fn dim(&self, type_: DimType) -> i32 {
+    /// Wraps `isl_multi_aff_flat_range_product`.
+    pub fn flat_range_product(self, multi2: MultiAff) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi1 = self;
+        let mut multi1 = multi1;
+        multi1.do_not_free_on_drop();
+        let multi1 = multi1.ptr;
+        let mut multi2 = multi2;
+        multi2.do_not_free_on_drop();
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_flat_range_product(multi1, multi2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_to_multi_pw_aff`.
+    pub fn to_multi_pw_aff(self) -> MultiPwAff {
+        let context_for_error_message = self.get_ctx();
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_to_multi_pw_aff(ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_flatten_domain`.
+    pub fn flatten_domain(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let ma = self;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_flatten_domain(ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_list`.
+    pub fn get_list(&self) -> AffList {
+        let context_for_error_message = self.get_ctx();
         let multi = self;
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_dim(multi, type_) };
+        let isl_rs_result = unsafe { isl_multi_aff_get_list(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = AffList { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_scale_multi_val`.
+    pub fn scale_multi_val(self, mv: MultiVal) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut mv = mv;
+        mv.do_not_free_on_drop();
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_scale_multi_val(multi, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_involves_dims`.
+    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_involves_dims(multi, type_, first, n) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_space`.
+    pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_space(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_splice`.
+    pub fn splice(self, in_pos: u32, out_pos: u32, multi2: MultiAff) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi1 = self;
+        let mut multi1 = multi1;
+        multi1.do_not_free_on_drop();
+        let multi1 = multi1.ptr;
+        let mut multi2 = multi2;
+        multi2.do_not_free_on_drop();
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_splice(multi1, in_pos, out_pos, multi2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_set_dim_name`.
+    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_multi_aff_set_dim_name(multi, type_, pos, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_range_factor_domain`.
+    pub fn range_factor_domain(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_range_factor_domain(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_scale_down_multi_val`.
+    pub fn scale_down_multi_val(self, mv: MultiVal) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut mv = mv;
+        mv.do_not_free_on_drop();
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_scale_down_multi_val(multi, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -1318,6 +1289,216 @@ impl MultiAff {
         mv.do_not_free_on_drop();
         let mv = mv.ptr;
         let isl_rs_result = unsafe { isl_multi_aff_mod_multi_val(multi, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_project_domain_on_params`.
+    pub fn project_domain_on_params(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_project_domain_on_params(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_set_tuple_name`.
+    pub fn set_tuple_name(self, type_: DimType, s: &str) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_multi_aff_set_tuple_name(multi, type_, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_multi_val_on_space`.
+    pub fn multi_val_on_space(space: Space, mv: MultiVal) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let mut mv = mv;
+        mv.do_not_free_on_drop();
+        let mv = mv.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_multi_val_on_space(space, mv) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_has_tuple_id`.
+    pub fn has_tuple_id(&self, type_: DimType) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_has_tuple_id(multi, type_) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_add_dims`.
+    pub fn add_dims(self, type_: DimType, n: u32) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_add_dims(multi, type_, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_gist_params`.
+    pub fn gist_params(self, context: Set) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let maff = self;
+        let mut maff = maff;
+        maff.do_not_free_on_drop();
+        let maff = maff.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_gist_params(maff, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_range_factor_range`.
+    pub fn range_factor_range(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_range_factor_range(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_from_range`.
+    pub fn from_range(self) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_from_range(multi) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_involves_nan`.
+    pub fn involves_nan(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_involves_nan(multi) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_tuple_name`.
+    pub fn get_tuple_name(&self, type_: DimType) -> &str {
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_tuple_name(multi, type_) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_drop_dims`.
+    pub fn drop_dims(self, type_: DimType, first: u32, n: u32) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_drop_dims(multi, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_bind_domain`.
+    pub fn bind_domain(self, tuple: MultiId) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut tuple = tuple;
+        tuple.do_not_free_on_drop();
+        let tuple = tuple.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_bind_domain(multi, tuple) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_range_product`.
+    pub fn range_product(self, multi2: MultiAff) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi1 = self;
+        let mut multi1 = multi1;
+        multi1.do_not_free_on_drop();
+        let multi1 = multi1.ptr;
+        let mut multi2 = multi2;
+        multi2.do_not_free_on_drop();
+        let multi2 = multi2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_range_product(multi1, multi2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1345,50 +1526,41 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_drop_dims`.
-    pub fn drop_dims(self, type_: DimType, first: u32, n: u32) -> MultiAff {
+    /// Wraps `isl_multi_aff_lex_gt_set`.
+    pub fn lex_gt_set(self, ma2: MultiAff) -> Set {
         let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_drop_dims(multi, type_, first, n) };
+        let ma1 = self;
+        let mut ma1 = ma1;
+        ma1.do_not_free_on_drop();
+        let ma1 = ma1.ptr;
+        let mut ma2 = ma2;
+        ma2.do_not_free_on_drop();
+        let ma2 = ma2.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_lex_gt_set(ma1, ma2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_bind_domain_wrapped_domain`.
-    pub fn bind_domain_wrapped_domain(self, tuple: MultiId) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut tuple = tuple;
-        tuple.do_not_free_on_drop();
-        let tuple = tuple.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_bind_domain_wrapped_domain(multi, tuple) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+    /// Wraps `isl_multi_aff_to_str`.
+    pub fn to_str(&self) -> &str {
+        let ma = self;
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_to_str(ma) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_multi_val_on_space`.
-    pub fn multi_val_on_space(space: Space, mv: MultiVal) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let mut mv = mv;
-        mv.do_not_free_on_drop();
-        let mv = mv.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_multi_val_on_space(space, mv) };
+    /// Wraps `isl_multi_aff_read_from_str`.
+    pub fn read_from_str(ctx: &Context, str_: &str) -> MultiAff {
+        let ctx = ctx.ptr;
+        let str_ = CString::new(str_).unwrap();
+        let str_ = str_.as_ptr();
+        let isl_rs_result = unsafe { isl_multi_aff_read_from_str(ctx, str_) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -1397,17 +1569,17 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_gist_params`.
-    pub fn gist_params(self, context: Set) -> MultiAff {
+    /// Wraps `isl_multi_aff_set_aff`.
+    pub fn set_aff(self, pos: i32, el: Aff) -> MultiAff {
         let context_for_error_message = self.get_ctx();
-        let maff = self;
-        let mut maff = maff;
-        maff.do_not_free_on_drop();
-        let maff = maff.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_gist_params(maff, context) };
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut el = el;
+        el.do_not_free_on_drop();
+        let el = el.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_set_aff(multi, pos, el) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1416,12 +1588,12 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_has_range_tuple_id`.
-    pub fn has_range_tuple_id(&self) -> bool {
+    /// Wraps `isl_multi_aff_range_is_wrapping`.
+    pub fn range_is_wrapping(&self) -> bool {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_has_range_tuple_id(multi) };
+        let isl_rs_result = unsafe { isl_multi_aff_range_is_wrapping(multi) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1430,184 +1602,18 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_get_tuple_name`.
-    pub fn get_tuple_name(&self, type_: DimType) -> &str {
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_tuple_name(multi, type_) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_project_domain_on_params`.
-    pub fn project_domain_on_params(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_project_domain_on_params(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_at`.
-    pub fn get_at(&self, pos: i32) -> Aff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_at(multi, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Aff { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_product`.
-    pub fn product(self, multi2: MultiAff) -> MultiAff {
+    /// Wraps `isl_multi_aff_plain_is_equal`.
+    pub fn plain_is_equal(&self, multi2: &MultiAff) -> bool {
         let context_for_error_message = self.get_ctx();
         let multi1 = self;
-        let mut multi1 = multi1;
-        multi1.do_not_free_on_drop();
         let multi1 = multi1.ptr;
-        let mut multi2 = multi2;
-        multi2.do_not_free_on_drop();
         let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_product(multi1, multi2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_move_dims`.
-    pub fn move_dims(self, dst_type: DimType, dst_pos: u32, src_type: DimType, src_pos: u32,
-                     n: u32)
-                     -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result =
-            unsafe { isl_multi_aff_move_dims(ma, dst_type, dst_pos, src_type, src_pos, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_dump`.
-    pub fn dump(&self) {
-        let maff = self;
-        let maff = maff.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_dump(maff) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_flatten_domain`.
-    pub fn flatten_domain(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_flatten_domain(ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_identity_on_domain_space`.
-    pub fn identity_on_domain_space(space: Space) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_identity_on_domain_space(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_identity_multi_aff`.
-    pub fn identity_multi_aff(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_identity_multi_aff(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_neg`.
-    pub fn neg(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_neg(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_get_tuple_id`.
-    pub fn get_tuple_id(&self, type_: DimType) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_get_tuple_id(multi, type_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_set_dim_id`.
-    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_set_dim_id(multi, type_, pos, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+        let isl_rs_result = unsafe { isl_multi_aff_plain_is_equal(multi1, multi2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -1627,54 +1633,8 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_to_multi_pw_aff`.
-    pub fn to_multi_pw_aff(self) -> MultiPwAff {
-        let context_for_error_message = self.get_ctx();
-        let ma = self;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_to_multi_pw_aff(ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_project_out_map`.
-    pub fn project_out_map(space: Space, type_: DimType, first: u32, n: u32) -> MultiAff {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_project_out_map(space, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_domain_reverse`.
-    pub fn domain_reverse(self) -> MultiAff {
-        let context_for_error_message = self.get_ctx();
-        let multi = self;
-        let mut multi = multi;
-        multi.do_not_free_on_drop();
-        let multi = multi.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_domain_reverse(multi) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_multi_aff_set_tuple_id`.
-    pub fn set_tuple_id(self, type_: DimType, id: Id) -> MultiAff {
+    /// Wraps `isl_multi_aff_set_range_tuple_id`.
+    pub fn set_range_tuple_id(self, id: Id) -> MultiAff {
         let context_for_error_message = self.get_ctx();
         let multi = self;
         let mut multi = multi;
@@ -1683,7 +1643,7 @@ impl MultiAff {
         let mut id = id;
         id.do_not_free_on_drop();
         let id = id.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_set_tuple_id(multi, type_, id) };
+        let isl_rs_result = unsafe { isl_multi_aff_set_range_tuple_id(multi, id) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1692,12 +1652,31 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_read_from_str`.
-    pub fn read_from_str(ctx: &Context, str_: &str) -> MultiAff {
-        let ctx = ctx.ptr;
-        let str_ = CString::new(str_).unwrap();
-        let str_ = str_.as_ptr();
-        let isl_rs_result = unsafe { isl_multi_aff_read_from_str(ctx, str_) };
+    /// Wraps `isl_multi_aff_unbind_params_insert_domain`.
+    pub fn unbind_params_insert_domain(self, domain: MultiId) -> MultiAff {
+        let context_for_error_message = self.get_ctx();
+        let multi = self;
+        let mut multi = multi;
+        multi.do_not_free_on_drop();
+        let multi = multi.ptr;
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_unbind_params_insert_domain(multi, domain) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiAff { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_range_map`.
+    pub fn range_map(space: Space) -> MultiAff {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_range_map(space) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -1706,22 +1685,25 @@ impl MultiAff {
         isl_rs_result
     }
 
-    /// Wraps `isl_multi_aff_sub`.
-    pub fn sub(self, multi2: MultiAff) -> MultiAff {
+    /// Wraps `isl_multi_aff_dim`.
+    pub fn dim(&self, type_: DimType) -> i32 {
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_dim(multi, type_) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_multi_aff_get_at`.
+    pub fn get_at(&self, pos: i32) -> Aff {
         let context_for_error_message = self.get_ctx();
-        let multi1 = self;
-        let mut multi1 = multi1;
-        multi1.do_not_free_on_drop();
-        let multi1 = multi1.ptr;
-        let mut multi2 = multi2;
-        multi2.do_not_free_on_drop();
-        let multi2 = multi2.ptr;
-        let isl_rs_result = unsafe { isl_multi_aff_sub(multi1, multi2) };
+        let multi = self;
+        let multi = multi.ptr;
+        let isl_rs_result = unsafe { isl_multi_aff_get_at(multi, pos) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = MultiAff { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+        let isl_rs_result = Aff { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 

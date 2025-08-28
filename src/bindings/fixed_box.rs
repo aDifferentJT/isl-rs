@@ -14,25 +14,23 @@ pub struct FixedBox {
 
 extern "C" {
 
-    fn isl_fixed_box_dump(box_: uintptr_t);
+    fn isl_fixed_box_to_str(box_: uintptr_t) -> *const c_char;
+
+    fn isl_fixed_box_get_ctx(box_: uintptr_t) -> uintptr_t;
 
     fn isl_fixed_box_get_space(box_: uintptr_t) -> uintptr_t;
 
-    fn isl_fixed_box_to_str(box_: uintptr_t) -> *const c_char;
+    fn isl_fixed_box_copy(box_: uintptr_t) -> uintptr_t;
 
     fn isl_fixed_box_free(box_: uintptr_t) -> uintptr_t;
+
+    fn isl_fixed_box_is_valid(box_: uintptr_t) -> i32;
+
+    fn isl_fixed_box_dump(box_: uintptr_t);
 
     fn isl_fixed_box_get_offset(box_: uintptr_t) -> uintptr_t;
 
     fn isl_fixed_box_get_size(box_: uintptr_t) -> uintptr_t;
-
-    fn isl_fixed_box_get_ctx(box_: uintptr_t) -> uintptr_t;
-
-    fn isl_fixed_box_copy(box_: uintptr_t) -> uintptr_t;
-
-    fn isl_fixed_box_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
-
-    fn isl_fixed_box_is_valid(box_: uintptr_t) -> i32;
 
 }
 
@@ -43,11 +41,28 @@ impl Clone for FixedBox {
 }
 
 impl FixedBox {
-    /// Wraps `isl_fixed_box_dump`.
-    pub fn dump(&self) {
+    /// Wraps `isl_fixed_box_to_str`.
+    pub fn to_str(&self) -> &str {
         let box_ = self;
         let box_ = box_.ptr;
-        let isl_rs_result = unsafe { isl_fixed_box_dump(box_) };
+        let isl_rs_result = unsafe { isl_fixed_box_to_str(box_) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_fixed_box_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let box_ = self;
+        let box_ = box_.ptr;
+        let isl_rs_result = unsafe { isl_fixed_box_get_ctx(box_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
         isl_rs_result
     }
 
@@ -65,13 +80,17 @@ impl FixedBox {
         isl_rs_result
     }
 
-    /// Wraps `isl_fixed_box_to_str`.
-    pub fn to_str(&self) -> &str {
+    /// Wraps `isl_fixed_box_copy`.
+    pub fn copy(&self) -> FixedBox {
+        let context_for_error_message = self.get_ctx();
         let box_ = self;
         let box_ = box_.ptr;
-        let isl_rs_result = unsafe { isl_fixed_box_to_str(box_) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        let isl_rs_result = unsafe { isl_fixed_box_copy(box_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = FixedBox { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -88,6 +107,28 @@ impl FixedBox {
         }
         let isl_rs_result = FixedBox { ptr: isl_rs_result,
                                        should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_fixed_box_is_valid`.
+    pub fn is_valid(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let box_ = self;
+        let box_ = box_.ptr;
+        let isl_rs_result = unsafe { isl_fixed_box_is_valid(box_) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_fixed_box_dump`.
+    pub fn dump(&self) {
+        let box_ = self;
+        let box_ = box_.ptr;
+        let isl_rs_result = unsafe { isl_fixed_box_dump(box_) };
         isl_rs_result
     }
 
@@ -116,63 +157,6 @@ impl FixedBox {
         }
         let isl_rs_result = MultiVal { ptr: isl_rs_result,
                                        should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_fixed_box_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let box_ = self;
-        let box_ = box_.ptr;
-        let isl_rs_result = unsafe { isl_fixed_box_get_ctx(box_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_fixed_box_copy`.
-    pub fn copy(&self) -> FixedBox {
-        let context_for_error_message = self.get_ctx();
-        let box_ = self;
-        let box_ = box_.ptr;
-        let isl_rs_result = unsafe { isl_fixed_box_copy(box_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = FixedBox { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_fixed_box_read_from_str`.
-    pub fn read_from_str(ctx: &Context, str_: &str) -> FixedBox {
-        let ctx = ctx.ptr;
-        let str_ = CString::new(str_).unwrap();
-        let str_ = str_.as_ptr();
-        let isl_rs_result = unsafe { isl_fixed_box_read_from_str(ctx, str_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = FixedBox { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_fixed_box_is_valid`.
-    pub fn is_valid(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let box_ = self;
-        let box_ = box_.ptr;
-        let isl_rs_result = unsafe { isl_fixed_box_is_valid(box_) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
         isl_rs_result
     }
 

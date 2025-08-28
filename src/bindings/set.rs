@@ -3,11 +3,11 @@
 
 use crate::bindings::{
     BasicSet, BasicSetList, Constraint, Context, DimType, FixedBox, Id, IdList, Map, MultiAff,
-    MultiId, MultiPwAff, MultiVal, Point, PwAff, PwMultiAff, SetList, Space, StrideInfo, Val,
+    MultiId, MultiPwAff, MultiVal, Point, PwAff, PwMultiAff, SetList, Space, Stat, StrideInfo, Val,
 };
 use libc::uintptr_t;
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 
 /// Wraps `isl_set`.
 pub struct Set {
@@ -17,329 +17,337 @@ pub struct Set {
 
 extern "C" {
 
-    fn isl_set_preimage_pw_multi_aff(set: uintptr_t, pma: uintptr_t) -> uintptr_t;
-
-    fn isl_set_sample_point(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lower_bound_multi_val(set: uintptr_t, lower: uintptr_t) -> uintptr_t;
-
-    fn isl_set_free(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_universe(space: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lower_bound_multi_pw_aff(set: uintptr_t, lower: uintptr_t) -> uintptr_t;
-
-    fn isl_set_remove_redundancies(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_dim_id(set: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_set_lower_bound_val(set: uintptr_t, type_: DimType, pos: u32, value: uintptr_t)
-                               -> uintptr_t;
-
-    fn isl_set_subtract(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_preimage_multi_pw_aff(set: uintptr_t, mpa: uintptr_t) -> uintptr_t;
-
-    fn isl_set_insert_dims(set: uintptr_t, type_: DimType, pos: u32, n: u32) -> uintptr_t;
-
-    fn isl_set_find_dim_by_name(set: uintptr_t, type_: DimType, name: *const c_char) -> i32;
-
-    fn isl_set_remove_dims(bset: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_set_drop_constraints_not_involving_dims(set: uintptr_t, type_: DimType, first: u32,
-                                                   n: u32)
-                                                   -> uintptr_t;
-
-    fn isl_set_align_divs(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_n_basic_set(set: uintptr_t) -> i32;
-
-    fn isl_set_lex_ge_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_is_bounded(set: uintptr_t) -> i32;
-
-    fn isl_set_has_tuple_id(set: uintptr_t) -> i32;
-
-    fn isl_set_add_constraint(set: uintptr_t, constraint: uintptr_t) -> uintptr_t;
-
-    fn isl_set_is_equal(set1: uintptr_t, set2: uintptr_t) -> i32;
-
-    fn isl_set_is_box(set: uintptr_t) -> i32;
-
-    fn isl_set_from_point(pnt: uintptr_t) -> uintptr_t;
-
-    fn isl_set_dim_has_any_lower_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+    fn isl_set_fix_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
 
     fn isl_set_unbind_params_insert_domain(set: uintptr_t, domain: uintptr_t) -> uintptr_t;
 
-    fn isl_set_fix_dim_si(set: uintptr_t, dim: u32, value: i32) -> uintptr_t;
+    fn isl_set_make_disjoint(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_remove_divs_involving_dims(set: uintptr_t, type_: DimType, first: u32, n: u32)
-                                          -> uintptr_t;
-
-    fn isl_set_upper_bound_val(set: uintptr_t, type_: DimType, pos: u32, value: uintptr_t)
-                               -> uintptr_t;
-
-    fn isl_set_is_empty(set: uintptr_t) -> i32;
-
-    fn isl_set_dim_is_bounded(set: uintptr_t, type_: DimType, pos: u32) -> i32;
-
-    fn isl_set_params(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_gist_basic_set(set: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_plain_multi_val_if_fixed(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_from_basic_set(bset: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_basic_set_list(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_apply(set: uintptr_t, map: uintptr_t) -> uintptr_t;
-
-    fn isl_set_from_params(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lex_gt_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_coalesce(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_size(set: uintptr_t) -> i32;
-
-    fn isl_set_preimage_multi_aff(set: uintptr_t, ma: uintptr_t) -> uintptr_t;
-
-    fn isl_set_nat_universe(space: uintptr_t) -> uintptr_t;
-
-    fn isl_set_union_disjoint(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_simple_hull(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lex_lt_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_product(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_set_dim_id(set: uintptr_t, type_: DimType, pos: u32, id: uintptr_t) -> uintptr_t;
-
-    fn isl_set_drop_constraints_involving_dims(set: uintptr_t, type_: DimType, first: u32, n: u32)
-                                               -> uintptr_t;
-
-    fn isl_set_involves_dims(set: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
-
-    fn isl_set_dim_max(set: uintptr_t, pos: i32) -> uintptr_t;
-
-    fn isl_set_upper_bound_multi_pw_aff(set: uintptr_t, upper: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_tuple_name(set: uintptr_t) -> *const c_char;
-
-    fn isl_set_gist(set: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lexmax_pw_multi_aff(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_align_params(set: uintptr_t, model: uintptr_t) -> uintptr_t;
-
-    fn isl_set_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
-
-    fn isl_set_gist_params(set: uintptr_t, context: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_lattice_tile(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_simple_fixed_box_hull(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_project_out_param_id_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_set_dim(set: uintptr_t, type_: DimType) -> i32;
+    fn isl_set_split_dims(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
 
     fn isl_set_sum(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
 
-    fn isl_set_unbind_params(set: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+    fn isl_set_product(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
 
-    fn isl_set_solutions(set: uintptr_t) -> uintptr_t;
+    fn isl_set_plain_is_universe(set: uintptr_t) -> i32;
 
-    fn isl_set_is_params(set: uintptr_t) -> i32;
+    fn isl_set_reset_tuple_id(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_project_out_param_id(set: uintptr_t, id: uintptr_t) -> uintptr_t;
+    fn isl_set_get_tuple_id(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_dim_has_lower_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+    fn isl_set_gist_params(set: uintptr_t, context: uintptr_t) -> uintptr_t;
 
-    fn isl_set_lexmax(set: uintptr_t) -> uintptr_t;
+    fn isl_set_has_tuple_id(set: uintptr_t) -> i32;
 
-    fn isl_set_upper_bound_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
+    fn isl_set_fix_val(set: uintptr_t, type_: DimType, pos: u32, v: uintptr_t) -> uintptr_t;
 
-    fn isl_set_remove_divs(set: uintptr_t) -> uintptr_t;
+    fn isl_set_get_space(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_read_from_str(ctx: uintptr_t, str_: *const c_char) -> uintptr_t;
 
     fn isl_set_max_multi_pw_aff(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_intersect_factor_domain(set: uintptr_t, domain: uintptr_t) -> uintptr_t;
+    fn isl_set_project_out_all_params(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_get_lattice_tile(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_plain_is_disjoint(set1: uintptr_t, set2: uintptr_t) -> i32;
+
+    fn isl_set_is_singleton(set: uintptr_t) -> i32;
+
+    fn isl_set_lex_gt_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_set_dim_id(set: uintptr_t, type_: DimType, pos: u32, id: uintptr_t) -> uintptr_t;
+
+    fn isl_set_set_tuple_id(set: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_set_lex_le_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_set_dim_name(set: uintptr_t, type_: DimType, pos: u32, s: *const c_char)
+                            -> uintptr_t;
+
+    fn isl_set_is_box(set: uintptr_t) -> i32;
+
+    fn isl_set_get_dim_name(set: uintptr_t, type_: DimType, pos: u32) -> *const c_char;
+
+    fn isl_set_lexmin_pw_multi_aff(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_copy(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_get_stride_info(set: uintptr_t, pos: i32) -> uintptr_t;
+    fn isl_set_free(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_bind(set: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+    fn isl_set_plain_is_empty(set: uintptr_t) -> i32;
 
-    fn isl_set_is_disjoint(set1: uintptr_t, set2: uintptr_t) -> i32;
+    fn isl_set_dim_has_any_upper_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
 
-    fn isl_set_convex_hull(set: uintptr_t) -> uintptr_t;
+    fn isl_set_equate(set: uintptr_t, type1: DimType, pos1: i32, type2: DimType, pos2: i32)
+                      -> uintptr_t;
 
-    fn isl_set_get_ctx(set: uintptr_t) -> uintptr_t;
+    fn isl_set_lower_bound_multi_pw_aff(set: uintptr_t, lower: uintptr_t) -> uintptr_t;
 
-    fn isl_set_affine_hull(set: uintptr_t) -> uintptr_t;
+    fn isl_set_n_basic_set(set: uintptr_t) -> i32;
 
-    fn isl_set_n_dim(set: uintptr_t) -> i32;
+    fn isl_set_lower_bound_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
+
+    fn isl_set_from_point(pnt: uintptr_t) -> uintptr_t;
+
+    fn isl_set_find_dim_by_id(set: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
+
+    fn isl_set_add_constraint(set: uintptr_t, constraint: uintptr_t) -> uintptr_t;
 
     fn isl_set_eliminate_dims(set: uintptr_t, first: u32, n: u32) -> uintptr_t;
-
-    fn isl_set_has_dim_id(set: uintptr_t, type_: DimType, pos: u32) -> i32;
-
-    fn isl_set_wrapped_reverse(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_plain_get_val_if_fixed(set: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
-
-    fn isl_set_reset_tuple_id(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_move_dims(set: uintptr_t, dst_type: DimType, dst_pos: u32, src_type: DimType,
                          src_pos: u32, n: u32)
                          -> uintptr_t;
 
-    fn isl_set_lexmin_pw_multi_aff(set: uintptr_t) -> uintptr_t;
+    fn isl_set_convex_hull(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_get_stride(set: uintptr_t, pos: i32) -> uintptr_t;
+    fn isl_set_set_tuple_name(set: uintptr_t, s: *const c_char) -> uintptr_t;
 
-    fn isl_set_lex_le_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+    fn isl_set_project_out_param_id_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
 
-    fn isl_set_n_param(set: uintptr_t) -> i32;
+    fn isl_set_reset_space(set: uintptr_t, space: uintptr_t) -> uintptr_t;
 
-    fn isl_set_intersect_params(set: uintptr_t, params: uintptr_t) -> uintptr_t;
+    fn isl_set_get_basic_set_list(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_affine_hull(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_from_multi_aff(ma: uintptr_t) -> uintptr_t;
+
+    fn isl_set_dim(set: uintptr_t, type_: DimType) -> i32;
+
+    fn isl_set_tuple_dim(set: uintptr_t) -> i32;
+
+    fn isl_set_upper_bound_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
+
+    fn isl_set_lower_bound_multi_val(set: uintptr_t, lower: uintptr_t) -> uintptr_t;
+
+    fn isl_set_preimage_multi_aff(set: uintptr_t, ma: uintptr_t) -> uintptr_t;
+
+    fn isl_set_preimage_pw_multi_aff(set: uintptr_t, pma: uintptr_t) -> uintptr_t;
+
+    fn isl_set_remove_dims(bset: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_set_unshifted_simple_hull_from_set_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
+
+    fn isl_set_remove_divs(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_dim_has_lower_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_set_foreach_basic_set(set: uintptr_t,
+                                 fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                                 user: *mut c_void)
+                                 -> Stat;
+
+    fn isl_set_get_stride_info(set: uintptr_t, pos: i32) -> uintptr_t;
+
+    fn isl_set_size(set: uintptr_t) -> i32;
+
+    fn isl_set_plain_cmp(set1: uintptr_t, set2: uintptr_t) -> i32;
+
+    fn isl_set_from_basic_set(bset: uintptr_t) -> uintptr_t;
+
+    fn isl_set_nat_universe(space: uintptr_t) -> uintptr_t;
+
+    fn isl_set_involves_dims(set: uintptr_t, type_: DimType, first: u32, n: u32) -> i32;
+
+    fn isl_set_is_strict_subset(set1: uintptr_t, set2: uintptr_t) -> i32;
 
     fn isl_set_upper_bound_multi_val(set: uintptr_t, upper: uintptr_t) -> uintptr_t;
 
-    fn isl_set_dim_has_upper_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+    fn isl_set_fix_dim_si(set: uintptr_t, dim: u32, value: i32) -> uintptr_t;
 
-    fn isl_set_lift(set: uintptr_t) -> uintptr_t;
+    fn isl_set_sample(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_union(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_is_bounded(set: uintptr_t) -> i32;
+
+    fn isl_set_intersect_factor_domain(set: uintptr_t, domain: uintptr_t) -> uintptr_t;
+
+    fn isl_set_align_divs(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_foreach_point(set: uintptr_t,
+                             fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                             user: *mut c_void)
+                             -> Stat;
+
+    fn isl_set_n_param(set: uintptr_t) -> i32;
+
+    fn isl_set_add_dims(set: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
+
+    fn isl_set_dim_is_bounded(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_set_lower_bound_val(set: uintptr_t, type_: DimType, pos: u32, value: uintptr_t)
+                               -> uintptr_t;
+
+    fn isl_set_get_hash(set: uintptr_t) -> u32;
+
+    fn isl_set_drop_constraints_not_involving_dims(set: uintptr_t, type_: DimType, first: u32,
+                                                   n: u32)
+                                                   -> uintptr_t;
+
+    fn isl_set_dim_max(set: uintptr_t, pos: i32) -> uintptr_t;
+
+    fn isl_set_min_multi_pw_aff(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_intersect_params(set: uintptr_t, params: uintptr_t) -> uintptr_t;
+
+    fn isl_set_is_equal(set1: uintptr_t, set2: uintptr_t) -> i32;
 
     fn isl_set_drop_unused_params(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_fix_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
+    fn isl_set_detect_equalities(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_complement(set: uintptr_t) -> uintptr_t;
+    fn isl_set_coefficients(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_get_tuple_id(set: uintptr_t) -> uintptr_t;
+    fn isl_set_bounded_simple_hull(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_get_simple_fixed_box_hull(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_eliminate(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+
+    fn isl_set_get_dim_id(set: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
+
+    fn isl_set_neg(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_dim_has_any_lower_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_set_unbind_params(set: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+
+    fn isl_set_intersect_factor_range(set: uintptr_t, range: uintptr_t) -> uintptr_t;
+
+    fn isl_set_is_empty(set: uintptr_t) -> i32;
+
+    fn isl_set_follows_at(set1: uintptr_t, set2: uintptr_t, pos: i32) -> i32;
+
+    fn isl_set_n_dim(set: uintptr_t) -> i32;
+
+    fn isl_set_is_subset(set1: uintptr_t, set2: uintptr_t) -> i32;
+
+    fn isl_set_bind(set: uintptr_t, tuple: uintptr_t) -> uintptr_t;
+
+    fn isl_set_drop_constraints_involving_dims(set: uintptr_t, type_: DimType, first: u32, n: u32)
+                                               -> uintptr_t;
+
+    fn isl_set_union_disjoint(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_coalesce(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_plain_is_equal(set1: uintptr_t, set2: uintptr_t) -> i32;
+
+    fn isl_set_dump(set: uintptr_t);
+
+    fn isl_set_simple_hull(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_lex_ge_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_align_params(set: uintptr_t, model: uintptr_t) -> uintptr_t;
+
+    fn isl_set_upper_bound_multi_pw_aff(set: uintptr_t, upper: uintptr_t) -> uintptr_t;
 
     fn isl_set_reset_user(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_involves_locals(set: uintptr_t) -> i32;
 
-    fn isl_set_dump(set: uintptr_t);
-
-    fn isl_set_sample(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_detect_equalities(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lexmin(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_union(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_min_multi_pw_aff(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_follows_at(set1: uintptr_t, set2: uintptr_t, pos: i32) -> i32;
-
-    fn isl_set_intersect_factor_range(set: uintptr_t, range: uintptr_t) -> uintptr_t;
-
     fn isl_set_polyhedral_hull(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_unshifted_simple_hull(set: uintptr_t) -> uintptr_t;
+    fn isl_set_from_params(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_flat_product(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+    fn isl_set_get_stride(set: uintptr_t, pos: i32) -> uintptr_t;
 
-    fn isl_set_remove_unknown_divs(set: uintptr_t) -> uintptr_t;
+    fn isl_set_remove_divs_involving_dims(set: uintptr_t, type_: DimType, first: u32, n: u32)
+                                          -> uintptr_t;
 
-    fn isl_set_get_dim_name(set: uintptr_t, type_: DimType, pos: u32) -> *const c_char;
-
-    fn isl_set_from_multi_aff(ma: uintptr_t) -> uintptr_t;
-
-    fn isl_set_coefficients(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_get_space(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_intersect(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
-
-    fn isl_set_lower_bound_si(set: uintptr_t, type_: DimType, pos: u32, value: i32) -> uintptr_t;
-
-    fn isl_set_set_tuple_id(set: uintptr_t, id: uintptr_t) -> uintptr_t;
-
-    fn isl_set_unshifted_simple_hull_from_set_list(set: uintptr_t, list: uintptr_t) -> uintptr_t;
-
-    fn isl_set_neg(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_plain_cmp(set1: uintptr_t, set2: uintptr_t) -> i32;
-
-    fn isl_set_to_str(set: uintptr_t) -> *const c_char;
-
-    fn isl_set_find_dim_by_id(set: uintptr_t, type_: DimType, id: uintptr_t) -> i32;
+    fn isl_set_universe(space: uintptr_t) -> uintptr_t;
 
     fn isl_set_compute_divs(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_get_hash(set: uintptr_t) -> u32;
+    fn isl_set_params(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_plain_is_equal(set1: uintptr_t, set2: uintptr_t) -> i32;
-
-    fn isl_set_add_dims(set: uintptr_t, type_: DimType, n: u32) -> uintptr_t;
-
-    fn isl_set_plain_is_empty(set: uintptr_t) -> i32;
-
-    fn isl_set_set_tuple_name(set: uintptr_t, s: *const c_char) -> uintptr_t;
-
-    fn isl_set_is_subset(set1: uintptr_t, set2: uintptr_t) -> i32;
-
-    fn isl_set_count_val(set: uintptr_t) -> uintptr_t;
+    fn isl_set_remove_unknown_divs(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_has_dim_name(set: uintptr_t, type_: DimType, pos: u32) -> i32;
 
-    fn isl_set_eliminate(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+    fn isl_set_plain_unshifted_simple_hull(set: uintptr_t) -> uintptr_t;
 
     fn isl_set_box_from_points(pnt1: uintptr_t, pnt2: uintptr_t) -> uintptr_t;
 
-    fn isl_set_plain_unshifted_simple_hull(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_make_disjoint(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_equate(set: uintptr_t, type1: DimType, pos1: i32, type2: DimType, pos2: i32)
-                      -> uintptr_t;
-
-    fn isl_set_bounded_simple_hull(set: uintptr_t) -> uintptr_t;
-
-    fn isl_set_reset_space(set: uintptr_t, space: uintptr_t) -> uintptr_t;
-
     fn isl_set_has_tuple_name(set: uintptr_t) -> i32;
 
-    fn isl_set_set_dim_name(set: uintptr_t, type_: DimType, pos: u32, s: *const c_char)
-                            -> uintptr_t;
+    fn isl_set_unshifted_simple_hull(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_is_strict_subset(set1: uintptr_t, set2: uintptr_t) -> i32;
+    fn isl_set_complement(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_plain_is_universe(set: uintptr_t) -> i32;
+    fn isl_set_lexmin(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_is_singleton(set: uintptr_t) -> i32;
+    fn isl_set_lexmax_pw_multi_aff(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_fix_val(set: uintptr_t, type_: DimType, pos: u32, v: uintptr_t) -> uintptr_t;
+    fn isl_set_flat_product(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
 
-    fn isl_set_split_dims(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+    fn isl_set_is_disjoint(set1: uintptr_t, set2: uintptr_t) -> i32;
 
-    fn isl_set_empty(space: uintptr_t) -> uintptr_t;
+    fn isl_set_count_val(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_dim_has_any_upper_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+    fn isl_set_remove_redundancies(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_dim_min(set: uintptr_t, pos: i32) -> uintptr_t;
+    fn isl_set_sample_point(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_tuple_dim(set: uintptr_t) -> i32;
+    fn isl_set_lift(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_has_equal_space(set1: uintptr_t, set2: uintptr_t) -> i32;
+    fn isl_set_solutions(set: uintptr_t) -> uintptr_t;
 
-    fn isl_set_plain_is_disjoint(set1: uintptr_t, set2: uintptr_t) -> i32;
+    fn isl_set_lex_lt_set(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
 
     fn isl_set_project_out(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
 
-    fn isl_set_project_onto_map(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
+    fn isl_set_dim_has_upper_bound(set: uintptr_t, type_: DimType, pos: u32) -> i32;
 
-    fn isl_set_project_out_all_params(set: uintptr_t) -> uintptr_t;
+    fn isl_set_gist(set: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_set_project_out_param_id(set: uintptr_t, id: uintptr_t) -> uintptr_t;
+
+    fn isl_set_find_dim_by_name(set: uintptr_t, type_: DimType, name: *const c_char) -> i32;
+
+    fn isl_set_get_tuple_name(set: uintptr_t) -> *const c_char;
+
+    fn isl_set_get_plain_multi_val_if_fixed(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_apply(set: uintptr_t, map: uintptr_t) -> uintptr_t;
+
+    fn isl_set_is_params(set: uintptr_t) -> i32;
+
+    fn isl_set_upper_bound_val(set: uintptr_t, type_: DimType, pos: u32, value: uintptr_t)
+                               -> uintptr_t;
+
+    fn isl_set_intersect(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_get_ctx(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_empty(space: uintptr_t) -> uintptr_t;
+
+    fn isl_set_subtract(set1: uintptr_t, set2: uintptr_t) -> uintptr_t;
+
+    fn isl_set_plain_get_val_if_fixed(set: uintptr_t, type_: DimType, pos: u32) -> uintptr_t;
+
+    fn isl_set_insert_dims(set: uintptr_t, type_: DimType, pos: u32, n: u32) -> uintptr_t;
+
+    fn isl_set_gist_basic_set(set: uintptr_t, context: uintptr_t) -> uintptr_t;
+
+    fn isl_set_has_dim_id(set: uintptr_t, type_: DimType, pos: u32) -> i32;
+
+    fn isl_set_has_equal_space(set1: uintptr_t, set2: uintptr_t) -> i32;
+
+    fn isl_set_dim_min(set: uintptr_t, pos: i32) -> uintptr_t;
+
+    fn isl_set_to_str(set: uintptr_t) -> *const c_char;
+
+    fn isl_set_preimage_multi_pw_aff(set: uintptr_t, mpa: uintptr_t) -> uintptr_t;
+
+    fn isl_set_lexmax(set: uintptr_t) -> uintptr_t;
+
+    fn isl_set_project_onto_map(set: uintptr_t, type_: DimType, first: u32, n: u32) -> uintptr_t;
 
 }
 
@@ -358,17 +366,14 @@ impl PartialEq for Set {
 impl Eq for Set {}
 
 impl Set {
-    /// Wraps `isl_set_preimage_pw_multi_aff`.
-    pub fn preimage_pw_multi_aff(self, pma: PwMultiAff) -> Set {
+    /// Wraps `isl_set_fix_si`.
+    pub fn fix_si(self, type_: DimType, pos: u32, value: i32) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let mut pma = pma;
-        pma.do_not_free_on_drop();
-        let pma = pma.ptr;
-        let isl_rs_result = unsafe { isl_set_preimage_pw_multi_aff(set, pma) };
+        let isl_rs_result = unsafe { isl_set_fix_si(set, type_, pos, value) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -377,33 +382,434 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_sample_point`.
-    pub fn sample_point(self) -> Point {
+    /// Wraps `isl_set_unbind_params_insert_domain`.
+    pub fn unbind_params_insert_domain(self, domain: MultiId) -> Map {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_sample_point(set) };
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_set_unbind_params_insert_domain(set, domain) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Point { ptr: isl_rs_result,
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_make_disjoint`.
+    pub fn make_disjoint(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_make_disjoint(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_split_dims`.
+    pub fn split_dims(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_split_dims(set, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_sum`.
+    pub fn sum(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_sum(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_product`.
+    pub fn product(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_product(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_plain_is_universe`.
+    pub fn plain_is_universe(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_is_universe(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_reset_tuple_id`.
+    pub fn reset_tuple_id(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_reset_tuple_id(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_tuple_id`.
+    pub fn get_tuple_id(&self) -> Id {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_tuple_id(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Id { ptr: isl_rs_result,
+                                 should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_gist_params`.
+    pub fn gist_params(self, context: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_set_gist_params(set, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_has_tuple_id`.
+    pub fn has_tuple_id(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_has_tuple_id(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_fix_val`.
+    pub fn fix_val(self, type_: DimType, pos: u32, v: Val) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut v = v;
+        v.do_not_free_on_drop();
+        let v = v.ptr;
+        let isl_rs_result = unsafe { isl_set_fix_val(set, type_, pos, v) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_space`.
+    pub fn get_space(&self) -> Space {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_space(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Space { ptr: isl_rs_result,
                                     should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_lower_bound_multi_val`.
-    pub fn lower_bound_multi_val(self, lower: MultiVal) -> Set {
+    /// Wraps `isl_set_read_from_str`.
+    pub fn read_from_str(ctx: &Context, str_: &str) -> Set {
+        let ctx = ctx.ptr;
+        let str_ = CString::new(str_).unwrap();
+        let str_ = str_.as_ptr();
+        let isl_rs_result = unsafe { isl_set_read_from_str(ctx, str_) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_max_multi_pw_aff`.
+    pub fn max_multi_pw_aff(self) -> MultiPwAff {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let mut lower = lower;
-        lower.do_not_free_on_drop();
-        let lower = lower.ptr;
-        let isl_rs_result = unsafe { isl_set_lower_bound_multi_val(set, lower) };
+        let isl_rs_result = unsafe { isl_set_max_multi_pw_aff(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_project_out_all_params`.
+    pub fn project_out_all_params(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_project_out_all_params(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_lattice_tile`.
+    pub fn get_lattice_tile(&self) -> FixedBox {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_lattice_tile(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = FixedBox { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_plain_is_disjoint`.
+    pub fn plain_is_disjoint(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_is_disjoint(set1, set2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_singleton`.
+    pub fn is_singleton(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_is_singleton(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lex_gt_set`.
+    pub fn lex_gt_set(self, set2: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_lex_gt_set(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_set_dim_id`.
+    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_set_set_dim_id(set, type_, pos, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_set_tuple_id`.
+    pub fn set_tuple_id(self, id: Id) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_set_set_tuple_id(set, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lex_le_set`.
+    pub fn lex_le_set(self, set2: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_lex_le_set(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_set_dim_name`.
+    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_set_set_dim_name(set, type_, pos, s) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_box`.
+    pub fn is_box(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_is_box(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_dim_name`.
+    pub fn get_dim_name(&self, type_: DimType, pos: u32) -> &str {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_dim_name(set, type_, pos) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lexmin_pw_multi_aff`.
+    pub fn lexmin_pw_multi_aff(self) -> PwMultiAff {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lexmin_pw_multi_aff(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_copy`.
+    pub fn copy(&self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_copy(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -428,14 +834,44 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_universe`.
-    pub fn universe(space: Space) -> Set {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_set_universe(space) };
+    /// Wraps `isl_set_plain_is_empty`.
+    pub fn plain_is_empty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_is_empty(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_has_any_upper_bound`.
+    pub fn dim_has_any_upper_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_has_any_upper_bound(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_equate`.
+    pub fn equate(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_equate(set, type1, pos1, type2, pos2) };
         if isl_rs_result == 0 {
-            panic!("ISL error");
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
@@ -461,168 +897,6 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_remove_redundancies`.
-    pub fn remove_redundancies(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_remove_redundancies(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_dim_id`.
-    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_dim_id(set, type_, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Id { ptr: isl_rs_result,
-                                 should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lower_bound_val`.
-    pub fn lower_bound_val(self, type_: DimType, pos: u32, value: Val) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut value = value;
-        value.do_not_free_on_drop();
-        let value = value.ptr;
-        let isl_rs_result = unsafe { isl_set_lower_bound_val(set, type_, pos, value) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_subtract`.
-    pub fn subtract(self, set2: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_subtract(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_preimage_multi_pw_aff`.
-    pub fn preimage_multi_pw_aff(self, mpa: MultiPwAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut mpa = mpa;
-        mpa.do_not_free_on_drop();
-        let mpa = mpa.ptr;
-        let isl_rs_result = unsafe { isl_set_preimage_multi_pw_aff(set, mpa) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_insert_dims`.
-    pub fn insert_dims(self, type_: DimType, pos: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_insert_dims(set, type_, pos, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_find_dim_by_name`.
-    pub fn find_dim_by_name(&self, type_: DimType, name: &str) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let name = CString::new(name).unwrap();
-        let name = name.as_ptr();
-        let isl_rs_result = unsafe { isl_set_find_dim_by_name(set, type_, name) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_remove_dims`.
-    pub fn remove_dims(self, type_: DimType, first: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let bset = self;
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_set_remove_dims(bset, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_drop_constraints_not_involving_dims`.
-    pub fn drop_constraints_not_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result =
-            unsafe { isl_set_drop_constraints_not_involving_dims(set, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_align_divs`.
-    pub fn align_divs(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_align_divs(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_set_n_basic_set`.
     pub fn n_basic_set(&self) -> i32 {
         let set = self;
@@ -631,50 +905,42 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_lex_ge_set`.
-    pub fn lex_ge_set(self, set2: Set) -> Map {
+    /// Wraps `isl_set_lower_bound_si`.
+    pub fn lower_bound_si(self, type_: DimType, pos: u32, value: i32) -> Set {
         let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_lex_ge_set(set1, set2) };
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lower_bound_si(set, type_, pos, value) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Map { ptr: isl_rs_result,
+        let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_is_bounded`.
-    pub fn is_bounded(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_is_bounded(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+    /// Wraps `isl_set_from_point`.
+    pub fn from_point(pnt: Point) -> Set {
+        let mut pnt = pnt;
+        pnt.do_not_free_on_drop();
+        let pnt = pnt.ptr;
+        let isl_rs_result = unsafe { isl_set_from_point(pnt) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_has_tuple_id`.
-    pub fn has_tuple_id(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
+    /// Wraps `isl_set_find_dim_by_id`.
+    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_has_tuple_id(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_set_find_dim_by_id(set, type_, id) };
         isl_rs_result
     }
 
@@ -697,960 +963,6 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_is_equal`.
-    pub fn is_equal(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_is_equal(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_box`.
-    pub fn is_box(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_is_box(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_from_point`.
-    pub fn from_point(pnt: Point) -> Set {
-        let mut pnt = pnt;
-        pnt.do_not_free_on_drop();
-        let pnt = pnt.ptr;
-        let isl_rs_result = unsafe { isl_set_from_point(pnt) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_dim_has_any_lower_bound`.
-    pub fn dim_has_any_lower_bound(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_has_any_lower_bound(set, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_unbind_params_insert_domain`.
-    pub fn unbind_params_insert_domain(self, domain: MultiId) -> Map {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_set_unbind_params_insert_domain(set, domain) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_fix_dim_si`.
-    pub fn fix_dim_si(self, dim: u32, value: i32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_fix_dim_si(set, dim, value) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_remove_divs_involving_dims`.
-    pub fn remove_divs_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_remove_divs_involving_dims(set, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_upper_bound_val`.
-    pub fn upper_bound_val(self, type_: DimType, pos: u32, value: Val) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut value = value;
-        value.do_not_free_on_drop();
-        let value = value.ptr;
-        let isl_rs_result = unsafe { isl_set_upper_bound_val(set, type_, pos, value) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_empty`.
-    pub fn is_empty(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_is_empty(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_dim_is_bounded`.
-    pub fn dim_is_bounded(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_is_bounded(set, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_params`.
-    pub fn params(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_params(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_gist_basic_set`.
-    pub fn gist_basic_set(self, context: BasicSet) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_set_gist_basic_set(set, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_plain_multi_val_if_fixed`.
-    pub fn get_plain_multi_val_if_fixed(&self) -> MultiVal {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_plain_multi_val_if_fixed(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiVal { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_from_basic_set`.
-    pub fn from_basic_set(bset: BasicSet) -> Set {
-        let mut bset = bset;
-        bset.do_not_free_on_drop();
-        let bset = bset.ptr;
-        let isl_rs_result = unsafe { isl_set_from_basic_set(bset) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_basic_set_list`.
-    pub fn get_basic_set_list(&self) -> BasicSetList {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_basic_set_list(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSetList { ptr: isl_rs_result,
-                                           should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_apply`.
-    pub fn apply(self, map: Map) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut map = map;
-        map.do_not_free_on_drop();
-        let map = map.ptr;
-        let isl_rs_result = unsafe { isl_set_apply(set, map) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_from_params`.
-    pub fn from_params(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_from_params(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lex_gt_set`.
-    pub fn lex_gt_set(self, set2: Set) -> Map {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_lex_gt_set(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_coalesce`.
-    pub fn coalesce(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_coalesce(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_size`.
-    pub fn size(&self) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_size(set) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_preimage_multi_aff`.
-    pub fn preimage_multi_aff(self, ma: MultiAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_set_preimage_multi_aff(set, ma) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_nat_universe`.
-    pub fn nat_universe(space: Space) -> Set {
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_set_nat_universe(space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_union_disjoint`.
-    pub fn union_disjoint(self, set2: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_union_disjoint(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_simple_hull`.
-    pub fn simple_hull(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_simple_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lex_lt_set`.
-    pub fn lex_lt_set(self, set2: Set) -> Map {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_lex_lt_set(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_product`.
-    pub fn product(self, set2: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_product(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_set_dim_id`.
-    pub fn set_dim_id(self, type_: DimType, pos: u32, id: Id) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_set_set_dim_id(set, type_, pos, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_drop_constraints_involving_dims`.
-    pub fn drop_constraints_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result =
-            unsafe { isl_set_drop_constraints_involving_dims(set, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_involves_dims`.
-    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_involves_dims(set, type_, first, n) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_dim_max`.
-    pub fn dim_max(self, pos: i32) -> PwAff {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_max(set, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = PwAff { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_upper_bound_multi_pw_aff`.
-    pub fn upper_bound_multi_pw_aff(self, upper: MultiPwAff) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut upper = upper;
-        upper.do_not_free_on_drop();
-        let upper = upper.ptr;
-        let isl_rs_result = unsafe { isl_set_upper_bound_multi_pw_aff(set, upper) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_tuple_name`.
-    pub fn get_tuple_name(&self) -> &str {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_tuple_name(set) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_gist`.
-    pub fn gist(self, context: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_set_gist(set, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lexmax_pw_multi_aff`.
-    pub fn lexmax_pw_multi_aff(self) -> PwMultiAff {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lexmax_pw_multi_aff(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_align_params`.
-    pub fn align_params(self, model: Space) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut model = model;
-        model.do_not_free_on_drop();
-        let model = model.ptr;
-        let isl_rs_result = unsafe { isl_set_align_params(set, model) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_read_from_str`.
-    pub fn read_from_str(ctx: &Context, str_: &str) -> Set {
-        let ctx = ctx.ptr;
-        let str_ = CString::new(str_).unwrap();
-        let str_ = str_.as_ptr();
-        let isl_rs_result = unsafe { isl_set_read_from_str(ctx, str_) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_gist_params`.
-    pub fn gist_params(self, context: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut context = context;
-        context.do_not_free_on_drop();
-        let context = context.ptr;
-        let isl_rs_result = unsafe { isl_set_gist_params(set, context) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_lattice_tile`.
-    pub fn get_lattice_tile(&self) -> FixedBox {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_lattice_tile(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = FixedBox { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_simple_fixed_box_hull`.
-    pub fn get_simple_fixed_box_hull(&self) -> FixedBox {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_simple_fixed_box_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = FixedBox { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_project_out_param_id_list`.
-    pub fn project_out_param_id_list(self, list: IdList) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_set_project_out_param_id_list(set, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_dim`.
-    pub fn dim(&self, type_: DimType) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim(set, type_) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_sum`.
-    pub fn sum(self, set2: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_sum(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_unbind_params`.
-    pub fn unbind_params(self, tuple: MultiId) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut tuple = tuple;
-        tuple.do_not_free_on_drop();
-        let tuple = tuple.ptr;
-        let isl_rs_result = unsafe { isl_set_unbind_params(set, tuple) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_solutions`.
-    pub fn solutions(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_solutions(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_params`.
-    pub fn is_params(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_is_params(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_project_out_param_id`.
-    pub fn project_out_param_id(self, id: Id) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_set_project_out_param_id(set, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_dim_has_lower_bound`.
-    pub fn dim_has_lower_bound(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_has_lower_bound(set, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lexmax`.
-    pub fn lexmax(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lexmax(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_upper_bound_si`.
-    pub fn upper_bound_si(self, type_: DimType, pos: u32, value: i32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_upper_bound_si(set, type_, pos, value) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_remove_divs`.
-    pub fn remove_divs(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_remove_divs(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_max_multi_pw_aff`.
-    pub fn max_multi_pw_aff(self) -> MultiPwAff {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_max_multi_pw_aff(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_intersect_factor_domain`.
-    pub fn intersect_factor_domain(self, domain: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut domain = domain;
-        domain.do_not_free_on_drop();
-        let domain = domain.ptr;
-        let isl_rs_result = unsafe { isl_set_intersect_factor_domain(set, domain) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_copy`.
-    pub fn copy(&self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_copy(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_stride_info`.
-    pub fn get_stride_info(&self, pos: i32) -> StrideInfo {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_stride_info(set, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = StrideInfo { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_bind`.
-    pub fn bind(self, tuple: MultiId) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut tuple = tuple;
-        tuple.do_not_free_on_drop();
-        let tuple = tuple.ptr;
-        let isl_rs_result = unsafe { isl_set_bind(set, tuple) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_disjoint`.
-    pub fn is_disjoint(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_is_disjoint(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_convex_hull`.
-    pub fn convex_hull(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_convex_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_ctx`.
-    pub fn get_ctx(&self) -> Context {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_ctx(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error");
-        }
-        let isl_rs_result = Context { ptr: isl_rs_result,
-                                      should_free_on_drop: true };
-        let mut isl_rs_result = isl_rs_result;
-        isl_rs_result.do_not_free_on_drop();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_affine_hull`.
-    pub fn affine_hull(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_affine_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_n_dim`.
-    pub fn n_dim(&self) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_n_dim(set) };
-        isl_rs_result
-    }
-
     /// Wraps `isl_set_eliminate_dims`.
     pub fn eliminate_dims(self, first: u32, n: u32) -> Set {
         let context_for_error_message = self.get_ctx();
@@ -1659,66 +971,6 @@ impl Set {
         set.do_not_free_on_drop();
         let set = set.ptr;
         let isl_rs_result = unsafe { isl_set_eliminate_dims(set, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_has_dim_id`.
-    pub fn has_dim_id(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_has_dim_id(set, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_wrapped_reverse`.
-    pub fn wrapped_reverse(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_wrapped_reverse(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_get_val_if_fixed`.
-    pub fn plain_get_val_if_fixed(&self, type_: DimType, pos: u32) -> Val {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_get_val_if_fixed(set, type_, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Val { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_reset_tuple_id`.
-    pub fn reset_tuple_id(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_reset_tuple_id(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1746,79 +998,372 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_lexmin_pw_multi_aff`.
-    pub fn lexmin_pw_multi_aff(self) -> PwMultiAff {
+    /// Wraps `isl_set_convex_hull`.
+    pub fn convex_hull(self) -> BasicSet {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lexmin_pw_multi_aff(set) };
+        let isl_rs_result = unsafe { isl_set_convex_hull(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_get_stride`.
-    pub fn get_stride(&self, pos: i32) -> Val {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_stride(set, pos) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Val { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lex_le_set`.
-    pub fn lex_le_set(self, set2: Set) -> Map {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_lex_le_set(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_n_param`.
-    pub fn n_param(&self) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_n_param(set) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_intersect_params`.
-    pub fn intersect_params(self, params: Set) -> Set {
+    /// Wraps `isl_set_set_tuple_name`.
+    pub fn set_tuple_name(self, s: &str) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let mut params = params;
-        params.do_not_free_on_drop();
-        let params = params.ptr;
-        let isl_rs_result = unsafe { isl_set_intersect_params(set, params) };
+        let s = CString::new(s).unwrap();
+        let s = s.as_ptr();
+        let isl_rs_result = unsafe { isl_set_set_tuple_name(set, s) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_project_out_param_id_list`.
+    pub fn project_out_param_id_list(self, list: IdList) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_set_project_out_param_id_list(set, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_reset_space`.
+    pub fn reset_space(self, space: Space) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_set_reset_space(set, space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_basic_set_list`.
+    pub fn get_basic_set_list(&self) -> BasicSetList {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_basic_set_list(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSetList { ptr: isl_rs_result,
+                                           should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_affine_hull`.
+    pub fn affine_hull(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_affine_hull(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_from_multi_aff`.
+    pub fn from_multi_aff(ma: MultiAff) -> Set {
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_set_from_multi_aff(ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim`.
+    pub fn dim(&self, type_: DimType) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim(set, type_) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_tuple_dim`.
+    pub fn tuple_dim(&self) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_tuple_dim(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_upper_bound_si`.
+    pub fn upper_bound_si(self, type_: DimType, pos: u32, value: i32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_upper_bound_si(set, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lower_bound_multi_val`.
+    pub fn lower_bound_multi_val(self, lower: MultiVal) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut lower = lower;
+        lower.do_not_free_on_drop();
+        let lower = lower.ptr;
+        let isl_rs_result = unsafe { isl_set_lower_bound_multi_val(set, lower) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_preimage_multi_aff`.
+    pub fn preimage_multi_aff(self, ma: MultiAff) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut ma = ma;
+        ma.do_not_free_on_drop();
+        let ma = ma.ptr;
+        let isl_rs_result = unsafe { isl_set_preimage_multi_aff(set, ma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_preimage_pw_multi_aff`.
+    pub fn preimage_pw_multi_aff(self, pma: PwMultiAff) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut pma = pma;
+        pma.do_not_free_on_drop();
+        let pma = pma.ptr;
+        let isl_rs_result = unsafe { isl_set_preimage_pw_multi_aff(set, pma) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_remove_dims`.
+    pub fn remove_dims(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let bset = self;
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_set_remove_dims(bset, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_unshifted_simple_hull_from_set_list`.
+    pub fn unshifted_simple_hull_from_set_list(self, list: SetList) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut list = list;
+        list.do_not_free_on_drop();
+        let list = list.ptr;
+        let isl_rs_result = unsafe { isl_set_unshifted_simple_hull_from_set_list(set, list) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_remove_divs`.
+    pub fn remove_divs(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_remove_divs(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_has_lower_bound`.
+    pub fn dim_has_lower_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_has_lower_bound(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_foreach_basic_set`.
+    pub fn foreach_basic_set(&self, fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                             user: *mut c_void)
+                             -> Stat {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_foreach_basic_set(set, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_stride_info`.
+    pub fn get_stride_info(&self, pos: i32) -> StrideInfo {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_stride_info(set, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = StrideInfo { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_size`.
+    pub fn size(&self) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_size(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_plain_cmp`.
+    pub fn plain_cmp(&self, set2: &Set) -> i32 {
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_cmp(set1, set2) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_from_basic_set`.
+    pub fn from_basic_set(bset: BasicSet) -> Set {
+        let mut bset = bset;
+        bset.do_not_free_on_drop();
+        let bset = bset.ptr;
+        let isl_rs_result = unsafe { isl_set_from_basic_set(bset) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_nat_universe`.
+    pub fn nat_universe(space: Space) -> Set {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_set_nat_universe(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_involves_dims`.
+    pub fn involves_dims(&self, type_: DimType, first: u32, n: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_involves_dims(set, type_, first, n) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_strict_subset`.
+    pub fn is_strict_subset(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_is_strict_subset(set1, set2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -1841,12 +1386,63 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_dim_has_upper_bound`.
-    pub fn dim_has_upper_bound(&self, type_: DimType, pos: u32) -> bool {
+    /// Wraps `isl_set_fix_dim_si`.
+    pub fn fix_dim_si(self, dim: u32, value: i32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_fix_dim_si(set, dim, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_sample`.
+    pub fn sample(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_sample(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_union`.
+    pub fn union(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_union(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_bounded`.
+    pub fn is_bounded(&self) -> bool {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_has_upper_bound(set, type_, pos) };
+        let isl_rs_result = unsafe { isl_set_is_bounded(set) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -1855,19 +1451,197 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_lift`.
-    pub fn lift(self) -> Set {
+    /// Wraps `isl_set_intersect_factor_domain`.
+    pub fn intersect_factor_domain(self, domain: Set) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lift(set) };
+        let mut domain = domain;
+        domain.do_not_free_on_drop();
+        let domain = domain.ptr;
+        let isl_rs_result = unsafe { isl_set_intersect_factor_domain(set, domain) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_align_divs`.
+    pub fn align_divs(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_align_divs(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_foreach_point`.
+    pub fn foreach_point(&self, fn_: unsafe extern "C" fn(uintptr_t, *mut c_void) -> Stat,
+                         user: *mut c_void)
+                         -> Stat {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_foreach_point(set, fn_, user) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_n_param`.
+    pub fn n_param(&self) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_n_param(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_add_dims`.
+    pub fn add_dims(self, type_: DimType, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_add_dims(set, type_, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_is_bounded`.
+    pub fn dim_is_bounded(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_is_bounded(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lower_bound_val`.
+    pub fn lower_bound_val(self, type_: DimType, pos: u32, value: Val) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut value = value;
+        value.do_not_free_on_drop();
+        let value = value.ptr;
+        let isl_rs_result = unsafe { isl_set_lower_bound_val(set, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_hash`.
+    pub fn get_hash(&self) -> u32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_hash(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_drop_constraints_not_involving_dims`.
+    pub fn drop_constraints_not_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result =
+            unsafe { isl_set_drop_constraints_not_involving_dims(set, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_max`.
+    pub fn dim_max(self, pos: i32) -> PwAff {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_max(set, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = PwAff { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_min_multi_pw_aff`.
+    pub fn min_multi_pw_aff(self) -> MultiPwAff {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_min_multi_pw_aff(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_intersect_params`.
+    pub fn intersect_params(self, params: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut params = params;
+        params.do_not_free_on_drop();
+        let params = params.ptr;
+        let isl_rs_result = unsafe { isl_set_intersect_params(set, params) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_equal`.
+    pub fn is_equal(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_is_equal(set1, set2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
@@ -1887,14 +1661,14 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_fix_si`.
-    pub fn fix_si(self, type_: DimType, pos: u32, value: i32) -> Set {
+    /// Wraps `isl_set_detect_equalities`.
+    pub fn detect_equalities(self) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_fix_si(set, type_, pos, value) };
+        let isl_rs_result = unsafe { isl_set_detect_equalities(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1903,14 +1677,60 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_complement`.
-    pub fn complement(self) -> Set {
+    /// Wraps `isl_set_coefficients`.
+    pub fn coefficients(self) -> BasicSet {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_complement(set) };
+        let isl_rs_result = unsafe { isl_set_coefficients(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_bounded_simple_hull`.
+    pub fn bounded_simple_hull(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_bounded_simple_hull(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_simple_fixed_box_hull`.
+    pub fn get_simple_fixed_box_hull(&self) -> FixedBox {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_simple_fixed_box_hull(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = FixedBox { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_eliminate`.
+    pub fn eliminate(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_eliminate(set, type_, first, n) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -1919,17 +1739,298 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_get_tuple_id`.
-    pub fn get_tuple_id(&self) -> Id {
+    /// Wraps `isl_set_get_dim_id`.
+    pub fn get_dim_id(&self, type_: DimType, pos: u32) -> Id {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_tuple_id(set) };
+        let isl_rs_result = unsafe { isl_set_get_dim_id(set, type_, pos) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Id { ptr: isl_rs_result,
                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_neg`.
+    pub fn neg(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_neg(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_has_any_lower_bound`.
+    pub fn dim_has_any_lower_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_has_any_lower_bound(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_unbind_params`.
+    pub fn unbind_params(self, tuple: MultiId) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut tuple = tuple;
+        tuple.do_not_free_on_drop();
+        let tuple = tuple.ptr;
+        let isl_rs_result = unsafe { isl_set_unbind_params(set, tuple) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_intersect_factor_range`.
+    pub fn intersect_factor_range(self, range: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut range = range;
+        range.do_not_free_on_drop();
+        let range = range.ptr;
+        let isl_rs_result = unsafe { isl_set_intersect_factor_range(set, range) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_empty`.
+    pub fn is_empty(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_is_empty(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_follows_at`.
+    pub fn follows_at(&self, set2: &Set, pos: i32) -> i32 {
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_follows_at(set1, set2, pos) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_n_dim`.
+    pub fn n_dim(&self) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_n_dim(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_subset`.
+    pub fn is_subset(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_is_subset(set1, set2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_bind`.
+    pub fn bind(self, tuple: MultiId) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut tuple = tuple;
+        tuple.do_not_free_on_drop();
+        let tuple = tuple.ptr;
+        let isl_rs_result = unsafe { isl_set_bind(set, tuple) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_drop_constraints_involving_dims`.
+    pub fn drop_constraints_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result =
+            unsafe { isl_set_drop_constraints_involving_dims(set, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_union_disjoint`.
+    pub fn union_disjoint(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_union_disjoint(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_coalesce`.
+    pub fn coalesce(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_coalesce(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_plain_is_equal`.
+    pub fn plain_is_equal(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_is_equal(set1, set2) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dump`.
+    pub fn dump(&self) {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dump(set) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_simple_hull`.
+    pub fn simple_hull(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_simple_hull(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lex_ge_set`.
+    pub fn lex_ge_set(self, set2: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_lex_ge_set(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_align_params`.
+    pub fn align_params(self, model: Space) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut model = model;
+        model.do_not_free_on_drop();
+        let model = model.ptr;
+        let isl_rs_result = unsafe { isl_set_align_params(set, model) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_upper_bound_multi_pw_aff`.
+    pub fn upper_bound_multi_pw_aff(self, upper: MultiPwAff) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut upper = upper;
+        upper.do_not_free_on_drop();
+        let upper = upper.ptr;
+        let isl_rs_result = unsafe { isl_set_upper_bound_multi_pw_aff(set, upper) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
@@ -1963,125 +2064,6 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_dump`.
-    pub fn dump(&self) {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dump(set) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_sample`.
-    pub fn sample(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_sample(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_detect_equalities`.
-    pub fn detect_equalities(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_detect_equalities(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_lexmin`.
-    pub fn lexmin(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lexmin(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_union`.
-    pub fn union(self, set2: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_union(set1, set2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_min_multi_pw_aff`.
-    pub fn min_multi_pw_aff(self) -> MultiPwAff {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_min_multi_pw_aff(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = MultiPwAff { ptr: isl_rs_result,
-                                         should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_follows_at`.
-    pub fn follows_at(&self, set2: &Set, pos: i32) -> i32 {
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_follows_at(set1, set2, pos) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_intersect_factor_range`.
-    pub fn intersect_factor_range(self, range: Set) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut range = range;
-        range.do_not_free_on_drop();
-        let range = range.ptr;
-        let isl_rs_result = unsafe { isl_set_intersect_factor_range(set, range) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
     /// Wraps `isl_set_polyhedral_hull`.
     pub fn polyhedral_hull(self) -> BasicSet {
         let context_for_error_message = self.get_ctx();
@@ -2098,33 +2080,90 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_unshifted_simple_hull`.
-    pub fn unshifted_simple_hull(self) -> BasicSet {
+    /// Wraps `isl_set_from_params`.
+    pub fn from_params(self) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_unshifted_simple_hull(set) };
+        let isl_rs_result = unsafe { isl_set_from_params(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_flat_product`.
-    pub fn flat_product(self, set2: Set) -> Set {
+    /// Wraps `isl_set_get_stride`.
+    pub fn get_stride(&self, pos: i32) -> Val {
         let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let mut set1 = set1;
-        set1.do_not_free_on_drop();
-        let set1 = set1.ptr;
-        let mut set2 = set2;
-        set2.do_not_free_on_drop();
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_flat_product(set1, set2) };
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_stride(set, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Val { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_remove_divs_involving_dims`.
+    pub fn remove_divs_involving_dims(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_remove_divs_involving_dims(set, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_universe`.
+    pub fn universe(space: Space) -> Set {
+        let mut space = space;
+        space.do_not_free_on_drop();
+        let space = space.ptr;
+        let isl_rs_result = unsafe { isl_set_universe(space) };
+        if isl_rs_result == 0 {
+            panic!("ISL error");
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_compute_divs`.
+    pub fn compute_divs(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_compute_divs(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_params`.
+    pub fn params(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_params(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2149,22 +2188,45 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_get_dim_name`.
-    pub fn get_dim_name(&self, type_: DimType, pos: u32) -> &str {
+    /// Wraps `isl_set_has_dim_name`.
+    pub fn has_dim_name(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_dim_name(set, type_, pos) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        let isl_rs_result = unsafe { isl_set_has_dim_name(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_from_multi_aff`.
-    pub fn from_multi_aff(ma: MultiAff) -> Set {
-        let mut ma = ma;
-        ma.do_not_free_on_drop();
-        let ma = ma.ptr;
-        let isl_rs_result = unsafe { isl_set_from_multi_aff(ma) };
+    /// Wraps `isl_set_plain_unshifted_simple_hull`.
+    pub fn plain_unshifted_simple_hull(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_plain_unshifted_simple_hull(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_box_from_points`.
+    pub fn box_from_points(pnt1: Point, pnt2: Point) -> Set {
+        let mut pnt1 = pnt1;
+        pnt1.do_not_free_on_drop();
+        let pnt1 = pnt1.ptr;
+        let mut pnt2 = pnt2;
+        pnt2.do_not_free_on_drop();
+        let pnt2 = pnt2.ptr;
+        let isl_rs_result = unsafe { isl_set_box_from_points(pnt1, pnt2) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
@@ -2173,14 +2235,28 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_coefficients`.
-    pub fn coefficients(self) -> BasicSet {
+    /// Wraps `isl_set_has_tuple_name`.
+    pub fn has_tuple_name(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_has_tuple_name(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_unshifted_simple_hull`.
+    pub fn unshifted_simple_hull(self) -> BasicSet {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_coefficients(set) };
+        let isl_rs_result = unsafe { isl_set_unshifted_simple_hull(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2189,22 +2265,56 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_get_space`.
-    pub fn get_space(&self) -> Space {
+    /// Wraps `isl_set_complement`.
+    pub fn complement(self) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_space(set) };
+        let isl_rs_result = unsafe { isl_set_complement(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
-        let isl_rs_result = Space { ptr: isl_rs_result,
-                                    should_free_on_drop: true };
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
         isl_rs_result
     }
 
-    /// Wraps `isl_set_intersect`.
-    pub fn intersect(self, set2: Set) -> Set {
+    /// Wraps `isl_set_lexmin`.
+    pub fn lexmin(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lexmin(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lexmax_pw_multi_aff`.
+    pub fn lexmax_pw_multi_aff(self) -> PwMultiAff {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lexmax_pw_multi_aff(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = PwMultiAff { ptr: isl_rs_result,
+                                         should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_flat_product`.
+    pub fn flat_product(self, set2: Set) -> Set {
         let context_for_error_message = self.get_ctx();
         let set1 = self;
         let mut set1 = set1;
@@ -2213,7 +2323,7 @@ impl Set {
         let mut set2 = set2;
         set2.do_not_free_on_drop();
         let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_intersect(set1, set2) };
+        let isl_rs_result = unsafe { isl_set_flat_product(set1, set2) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2222,198 +2332,13 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_lower_bound_si`.
-    pub fn lower_bound_si(self, type_: DimType, pos: u32, value: i32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_lower_bound_si(set, type_, pos, value) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_set_tuple_id`.
-    pub fn set_tuple_id(self, id: Id) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut id = id;
-        id.do_not_free_on_drop();
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_set_set_tuple_id(set, id) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_unshifted_simple_hull_from_set_list`.
-    pub fn unshifted_simple_hull_from_set_list(self, list: SetList) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut list = list;
-        list.do_not_free_on_drop();
-        let list = list.ptr;
-        let isl_rs_result = unsafe { isl_set_unshifted_simple_hull_from_set_list(set, list) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_neg`.
-    pub fn neg(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_neg(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_cmp`.
-    pub fn plain_cmp(&self, set2: &Set) -> i32 {
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_cmp(set1, set2) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_to_str`.
-    pub fn to_str(&self) -> &str {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_to_str(set) };
-        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
-        let isl_rs_result = isl_rs_result.to_str().unwrap();
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_find_dim_by_id`.
-    pub fn find_dim_by_id(&self, type_: DimType, id: &Id) -> i32 {
-        let set = self;
-        let set = set.ptr;
-        let id = id.ptr;
-        let isl_rs_result = unsafe { isl_set_find_dim_by_id(set, type_, id) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_compute_divs`.
-    pub fn compute_divs(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_compute_divs(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_get_hash`.
-    pub fn get_hash(&self) -> u32 {
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_get_hash(set) };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_is_equal`.
-    pub fn plain_is_equal(&self, set2: &Set) -> bool {
+    /// Wraps `isl_set_is_disjoint`.
+    pub fn is_disjoint(&self, set2: &Set) -> bool {
         let context_for_error_message = self.get_ctx();
         let set1 = self;
         let set1 = set1.ptr;
         let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_is_equal(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_add_dims`.
-    pub fn add_dims(self, type_: DimType, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_add_dims(set, type_, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_is_empty`.
-    pub fn plain_is_empty(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_is_empty(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_set_tuple_name`.
-    pub fn set_tuple_name(self, s: &str) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_set_set_tuple_name(set, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_subset`.
-    pub fn is_subset(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_is_subset(set1, set2) };
+        let isl_rs_result = unsafe { isl_set_is_disjoint(set1, set2) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -2436,28 +2361,14 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_has_dim_name`.
-    pub fn has_dim_name(&self, type_: DimType, pos: u32) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_has_dim_name(set, type_, pos) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_eliminate`.
-    pub fn eliminate(self, type_: DimType, first: u32, n: u32) -> Set {
+    /// Wraps `isl_set_remove_redundancies`.
+    pub fn remove_redundancies(self) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_eliminate(set, type_, first, n) };
+        let isl_rs_result = unsafe { isl_set_remove_redundancies(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2466,213 +2377,258 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_box_from_points`.
-    pub fn box_from_points(pnt1: Point, pnt2: Point) -> Set {
-        let mut pnt1 = pnt1;
-        pnt1.do_not_free_on_drop();
-        let pnt1 = pnt1.ptr;
-        let mut pnt2 = pnt2;
-        pnt2.do_not_free_on_drop();
-        let pnt2 = pnt2.ptr;
-        let isl_rs_result = unsafe { isl_set_box_from_points(pnt1, pnt2) };
+    /// Wraps `isl_set_sample_point`.
+    pub fn sample_point(self) -> Point {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_sample_point(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Point { ptr: isl_rs_result,
+                                    should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lift`.
+    pub fn lift(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lift(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_solutions`.
+    pub fn solutions(self) -> BasicSet {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_solutions(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = BasicSet { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lex_lt_set`.
+    pub fn lex_lt_set(self, set2: Set) -> Map {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_lex_lt_set(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Map { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_project_out`.
+    pub fn project_out(self, type_: DimType, first: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_project_out(set, type_, first, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_dim_has_upper_bound`.
+    pub fn dim_has_upper_bound(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_dim_has_upper_bound(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_gist`.
+    pub fn gist(self, context: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_set_gist(set, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_project_out_param_id`.
+    pub fn project_out_param_id(self, id: Id) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut id = id;
+        id.do_not_free_on_drop();
+        let id = id.ptr;
+        let isl_rs_result = unsafe { isl_set_project_out_param_id(set, id) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_find_dim_by_name`.
+    pub fn find_dim_by_name(&self, type_: DimType, name: &str) -> i32 {
+        let set = self;
+        let set = set.ptr;
+        let name = CString::new(name).unwrap();
+        let name = name.as_ptr();
+        let isl_rs_result = unsafe { isl_set_find_dim_by_name(set, type_, name) };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_tuple_name`.
+    pub fn get_tuple_name(&self) -> &str {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_tuple_name(set) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_plain_multi_val_if_fixed`.
+    pub fn get_plain_multi_val_if_fixed(&self) -> MultiVal {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_plain_multi_val_if_fixed(set) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = MultiVal { ptr: isl_rs_result,
+                                       should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_apply`.
+    pub fn apply(self, map: Map) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut map = map;
+        map.do_not_free_on_drop();
+        let map = map.ptr;
+        let isl_rs_result = unsafe { isl_set_apply(set, map) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_is_params`.
+    pub fn is_params(&self) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_is_params(set) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_upper_bound_val`.
+    pub fn upper_bound_val(self, type_: DimType, pos: u32, value: Val) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut value = value;
+        value.do_not_free_on_drop();
+        let value = value.ptr;
+        let isl_rs_result = unsafe { isl_set_upper_bound_val(set, type_, pos, value) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_intersect`.
+    pub fn intersect(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_intersect(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_get_ctx`.
+    pub fn get_ctx(&self) -> Context {
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_get_ctx(set) };
         if isl_rs_result == 0 {
             panic!("ISL error");
         }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_unshifted_simple_hull`.
-    pub fn plain_unshifted_simple_hull(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_unshifted_simple_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_make_disjoint`.
-    pub fn make_disjoint(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_make_disjoint(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_equate`.
-    pub fn equate(self, type1: DimType, pos1: i32, type2: DimType, pos2: i32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_equate(set, type1, pos1, type2, pos2) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_bounded_simple_hull`.
-    pub fn bounded_simple_hull(self) -> BasicSet {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_bounded_simple_hull(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = BasicSet { ptr: isl_rs_result,
-                                       should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_reset_space`.
-    pub fn reset_space(self, space: Space) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut space = space;
-        space.do_not_free_on_drop();
-        let space = space.ptr;
-        let isl_rs_result = unsafe { isl_set_reset_space(set, space) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_has_tuple_name`.
-    pub fn has_tuple_name(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_has_tuple_name(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_set_dim_name`.
-    pub fn set_dim_name(self, type_: DimType, pos: u32, s: &str) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let s = CString::new(s).unwrap();
-        let s = s.as_ptr();
-        let isl_rs_result = unsafe { isl_set_set_dim_name(set, type_, pos, s) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_strict_subset`.
-    pub fn is_strict_subset(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_is_strict_subset(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_is_universe`.
-    pub fn plain_is_universe(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_is_universe(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_is_singleton`.
-    pub fn is_singleton(&self) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_is_singleton(set) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_fix_val`.
-    pub fn fix_val(self, type_: DimType, pos: u32, v: Val) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let mut v = v;
-        v.do_not_free_on_drop();
-        let v = v.ptr;
-        let isl_rs_result = unsafe { isl_set_fix_val(set, type_, pos, v) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_split_dims`.
-    pub fn split_dims(self, type_: DimType, first: u32, n: u32) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_split_dims(set, type_, first, n) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
+        let isl_rs_result = Context { ptr: isl_rs_result,
+                                      should_free_on_drop: true };
+        let mut isl_rs_result = isl_rs_result;
+        isl_rs_result.do_not_free_on_drop();
         isl_rs_result
     }
 
@@ -2690,12 +2646,95 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_dim_has_any_upper_bound`.
-    pub fn dim_has_any_upper_bound(&self, type_: DimType, pos: u32) -> bool {
+    /// Wraps `isl_set_subtract`.
+    pub fn subtract(self, set2: Set) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let mut set1 = set1;
+        set1.do_not_free_on_drop();
+        let set1 = set1.ptr;
+        let mut set2 = set2;
+        set2.do_not_free_on_drop();
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_subtract(set1, set2) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_plain_get_val_if_fixed`.
+    pub fn plain_get_val_if_fixed(&self, type_: DimType, pos: u32) -> Val {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_dim_has_any_upper_bound(set, type_, pos) };
+        let isl_rs_result = unsafe { isl_set_plain_get_val_if_fixed(set, type_, pos) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Val { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_insert_dims`.
+    pub fn insert_dims(self, type_: DimType, pos: u32, n: u32) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_insert_dims(set, type_, pos, n) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_gist_basic_set`.
+    pub fn gist_basic_set(self, context: BasicSet) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let mut context = context;
+        context.do_not_free_on_drop();
+        let context = context.ptr;
+        let isl_rs_result = unsafe { isl_set_gist_basic_set(set, context) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_has_dim_id`.
+    pub fn has_dim_id(&self, type_: DimType, pos: u32) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_has_dim_id(set, type_, pos) };
+        let isl_rs_result = match isl_rs_result {
+            0 => false,
+            1 => true,
+            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
+        };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_has_equal_space`.
+    pub fn has_equal_space(&self, set2: &Set) -> bool {
+        let context_for_error_message = self.get_ctx();
+        let set1 = self;
+        let set1 = set1.ptr;
+        let set2 = set2.ptr;
+        let isl_rs_result = unsafe { isl_set_has_equal_space(set1, set2) };
         let isl_rs_result = match isl_rs_result {
             0 => false,
             1 => true,
@@ -2720,52 +2759,43 @@ impl Set {
         isl_rs_result
     }
 
-    /// Wraps `isl_set_tuple_dim`.
-    pub fn tuple_dim(&self) -> i32 {
+    /// Wraps `isl_set_to_str`.
+    pub fn to_str(&self) -> &str {
         let set = self;
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_tuple_dim(set) };
+        let isl_rs_result = unsafe { isl_set_to_str(set) };
+        let isl_rs_result = unsafe { CStr::from_ptr(isl_rs_result) };
+        let isl_rs_result = isl_rs_result.to_str().unwrap();
         isl_rs_result
     }
 
-    /// Wraps `isl_set_has_equal_space`.
-    pub fn has_equal_space(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_has_equal_space(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_plain_is_disjoint`.
-    pub fn plain_is_disjoint(&self, set2: &Set) -> bool {
-        let context_for_error_message = self.get_ctx();
-        let set1 = self;
-        let set1 = set1.ptr;
-        let set2 = set2.ptr;
-        let isl_rs_result = unsafe { isl_set_plain_is_disjoint(set1, set2) };
-        let isl_rs_result = match isl_rs_result {
-            0 => false,
-            1 => true,
-            _ => panic!("ISL error: {}", context_for_error_message.last_error_msg()),
-        };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_project_out`.
-    pub fn project_out(self, type_: DimType, first: u32, n: u32) -> Set {
+    /// Wraps `isl_set_preimage_multi_pw_aff`.
+    pub fn preimage_multi_pw_aff(self, mpa: MultiPwAff) -> Set {
         let context_for_error_message = self.get_ctx();
         let set = self;
         let mut set = set;
         set.do_not_free_on_drop();
         let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_project_out(set, type_, first, n) };
+        let mut mpa = mpa;
+        mpa.do_not_free_on_drop();
+        let mpa = mpa.ptr;
+        let isl_rs_result = unsafe { isl_set_preimage_multi_pw_aff(set, mpa) };
+        if isl_rs_result == 0 {
+            panic!("ISL error: {}", context_for_error_message.last_error_msg());
+        }
+        let isl_rs_result = Set { ptr: isl_rs_result,
+                                  should_free_on_drop: true };
+        isl_rs_result
+    }
+
+    /// Wraps `isl_set_lexmax`.
+    pub fn lexmax(self) -> Set {
+        let context_for_error_message = self.get_ctx();
+        let set = self;
+        let mut set = set;
+        set.do_not_free_on_drop();
+        let set = set.ptr;
+        let isl_rs_result = unsafe { isl_set_lexmax(set) };
         if isl_rs_result == 0 {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
@@ -2786,22 +2816,6 @@ impl Set {
             panic!("ISL error: {}", context_for_error_message.last_error_msg());
         }
         let isl_rs_result = Map { ptr: isl_rs_result,
-                                  should_free_on_drop: true };
-        isl_rs_result
-    }
-
-    /// Wraps `isl_set_project_out_all_params`.
-    pub fn project_out_all_params(self) -> Set {
-        let context_for_error_message = self.get_ctx();
-        let set = self;
-        let mut set = set;
-        set.do_not_free_on_drop();
-        let set = set.ptr;
-        let isl_rs_result = unsafe { isl_set_project_out_all_params(set) };
-        if isl_rs_result == 0 {
-            panic!("ISL error: {}", context_for_error_message.last_error_msg());
-        }
-        let isl_rs_result = Set { ptr: isl_rs_result,
                                   should_free_on_drop: true };
         isl_rs_result
     }
